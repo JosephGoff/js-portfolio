@@ -258,18 +258,18 @@ const About: React.FC<PageProps> = ({ navigate }) => {
             style={{ borderBottom: "1px solid black" }}
             className="fixed z-[300] top-0 left-0 w-[100%] bg-white h-[56px] md:h-[72px] lg:h-[78px]"
           ></div> */}
-          <div className="relative w-[100%] h-[calc(100vh-56px)] md:h-[calc(100vh-72px)] lg:h-[calc(100vh-78px)]">
-            <img
+          <div className="relative w-[82%] ml-[9%] mt-[56px] md:mt-[75px] h-[calc(100vh-56px)] md:h-[calc(100vh-75px)]">
+            {/* <img
               style={{}}
               alt=""
               src={coversRef.current === null ? "" : coversRef.current[0].url}
-              className="about-image select-none w-[calc(150px+10vw)] absolute top-[0] left-[0]"
-            />
+              className="about-image select-none w-[calc(150px+10vw)] absolute top-[60px] left-[0]"
+            /> */}
             <div
               style={{ fontWeight: "bold" }}
-              className="text-[white] z-[110] w-[100%] abygaer absolute md:bottom-[15vh] lg:bottom-[6vh] md:text-[calc(7vw+50px)] text-[calc(4vw+40px)] leading-[calc(4vw+45px)] md:leading-[calc(6vw+45px)] flex justify-center items-center flex-col"
+              className="text-[white] h-[100%] lg:pb-[100px] z-[110] w-[100%] abygaer absolute md:text-[calc(5vw+50px)] text-[calc(4vw+40px)] leading-[calc(4vw+45px)] md:leading-[calc(4.5vw+45px)] flex justify-center items-center flex-col"
             >
-              <p className="mr-[40vw]">JESS</p>
+              <p className="mr-[38vw]">JESS</p>
               <p className="mr-[-10vw]">SHULMAN</p>
             </div>
             <p className="manrope text-[#323232] absolute bottom-[calc(7vw+80px)] md:bottom-[15px] text-[calc(10px+0.5vw)] tracking-[-0.05vw] leading-[calc(12px+0.6vw)]  right-[27px] text-right">
