@@ -198,15 +198,35 @@ const About: React.FC<PageProps> = ({ navigate }) => {
 
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [translateY, setTranslateY] = useState(0);
-  const [isInView, setIsInView] = useState(false);
+  // const [isInView, setIsInView] = useState(false);
+
+  const [heroWidth, setHeroWidth] = useState("78%");
+  const [heroMt, setHeroMt] = useState(window.innerWidth > 1024 ? "5vh" : "10vh");
 
   useEffect(() => {
     const handleScroll = () => {
+      if (!topRef.current) return;
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+
+      const startScroll = viewportHeight * 0;
+      const endScroll = viewportHeight * 0.3;
+      let progress = (scrollY - startScroll) / (endScroll - startScroll);
+      progress = Math.min(1, Math.max(0, progress));
+      const final = window.innerWidth > 1024 ? 60 : 90
+      const newWidth = 78 + progress * (final - 78); // From 78% to 100%
+      setHeroWidth(`${newWidth}%`);
+
+      let progress2 = (scrollY - startScroll) / (endScroll - startScroll);
+      progress2 = Math.min(1, Math.max(0, progress2));
+      const final2 = window.innerWidth > 1024 ? 0 : 0
+      const newHeroMt = 10 + progress2 * -10; 
+      setHeroMt(`${newHeroMt}vh`);
+
       if (imgRef.current) {
-        const scrollY = window.scrollY;
         const imgTop = imgRef.current.getBoundingClientRect().top + scrollY;
-        if (scrollY > imgTop - window.innerHeight) {
-          const scrollFactor = (scrollY - (imgTop - window.innerHeight)) * 0.05;
+        if (scrollY > 0) {
+          const scrollFactor = (scrollY - (0 - window.innerHeight)) * 0.05;
           setTranslateY(scrollFactor);
         }
       }
@@ -250,42 +270,45 @@ const About: React.FC<PageProps> = ({ navigate }) => {
     }
   };
 
+  const topRef = useRef<HTMLDivElement | null>(null);
+  const topRef2 = useRef<HTMLDivElement | null>(null);
+
   return (
     <>
       {Object.keys(aboutText).length > 0 && (
-        <div className="w-[100%]">
-          {/* <div
-            style={{ borderBottom: "1px solid black" }}
-            className="fixed z-[300] top-0 left-0 w-[100%] bg-white h-[56px] md:h-[72px] lg:h-[78px]"
-          ></div> */}
-          <div className="relative w-[82%] ml-[9%] mt-[56px] md:mt-[75px] h-[calc(100vh-56px)] md:h-[calc(100vh-75px)]">
-            {/* <img
-              style={{}}
-              alt=""
-              src={coversRef.current === null ? "" : coversRef.current[0].url}
-              className="about-image select-none w-[calc(150px+10vw)] absolute top-[60px] left-[0]"
-            /> */}
+        <div className={`w-[100%]`}>
+          <div className={`w-[100%] flex justify-center lg:px-[2.5vw]`}>
             <div
-              style={{ fontWeight: "bold" }}
-              className="text-[white] h-[100%] lg:pb-[100px] z-[110] w-[100%] abygaer absolute md:text-[calc(5vw+50px)] text-[calc(4vw+40px)] leading-[calc(4vw+45px)] md:leading-[calc(4.5vw+45px)] flex justify-center items-center flex-col"
+              ref={topRef}
+              style={{ width: heroWidth }}
+              className="fixed mt-[56px] md:mt-[75px] h-[calc(100vh-56px)] md:h-[calc(100vh-75px)]"
             >
-              <p className="mr-[38vw]">JESS</p>
-              <p className="mr-[-10vw]">SHULMAN</p>
-            </div>
-            <p className="manrope text-[#323232] absolute bottom-[calc(7vw+80px)] md:bottom-[15px] text-[calc(10px+0.5vw)] tracking-[-0.05vw] leading-[calc(12px+0.6vw)]  right-[27px] text-right">
-              {aboutText.section1.text4}
-              <br className="hidden md:block" />
-              {aboutText.section1.text5}
-              <br />
-              {aboutText.section1.text6}
-            </p>
+              <div
+                ref={topRef2}
+                style={{ marginTop: heroMt }}
+                className="select-none absolute min-h-[400px] w-[100%] lg:h-[80%] h-[70%] flex flex-col"
+              >
+                <img
+                  alt=""
+                  src={
+                    coversRef.current === null ? "" : coversRef.current[1].url
+                  }
+                  className="overflow-hidden left-0 h-[100%] object-cover object-[50%_20%]"
+                />
+                <div
+                  style={{ fontWeight: "bold" }}
+                  className="text-[white] h-[100%] mt-[8vh] z-[110] w-[100%] abygaer absolute md:text-[calc(5vw+50px)] text-[calc(4vw+40px)] leading-[calc(4vw+45px)] md:leading-[calc(4.5vw+45px)] flex justify-center items-center flex-col"
+                >
+                  <p className="mr-[38vw]">JESS</p>
+                  <p className="mr-[-10vw]">SHULMAN</p>
+                </div>
 
-            <div className="select-none absolute top-0 left-0 w-[100%] h-[100%] flex flex-col items-center">
-              <img
-                alt=""
-                src={coversRef.current === null ? "" : coversRef.current[1].url}
-                className="overflow-hidden w-[100vw] lg:w-[100vw] left-0 h-[66%] md:h-[66%] object-cover"
-              />
+                <p className="manrope text-[#323232] absolute bottom-[-12.5%] md:bottom-[-11.1%] text-[calc(10px+0.5vw)] tracking-[-0.05vw] leading-[calc(13px+0.8vw)] right-0 text-right">
+                  {aboutText.section1.text4} {aboutText.section1.text5}
+                  <br />
+                  {aboutText.section1.text6}
+                </p>
+              </div>
             </div>
 
             {/* <div className="absolute top-0 left-0 w-[100%] h-[100%] flex flex-col items-center justify-center">
@@ -306,7 +329,8 @@ const About: React.FC<PageProps> = ({ navigate }) => {
               </div>
             </div> */}
           </div>
-          <div className="w-[100%] mt-[40px] flex flex-col items-center justify-center px-[calc(15px+2vw)]">
+          <div className="h-[100vh]"></div>
+          <div className="w-[100%] flex flex-col items-center justify-center px-[calc(15px+2vw)]">
             <div
               className="w-[100%] flex relative justify-center"
               style={{ borderTop: "0.5px solid #bbbbbb" }}
