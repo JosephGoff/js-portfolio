@@ -185,7 +185,7 @@ const About: React.FC<PageProps> = ({ navigate }) => {
         let progress = scrollRelation / (2 * divHeight);
         progress = Math.min(1, Math.max(0, progress));
         const newTranslateY1 = -20 + progress * 40;
-        const newTranslateCover1 = 50 - progress * 50;
+        const newTranslateCover1 = 72.5 - progress * 72.5;
 
         if (animationFrame.current) {
           cancelAnimationFrame(animationFrame.current);
@@ -206,9 +206,7 @@ const About: React.FC<PageProps> = ({ navigate }) => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        console.log(entries);
         if (entries[0].isIntersecting) {
-          console.log("added");
           window.addEventListener("scroll", handleParallax);
         } else {
           window.removeEventListener("scroll", handleParallax);
@@ -310,26 +308,32 @@ const About: React.FC<PageProps> = ({ navigate }) => {
 
         <div
           ref={whiteCoverRef}
-          className="bg-white absolute top-0 aspect-[1/1.15] h-[66.6%] flex justify-center items-center flex-col"
-          style={{ borderRadius: "6px", transform: `translate3d(0, 50%, 0)` }}
+          className="bg-white absolute top-0 aspect-[1/1.15] h-[58%] flex justify-center items-center flex-col"
+          style={{ borderRadius: "6px", transform: `translate3d(0, 72.5%, 0)` }}
         >
-          <div className="h-[6%] text-center">{item.text1}</div>
-          <div className="h-[15%] text-[calc(22px+2vw)] leading-[calc(22px+2.4vw)] px-[40%] font-[600] text-center">{item.text2}</div>
-          <div className="h-[7%] text-[calc(8px+0.7vw)] text-center">{item.text3}</div>
-          <div className="h-[22%] text-center px-[30%] leading-[calc(11px+1.2vw)] text-[calc(7px+0.9vw)]">
+
+        
+
+          <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">{item.text1}</div>
+          <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
+            {item.text2}
+          </div>
+          <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
+            {item.text3}
+          </div> 
+          <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
             {item.text4}
           </div>
 
           <img
-            className="aspect-[1.5/1] h-[30%] object-cover"
-            ref={imgRef}
+            className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
             src={coversRef.current === null ? "" : coversRef.current[2].url}
             alt=""
             style={{ borderRadius: 5 }}
           />
         </div>
       </div>
-      <div className="bg-red-100 h-[100vh] min-h-[600px] w-[100vw]"></div>
+      <div className="bg-white h-[100vh] min-h-[600px] w-[100vw]"></div>
     </div>
   );
 };
