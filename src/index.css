@@ -287,3 +287,15 @@ code {
 }
 
 
+
+
+/* ABOUT */
+/* akitha */
+@font-face {
+  font-family: 'akitha';
+  src: url('/public/fonts/akitha/akitha.regular.otf') format('opentype');
+}
+
+.akitha {
+  font-family: 'akitha', sans-serif;
+}

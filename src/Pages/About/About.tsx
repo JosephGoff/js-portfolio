@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { PageProps } from "../../App";
+import { Page, PageProps } from "../../App";
 import useProjectColorsState from "../../store/useProjectColorsStore";
 import useSelectedProjectState from "../../store/useSelectedProjectStore";
 import useSelectedProjectNameState from "../../store/useSelectedProjectNameStore";
@@ -9,6 +9,11 @@ import { CoverEntry, CoverEntryImage } from "../Home/Home";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./About.css";
+
+export interface AboutPageProps {
+  navigate: (page: Page) => void;
+  slideUpComponent: boolean;
+}
 
 // Use Share URL, but replace end with /formResponse
 // To get entries, click ... prefill form, then prefill tabs, submit, and copy link to get entries
@@ -131,7 +136,7 @@ const ContactForm2 = (text: any) => {
   );
 };
 
-const About: React.FC<PageProps> = ({ navigate }) => {
+const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const { projectColors, setProjectColors } = useProjectColorsState();
   const { selectedProject, setSelectedProject } = useSelectedProjectState();
   const { selectedProjectName, setSelectedProjectName } =
@@ -266,16 +271,100 @@ const About: React.FC<PageProps> = ({ navigate }) => {
   ];
 
   const item = items[0];
+  const [imagesOpacity, setImagesOpacity] = useState(false);
+
+  useEffect(() => {
+    if (!slideUpComponent) {
+      setImagesOpacity(true);
+    }
+  }, []);
 
   return (
-    <div className="w-[100vw] min-h-[100vh]">
-      <div className="h-[100vh] min-h-[600px] w-[100vw] pt-[calc(40px+15px)] p-[40px] bg-green-100">
-        <img
-          className="w-[100%] h-[100%] object-cover object-[60%_20%]"
-          // style={{borderRadius: "5px"}}
-          src={coversRef.current === null ? "" : coversRef.current[1].url}
-          alt=""
-        />
+    <div className="w-[100vw] min-h-[100vh select-none">
+      <div
+        style={{
+          opacity: imagesOpacity ? 1 : 0,
+          transition: "opacity 0.8s ease-in-out",
+        }}
+        className="lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]"
+      >
+        Jess Shulman
+      </div>
+      <div
+        style={{
+          opacity: imagesOpacity ? 1 : 0,
+          transition: "opacity 0.8s ease-in-out",
+        }}
+        className="sephir lg:hidden absolute left-[14%] sm:left-[17%] text-[calc(1vw+10px)] bottom-[37%] md:bottom-[35%]"
+      >
+        <span> Graphic Designer</span> & <br />{" "}
+        <span className="ml-[44%]">Photographer</span>
+      </div>
+      <div className="h-[100vh] min-h-[600px] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
+        <div className="w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
+          <div
+            style={{
+              opacity: imagesOpacity ? 1 : 0,
+              transition: "opacity 0.8s ease-in-out",
+            }}
+            className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] lg:w-[100%] max-w-[550px]"
+          >
+            <img
+              className="w-[100%] h-[100%] lg:ml-0 ml-[20px] object-cover object-[50%_50%]"
+              src={coversRef.current === null ? "" : coversRef.current[0].url}
+              alt="about 1"
+            />
+          </div>
+          <div
+            style={{
+              opacity: imagesOpacity ? 1 : 0,
+              transition: "opacity 0.8s ease-in-out",
+            }}
+            className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end"
+          >
+            Jess Shulman
+          </div>
+          <div
+            style={{
+              opacity: imagesOpacity ? 1 : 0,
+              transition: "opacity 0.8s ease-in-out",
+            }}
+            className="sephir hidden lg:flex lg:mr-[-1%] mr-[9%] mt-[calc(1vw+25px)] text-[calc(1vw+10px)] flex-col lg:flex-row"
+          >
+            <span>Graphic Designer</span>
+            <span className="mx-2">&</span>
+            <span className="lg:ml-0 ml-[61%]">Photographer</span>
+          </div>
+        </div>
+
+        <div className="lg:mt-[-2px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
+          <div
+            style={{
+              opacity: imagesOpacity ? 1 : 0,
+              transition: "opacity 0.8s ease-in-out",
+            }}
+            className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]"
+          >
+            <img
+              className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+              src={coversRef.current === null ? "" : coversRef.current[1].url}
+              alt="about 2"
+            />
+          </div>
+          <div
+            style={{
+              opacity: imagesOpacity ? 1 : 0,
+              transition: "opacity 0.8s ease-in-out",
+            }}
+            className="absolute top-[55%] lg:top-[45%] max-w-[330px] w-[55%] lg:w-[65%] aspect-[1/1.1]"
+          >
+            <img
+              className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+              src={coversRef.current === null ? "" : coversRef.current[2].url}
+              alt="about 3"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="w-[100vw] bg-white flex flex-col pt-[calc(50px+5vw)] items-center px-[calc(50vw-200px)]">
@@ -311,23 +400,22 @@ const About: React.FC<PageProps> = ({ navigate }) => {
           className="bg-white absolute top-0 aspect-[1/1.15] h-[58%] flex justify-center items-center flex-col"
           style={{ borderRadius: "6px", transform: `translate3d(0, 72.5%, 0)` }}
         >
-
-        
-
-          <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">{item.text1}</div>
+          <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
+            {item.text1}
+          </div>
           <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
             {item.text2}
           </div>
           <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
             {item.text3}
-          </div> 
+          </div>
           <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
             {item.text4}
           </div>
 
           <img
             className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
-            src={coversRef.current === null ? "" : coversRef.current[2].url}
+            src={coversRef.current === null ? "" : coversRef.current[3].url}
             alt=""
             style={{ borderRadius: 5 }}
           />

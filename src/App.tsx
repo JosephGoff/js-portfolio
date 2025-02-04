@@ -859,7 +859,7 @@ const App = () => {
               animate={true}
             />
           )}
-          {currentPage === "about" && <About navigate={navigate} />}
+          {currentPage === "about" && <About slideUpComponent={false} navigate={navigate} />}
           {currentPage === "archives" && (
             <Archives navigate={navigate} slideUpComponent={false} />
           )}
@@ -1046,7 +1046,7 @@ const App = () => {
           )}
         {incomingPageDecision === "about" && (
           <SlideUpPage isVisible zIdx={702} full={true} nextColor={"white"}>
-            <About navigate={navigate} />
+            <About slideUpComponent={true} navigate={navigate} />
           </SlideUpPage>
         )}
         {incomingPageDecision === "archives" && (
