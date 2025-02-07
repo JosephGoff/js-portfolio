@@ -263,7 +263,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const items = [
     {
       text1: "01",
-      text2: "GIFT / NOVELTY",
+      text2: "PHOTOGRAPHY",
       text3: "PRICE ¥200,000〜",
       text4:
         "We offer original floral arrangements, blizzard flower gift boxes, pressed flower panels, and other original floral arrangements suitable for your project as promotional tools for distribution at events, commemorative parties, and various campaigns.",
@@ -279,48 +279,117 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     }
   }, []);
 
+  const scroll1AnimationFrame = useRef<number | null>(null);
+
+  const scroll1Div1 = useRef<HTMLDivElement | null>(null);
+  const scroll1Div1Value = useRef(1);
+
+  const scroll1Div2 = useRef<HTMLDivElement | null>(null);
+
+  const scroll1Div3 = useRef<HTMLDivElement | null>(null);
+
+  const scroll1Div4 = useRef<HTMLDivElement | null>(null);
+  const scroll1Div4Value = useRef(0);
+
+  useEffect(() => {
+    const handleScroll1 = () => {
+      if (
+        !scroll1Div1.current ||
+        !scroll1Div2.current ||
+        !scroll1Div3.current ||
+        !scroll1Div4.current
+      )
+        return;
+      // const div = scroll1Div1.current;
+      // const divHeight = div.clientHeight;
+      // const scrollRelation = 1;
+      // const scrollRelation = -(div.getBoundingClientRect().y - divHeight);
+
+      // if (scrollRelation >= 0) {
+      // let progress = scrollRelation / (2 * divHeight);
+      // progress = Math.min(1, Math.max(0, progress));
+
+      // let progress1 = window.scrollY;
+      // const newScroll1TranslateY1 = 1 - progress1 * 0.01;
+
+      function easeOutCubic(t: any) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      const mark2 = 200;
+      let progress1 = window.scrollY / window.innerHeight;
+      let progress2 = (window.scrollY - mark2) / window.innerHeight;
+      progress1 = Math.min(Math.max(progress1, 0), 1);
+
+      const newScroll1Value1 = 1 - easeOutCubic(progress1) * 2;
+      const newScroll1Value2 = 1 - easeOutCubic(progress2) * 1.2;
+
+      if (scroll1AnimationFrame.current) {
+        cancelAnimationFrame(scroll1AnimationFrame.current);
+      }
+
+      scroll1AnimationFrame.current = requestAnimationFrame(() => {
+        scroll1Div1Value.current = newScroll1Value1;
+        scroll1Div4Value.current = newScroll1Value2;
+        if (scroll1Div1.current) {
+          scroll1Div1.current.style.opacity = `${scroll1Div1Value.current}`;
+        }
+
+        if (scroll1Div2.current) {
+          scroll1Div2.current.style.opacity = `${scroll1Div1Value.current}`;
+        }
+
+        if (scroll1Div3.current) {
+          scroll1Div3.current.style.opacity = `${1 - scroll1Div1Value.current}`;
+        }
+
+        if (scroll1Div4.current) {
+          if (window.scrollY > mark2) {
+            scroll1Div4.current.style.opacity = `1`;
+            scroll1Div4.current.style.transition = "opacity 0.8s ease-in-out";
+          } else {
+            scroll1Div4.current.style.opacity = `0`;
+            scroll1Div4.current.style.transition = "opacity 0.2s ease-in-out";
+          }
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll1);
+
+    // const observer = new IntersectionObserver(
+    //   (entries) => {
+    //     if (entries[0].isIntersecting) {
+    //       window.addEventListener("scroll", handleScroll1);
+    //     } else {
+    //       window.removeEventListener("scroll", handleScroll1);
+    //     }
+    //   },
+    //   { threshold: 0.01 }
+    // );
+
+    // if (scroll1TranslateDiv1.current) observer.observe(scroll1TranslateDiv1.current);
+
+    return () => {
+      // observer.disconnect();
+      window.removeEventListener("scroll", handleScroll1);
+      // if (scroll1AnimationFrame.current) cancelAnimationFrame(scroll1AnimationFrame.current);
+    };
+  }, []);
+
   return (
-    <div className="w-[100vw] min-h-[100vh select-none">
-      <div
-        style={{
-          opacity: imagesOpacity ? 1 : 0,
-          transition: "opacity 0.8s ease-in-out",
-        }}
-        className="lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]"
-      >
-        Jess Shulman
-      </div>
-      <div
-        style={{
-          opacity: imagesOpacity ? 1 : 0,
-          transition: "opacity 0.8s ease-in-out",
-        }}
-        className="sephir lg:hidden absolute left-[14%] sm:left-[17%] text-[calc(1vw+10px)] bottom-[37%] md:bottom-[35%]"
-      >
-        <span> Graphic Designer</span> & <br />{" "}
-        <span className="ml-[44%]">Photographer</span>
-      </div>
-      <div className="h-[100vh] min-h-[600px] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
-        <div className="w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
+    <div className="w-[100vw] min-h-[100vh] select-none">
+      <div className="w-[100vw] h-[100vh] min-h-[600px]">
+        <div
+          ref={scroll1Div1}
+          className="z-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[600px]"
+        >
           <div
             style={{
               opacity: imagesOpacity ? 1 : 0,
               transition: "opacity 0.8s ease-in-out",
             }}
-            className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] lg:w-[100%] max-w-[550px]"
-          >
-            <img
-              className="w-[100%] h-[100%] lg:ml-0 ml-[20px] object-cover object-[50%_50%]"
-              src={coversRef.current === null ? "" : coversRef.current[0].url}
-              alt="about 1"
-            />
-          </div>
-          <div
-            style={{
-              opacity: imagesOpacity ? 1 : 0,
-              transition: "opacity 0.8s ease-in-out",
-            }}
-            className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end"
+            className="lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]"
           >
             Jess Shulman
           </div>
@@ -329,61 +398,157 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
               opacity: imagesOpacity ? 1 : 0,
               transition: "opacity 0.8s ease-in-out",
             }}
-            className="sephir hidden lg:flex lg:mr-[-1%] mr-[9%] mt-[calc(1vw+25px)] text-[calc(1vw+10px)] flex-col lg:flex-row"
+            className="sephir lg:hidden absolute left-[14%] sm:left-[17%] text-[calc(1vw+10px)] bottom-[37%] md:bottom-[35%]"
           >
-            <span>Graphic Designer</span>
-            <span className="mx-2">&</span>
-            <span className="lg:ml-0 ml-[61%]">Photographer</span>
+            <span> Graphic Designer</span> & <br />{" "}
+            <span className="ml-[44%]">Photographer</span>
+          </div>
+
+          <div
+            ref={scroll1Div3}
+            style={{ opacity: 0, transition: "opacity 0.8s ease-in-out" }}
+            className="lg:hidden absolute top-[50%] left-[7vw] aspect-[1.1/1] lg:mr-[5vw] mr-[3vw] w-[35%] max-w-[550px]"
+          >
+            <img
+              className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+              src={coversRef.current === null ? "" : coversRef.current[0].url}
+              alt="about 1"
+            />
           </div>
         </div>
 
-        <div className="lg:mt-[-2px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
-          <div
-            style={{
-              opacity: imagesOpacity ? 1 : 0,
-              transition: "opacity 0.8s ease-in-out",
-            }}
-            className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]"
-          >
-            <img
-              className="w-[100%] h-[100%] object-cover object-[50%_50%]"
-              src={coversRef.current === null ? "" : coversRef.current[1].url}
-              alt="about 2"
-            />
+        <div className=" h-[100vh] min-h-[600px] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
+          <div className="w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
+            <div
+              style={{
+                opacity: imagesOpacity ? 1 : 0,
+                transition: "opacity 0.8s ease-in-out",
+              }}
+              className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] lg:w-[100%] max-w-[550px]"
+            >
+              <img
+                className="w-[100%] h-[100%] lg:ml-0 ml-[20px] object-cover object-[50%_50%]"
+                src={coversRef.current === null ? "" : coversRef.current[0].url}
+                alt="about 1"
+              />
+            </div>
+            <div
+              ref={scroll1Div2}
+              className="z-[105] w-[100%] h-[100%] flex flex-col items-end"
+            >
+              <div
+                style={{
+                  opacity: imagesOpacity ? 1 : 0,
+                  transition: "opacity 0.8s ease-in-out",
+                }}
+                className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end"
+              >
+                Jess Shulman
+              </div>
+              <div
+                style={{
+                  opacity: imagesOpacity ? 1 : 0,
+                  transition: "opacity 0.8s ease-in-out",
+                }}
+                className="sephir hidden lg:flex lg:mr-[-1%] mr-[9%] mt-[calc(1vw+25px)] text-[calc(1vw+10px)] flex-col lg:flex-row"
+              >
+                <span>Graphic Designer</span>
+                <span className="mx-2">&</span>
+                <span className="lg:ml-0 ml-[61%]">Photographer</span>
+              </div>
+            </div>
+
+            <div
+              ref={scroll1Div4}
+              style={{
+                opacity: 0,
+                transition: "opacity 0.8s ease-in-out",
+              }}
+              className="lg:flex hidden aspect-[1/1.1] lg:mr-[6vw] mr-[3vw] lg:mt-[-19%] w-[75%] max-w-[550px]"
+            >
+              <img
+                className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+                src={coversRef.current === null ? "" : coversRef.current[0].url}
+                alt="about 1"
+              />
+            </div>
           </div>
-          <div
-            style={{
-              opacity: imagesOpacity ? 1 : 0,
-              transition: "opacity 0.8s ease-in-out",
-            }}
-            className="absolute top-[55%] lg:top-[45%] max-w-[330px] w-[55%] lg:w-[65%] aspect-[1/1.1]"
-          >
-            <img
-              className="w-[100%] h-[100%] object-cover object-[50%_50%]"
-              src={coversRef.current === null ? "" : coversRef.current[2].url}
-              alt="about 3"
-            />
+
+          <div className="lg:mt-[-2px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
+            <div
+              style={{
+                opacity: imagesOpacity ? 1 : 0,
+                transition: "opacity 0.8s ease-in-out",
+              }}
+              className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]"
+            >
+              <img
+                className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+                src={coversRef.current === null ? "" : coversRef.current[1].url}
+                alt="about 2"
+              />
+            </div>
+            <div
+              style={{
+                opacity: imagesOpacity ? 1 : 0,
+                transition: "opacity 0.8s ease-in-out",
+              }}
+              className="absolute top-[55%] lg:top-[45%] max-w-[330px] w-[55%] lg:w-[65%] aspect-[1/1.1]"
+            >
+              <img
+                className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+                src={coversRef.current === null ? "" : coversRef.current[2].url}
+                alt="about 3"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="w-[100vw] bg-white flex flex-col pt-[calc(50px+5vw)] items-center px-[calc(50vw-200px)]">
-        <p className="pb-[calc(1vw+10px)] text-[calc(20px+5vw)] font-[600]">
-          SERVICE
-        </p>
-        <p className="flex text-left pb-[70px]">
-          We offer flower design services that cater to your budget, desired
-          size, and various other requests. If you already have an idea of the
-          floral arrangement you want, we can provide a design plan that matches
-          your concept and vision.
-        </p>
-        <p className="text-[calc(6px+1vw)] pb-[50px]">
-          *The listed price is an estimate; please consult with us separately
-          for details.
-        </p>
-      </div>
+      <div className="w-[100vw] bg-white h-[1000vh] "></div>
 
-      <div
+      {/* TEXT */}
+      {/* <div className="w-[100vw] bg-white flex flex-col items-center px-[calc(20vw+20px)]">
+        <p className="abygaer pb-[calc(2vw+20px)] text-[calc(20px+5vw)] font-[600]">
+          About Me
+        </p>
+        <p className="sandemore flex text-center pb-[61px] text-[calc(10px+1vw)]">
+          Hi! I’m Jess Shulman—a photographer, designer, and lover of all things
+          creative
+          <br /> <br />I get my inspiration from the lovely humans around me,
+          this amazing earth, and all the little things that make life beautiful
+          <br /> <br /> You can find me gardening, behind the camera, sketching,
+          making something handmade, spending time with my favorite people —
+          whatever it is, you can expect I’ll be laughing
+        </p>
+
+        <div
+          style={{
+            opacity: imagesOpacity ? 1 : 0,
+            transition: "opacity 0.8s ease-in-out",
+          }}
+          className="aspect-[1/1.2] w-[37vw]"
+        >
+          <img
+            className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+            src={coversRef.current === null ? "" : coversRef.current[0].url}
+            alt="about 1"
+          />
+        </div>
+
+        <p className="sandemore flex text-center text-[calc(10px+1vw)] pt-[32px] pb-[130px] ">
+          <br /> <br /> I care deeply about the earth, sustainability, and am
+          always looking for ways to bring the beauty of nature into your daily
+          life, whether it’s flowers from the farm or the artistry in my
+          designs.
+          <br />
+          <br /> I'd love to meet you and see how I can help capture your story.
+          Send me a message and let’s make something beautiful together!
+        </p>
+      </div> */}
+
+      {/* Scroll images */}
+      {/* <div
         ref={translateDiv1}
         className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
       >
@@ -420,8 +585,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             style={{ borderRadius: 5 }}
           />
         </div>
-      </div>
-      <div className="bg-white h-[100vh] min-h-[600px] w-[100vw]"></div>
+      </div> */}
     </div>
   );
 };
