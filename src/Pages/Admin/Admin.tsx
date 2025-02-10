@@ -731,9 +731,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         Uint8Array.from(atob(base64Content), (char) => char.charCodeAt(0))
       );
 
+      let parsedContent = null;
       if (decodedContent) {
         try {
-          const parsedContent = JSON.parse(decodedContent);
+          parsedContent = JSON.parse(decodedContent);
           setAppFile(parsedContent);
 
           if (parsedContent["pages"] !== undefined) {
@@ -750,7 +751,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         }
       }
 
-      return decodedContent;
+      return parsedContent;
     } catch (error) {
       console.error("Error fetching file contents:", error);
     }
@@ -1849,6 +1850,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         // style={{ backgroundColor: "red" }}
       >
         {Object.keys(currentFolder)
+          .filter((item: any) => item !== "blank.png" && item !== "fallback.jpeg")
           .sort((a, b) => {
             let indexMap: any = {};
             if (appFile["pages"] !== undefined) {
@@ -1916,7 +1918,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             return 0;
           })
           .map((key, index) => {
-            if (key === "blank.png" || key === "fallback.jpeg") return <></>;
             const isSecondaryFolder =
               typeof currentFolder[key] !== "string" &&
               ((currentPath[0] === "projects" && key !== "covers") ||
@@ -2833,6 +2834,76 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     }
   };
 
+  const resetAppFileWithGitData = async () => {
+    setLoading(true);
+    const fullRepo = await fetchFullRepoTree("JosephGoff", "js-portfolio");
+    if (fullRepo && fullRepo["public"]?.["assets"]) {
+      const { icons, ...filteredProject } = fullRepo["public"]["assets"];
+      setFullProject(filteredProject);
+
+      if (fullRepo["src"]["app.json"]) {
+        const appFileURL = fullRepo["src"]["app.json"];
+        const currentAppFile = await fetchAppFileContents(appFileURL);
+
+        console.log(currentAppFile);
+        console.log(filteredProject);
+
+        // Filter About
+        currentAppFile.pages.about.images =
+          currentAppFile.pages.about.images.filter((item: any) =>
+            Object.keys(filteredProject.about).includes(item.name)
+          );
+
+        // Filter project and archives lists
+        currentAppFile.pages.projects = currentAppFile.pages.projects.filter(
+          (item: any) => Object.keys(filteredProject.projects).includes(item.id)
+        );
+
+        currentAppFile.pages.archives = currentAppFile.pages.archives.filter(
+          (item: any) => Object.keys(filteredProject.archives).includes(item.id)
+        );
+
+        // Filter images within project and archive folders
+        for (let i = 0; i < Object.keys(filteredProject.projects).length; i++) {
+          let folderName = Object.keys(filteredProject.projects)[i];
+          if (folderName === "blank.png") continue;
+
+          const foundIndex = currentAppFile.pages.projects.findIndex(
+            (item: any) => item.id === folderName
+          );
+          if (foundIndex === -1) continue;
+          currentAppFile.pages.projects[foundIndex].images =
+            currentAppFile.pages.projects[foundIndex].images.filter(
+              (item: any) =>
+                Object.keys(filteredProject.projects[folderName]).includes(
+                  item.name
+                )
+            );
+        }
+
+        for (let i = 0; i < Object.keys(filteredProject.archives).length; i++) {
+          let folderName = Object.keys(filteredProject.archives)[i];
+          if (folderName === "blank.png") continue;
+
+          const foundIndex = currentAppFile.pages.archives.findIndex(
+            (item: any) => item.id === folderName
+          );
+          if (foundIndex === -1) continue;
+          currentAppFile.pages.archives[foundIndex].images =
+            currentAppFile.pages.archives[foundIndex].images.filter(
+              (item: any) =>
+                Object.keys(filteredProject.archives[folderName]).includes(
+                  item.name
+                )
+            );
+        }
+
+        await updateAppFile(currentAppFile);
+      }
+    }
+    setLoading(false);
+  };
+
   if (!fullProject) {
     return <div>Loading...</div>;
   }
@@ -2953,6 +3024,20 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
         {loading && (
           <div className="absolute top-4 right-[107px] simple-spinner"></div>
+        )}
+
+        {!loading && (
+          <div
+            onClick={resetAppFileWithGitData}
+            className="w-[31px] h-[31px] absolute top-[16px] right-[110px] flex items-center justify-center cursor-pointer hover-dim7"
+            style={{ borderRadius: "50%", border: "1px solid black" }}
+          >
+            <GrPowerCycle
+              color="black"
+              size={18}
+              className="ml-[-0.5px] mt-[-0.5px]"
+            />
+          </div>
         )}
         <button onClick={onLogout} className="button absolute top-3 right-3">
           Logout
