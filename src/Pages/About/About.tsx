@@ -293,13 +293,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
 
   useEffect(() => {
     const handleScroll1 = () => {
-      if (
-        !scroll1Div1.current ||
-        !scroll1Div2.current ||
-        !scroll1Div3.current ||
-        !scroll1Div4.current
-      )
-        return;
+      if (!scroll1Div1.current || !scroll1Div2.current) return;
       // const div = scroll1Div1.current;
       // const divHeight = div.clientHeight;
       // const scrollRelation = 1;
@@ -331,27 +325,27 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       scroll1AnimationFrame.current = requestAnimationFrame(() => {
         scroll1Div1Value.current = newScroll1Value1;
         scroll1Div4Value.current = newScroll1Value2;
-        if (scroll1Div1.current) {
-          scroll1Div1.current.style.opacity = `${scroll1Div1Value.current}`;
-        }
+        // if (scroll1Div1.current) {
+        //   scroll1Div1.current.style.opacity = `${scroll1Div1Value.current}`;
+        // }
 
-        if (scroll1Div2.current) {
-          scroll1Div2.current.style.opacity = `${scroll1Div1Value.current}`;
-        }
+        // if (scroll1Div2.current) {
+        //   scroll1Div2.current.style.opacity = `${scroll1Div1Value.current}`;
+        // }
 
-        if (scroll1Div3.current) {
-          scroll1Div3.current.style.opacity = `${1 - scroll1Div1Value.current}`;
-        }
+        // if (scroll1Div3.current) {
+        //   scroll1Div3.current.style.opacity = `${1 - scroll1Div1Value.current}`;
+        // }
 
-        if (scroll1Div4.current) {
-          if (window.scrollY > mark2) {
-            scroll1Div4.current.style.opacity = `1`;
-            scroll1Div4.current.style.transition = "opacity 0.8s ease-in-out";
-          } else {
-            scroll1Div4.current.style.opacity = `0`;
-            scroll1Div4.current.style.transition = "opacity 0.2s ease-in-out";
-          }
-        }
+        // if (scroll1Div4.current) {
+        //   if (window.scrollY > mark2) {
+        //     scroll1Div4.current.style.opacity = `1`;
+        //     scroll1Div4.current.style.transition = "opacity 0.8s ease-in-out";
+        //   } else {
+        //     scroll1Div4.current.style.opacity = `0`;
+        //     scroll1Div4.current.style.transition = "opacity 0.2s ease-in-out";
+        //   }
+        // }
       });
     };
 
@@ -403,18 +397,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <span> Graphic Designer</span> & <br />{" "}
             <span className="ml-[44%]">Photographer</span>
           </div>
-
-          <div
-            ref={scroll1Div3}
-            style={{ opacity: 0, transition: "opacity 0.8s ease-in-out" }}
-            className="lg:hidden absolute top-[50%] left-[7vw] aspect-[1.1/1] lg:mr-[5vw] mr-[3vw] w-[35%] max-w-[550px]"
-          >
-            <img
-              className="w-[100%] h-[100%] object-cover object-[50%_50%]"
-              src={coversRef.current === null ? "" : coversRef.current[0].url}
-              alt="about 1"
-            />
-          </div>
         </div>
 
         <div className=" h-[100vh] min-h-[600px] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
@@ -457,21 +439,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
                 <span className="lg:ml-0 ml-[61%]">Photographer</span>
               </div>
             </div>
-
-            <div
-              ref={scroll1Div4}
-              style={{
-                opacity: 0,
-                transition: "opacity 0.8s ease-in-out",
-              }}
-              className="lg:flex hidden aspect-[1/1.1] lg:mr-[6vw] mr-[3vw] lg:mt-[-19%] w-[75%] max-w-[550px]"
-            >
-              <img
-                className="w-[100%] h-[100%] object-cover object-[50%_50%]"
-                src={coversRef.current === null ? "" : coversRef.current[0].url}
-                alt="about 1"
-              />
-            </div>
           </div>
 
           <div className="lg:mt-[-2px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
@@ -504,11 +471,19 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
         </div>
       </div>
-
-      <div className="w-[100vw] bg-white h-[1000vh] "></div>
+{/* 
+      <div className="w-[100vw] h-[100vh] justify-center flex bg-[white]">
+        <img
+          className="aspect-[1.6/1] w-[85%] max-w-[1000px] object-cover object-[50%_20%]"
+          src={coversRef.current === null ? "" : coversRef.current[6].url}
+          alt="about 1"
+        />
+        <div className="bg-[red] w-[30%] aspect-[1/1.5] absolute"></div>
+      </div> */}
+      {/* <div className="w-[100vw] bg-white h-[1000vh] "></div> */}
 
       {/* TEXT */}
-      {/* <div className="w-[100vw] bg-white flex flex-col items-center px-[calc(20vw+20px)]">
+      <div className="ml-[50vw] w-[50vw] bg-[lightgreen] flex flex-col items-center px-[calc(5%+20px)]">
         <p className="abygaer pb-[calc(2vw+20px)] text-[calc(20px+5vw)] font-[600]">
           About Me
         </p>
@@ -545,7 +520,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           <br /> I'd love to meet you and see how I can help capture your story.
           Send me a message and let’s make something beautiful together!
         </p>
-      </div> */}
+      </div>
 
       {/* Scroll images */}
       {/* <div
