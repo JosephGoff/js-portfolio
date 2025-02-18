@@ -313,9 +313,10 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         return;
 
       const topPosition =
-        section2Ref.current.offsetTop - 0.75 * window.innerHeight;
+        section2Ref.current.offsetTop - 0.8 * window.innerHeight;
 
       let fourImagesProgress = (window.scrollY - topPosition) / 23;
+      console.log(topPosition)
       fourImagesProgress = Math.min(30, Math.max(0, fourImagesProgress));
 
       let fourImagesOpacityProgress = (window.scrollY - topPosition) / 300;
@@ -330,7 +331,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         1,
         Math.max(0, fourImagesOpacityText1Progress)
       );
-      console.log(fourImagesOpacityText1Progress);
 
       let fourImagesOpacityText2Progress =
         (window.scrollY - (topPosition + 250)) / 300;
@@ -340,7 +340,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       );
 
       let fourImagesOpacityText3Progress =
-        (window.scrollY - (topPosition + 500)) / 300;
+        (window.scrollY - (topPosition + 350)) / 300;
       fourImagesOpacityText3Progress = Math.min(
         1,
         Math.max(0, fourImagesOpacityText3Progress)
@@ -400,22 +400,8 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       });
     };
 
-    const observer2 = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          window.addEventListener("scroll", handleParallax);
-        } else {
-          window.removeEventListener("scroll", handleParallax);
-        }
-      },
-      { threshold: 0.01 }
-    );
-
-    if (section5TranslateDiv1.current)
-      observer2.observe(section5TranslateDiv1.current);
-
+    window.addEventListener("scroll", handleParallax);
     return () => {
-      observer2.disconnect();
       window.removeEventListener("scroll", handleParallax);
       if (section5AnimationFrame.current)
         cancelAnimationFrame(section5AnimationFrame.current);
@@ -484,7 +470,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         }}
         ref={aboutCoverRef}
       >
-        <div className="z-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[600px]">
+        <div className="bz-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[600px]">
           <div className="lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]">
             Jess Shulman
           </div>
@@ -494,16 +480,16 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
         </div>
 
-        <div className=" h-[100vh] min-h-[600px] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
-          <div className="w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
-            <div className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] lg:w-[100%] max-w-[550px]">
+        <div className="h-[100vh] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
+          <div className="min-h-[500px] w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
+            <div className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] max-h-[70%] lg:w-[100%] max-w-[550px]">
               <img
                 className="w-[100%] h-[100%] lg:ml-0 ml-[20px] object-cover object-[50%_50%]"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 1"
               />
             </div>
-            <div className="z-[105] w-[100%] h-[100%] flex flex-col items-end">
+            <div className=" z-[105] w-[100%] h-[100%] flex flex-col items-end">
               <div className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end">
                 Jess Shulman
               </div>
@@ -517,7 +503,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             </div>
           </div>
 
-          <div className="lg:mt-[-2px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
+          <div className="lg:mt-[-2px] min-h-[500px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
             <div className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]">
               <img
                 className="w-[100%] h-[100%] object-cover object-[50%_50%]"
@@ -587,7 +573,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       </div> */}
 
       <div
-        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[-10px] lg:mb-[50px] md:mt-[-60px] mt-[-130px]"
+        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[50px] lg:mb-[90px] md:mt-[-60px] mt-[-130px]"
         ref={section2Ref}
       >
         <div
@@ -637,7 +623,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
         </div>
 
-        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] pt-[50px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
+        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] pt-[90px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
           <div
             ref={section5Text1Ref}
             style={{ opacity: 0 }}
@@ -692,7 +678,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         <div className="h-[100%] bg-white w-[40px] absolute right-0 top-0"></div>
       </div>
 
-      <div className="w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[400px] h-[auto] flex flex-col lg:flex-row">
+      <div className="w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[350px] h-[auto] flex flex-col lg:flex-row">
         <div className="lg:pl-[30px] kayonest text-[calc(3vw+50px)] leading-[calc(3vw+50px)] mb-[calc(2vw+30px)] lg:w-[calc(45vw-35px)] lg:mb-0[font-[500]">
           Overview
         </div>
@@ -709,18 +695,18 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      <div className="lg:w-[70vw] lg:ml-[14vw] w-[96vw] h-[calc(100vw*0.57)] min-h-[480px] flex flex-row gap-[12.5vw] justify-center">
-        <div className="w-[37vw] aspect-[1/1.33] object-cover flex items-center">
+      <div className="lg:w-[70vw] lg:ml-[14vw] w-[96vw] lg:mt-0 mt-[50px] h-[calc(100vw*0.57)] min-h-[480px] flex flex-row gap-[12.5vw] justify-center items-center">
+        <div className="w-[37vw] h-[calc(37vw*1.33)] object-cover flex items-center bg-red-500">
           <img
             alt=""
-            className="w-[100%]] aspect-[1/1.33] object-cover"
+            className="w-[100%]] h-[100%] object-cover"
             src={coversRef.current === null ? "" : coversRef.current[0].url}
           />
         </div>
-        <div className="w-[25vw] aspect-[1/1.39] object-cover flex items-center">
+        <div className="w-[25vw] h-[calc(25vw*1.39)] object-cover flex items-center">
           <img
             alt=""
-            className="w-[100%] aspect-[1/1.39] object-cover"
+            className="w-[100%] h-[100%] object-cover"
             src={coversRef.current === null ? "" : coversRef.current[0].url}
           />
         </div>
