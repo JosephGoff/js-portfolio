@@ -51,7 +51,6 @@ const Home: React.FC<HomePageProps> = ({
       project !== null &&
       project["Projects"]
     ) {
-      console.log(project["Projects"].children)
       coversRef.current = project["Projects"].children;
       readyToTransition.current = true;
       setCoversReady(project["Projects"].children);
@@ -215,7 +214,7 @@ const Home: React.FC<HomePageProps> = ({
         const startTime = Date.now();
 
         const checkPreload = () => {
-          if (preloadedImages[0] === true) {
+          if (preloadedImages[2] === true) {
             setFirstPageLoad(true); // Images are preloaded
           } else if (Date.now() - startTime >= maxWaitTime) {
             setFirstPageLoad(true); // Fallback after timeout

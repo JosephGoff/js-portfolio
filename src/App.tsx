@@ -324,14 +324,18 @@ const App = () => {
       }
       const pageLoadOrder = [];
       pageLoadOrder.push(startingPreloadIndex);
-      for (let i = 0; i < 4; i++) {
-        if (i !== startingPreloadIndex) {
+      for (let i = 2; i < 4; i++) {
+        if (i !== startingPreloadIndex && i !== 0) {
           pageLoadOrder.push(i);
         }
       }
+      if (1 !== startingPreloadIndex) {
+        pageLoadOrder.push(1);
+      }
+
       for (let i = 0; i < pageLoadOrder.length; i++) {
-        if (collectAllImages.current[i].length > 0) {
-          const currentPageIndex = pageLoadOrder[i]; // 0 = home, 1 = about, 2 = project, 3 = archives
+        const currentPageIndex = pageLoadOrder[i]; // 0 = home, 1 = about, 2 = project, 3 = archives
+        if (collectAllImages.current[currentPageIndex].length > 0) {
           await preloadImages(collectAllImages.current[currentPageIndex]);
           const preloadedImagesCopy = preloadedImages;
           preloadedImagesCopy[currentPageIndex] = true;

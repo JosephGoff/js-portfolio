@@ -429,7 +429,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
 
                   {incomingProject !== null && coversRef.current !== null && (
                     <>
-                      <div className="w-[100%] py-[4px] aspect-[6/1] flex justify-center klivora text-[7vw] text-center">
+                      <div style={{color: projectColors[2][1]}} className="w-[100%] py-[4px] aspect-[6/1] flex justify-center klivora text-[7vw] text-center">
                         <>
                           {coversRef.current[incomingProject].title
                             .split("_")
@@ -440,7 +440,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                             .join(" ")}
                         </>
                       </div>
-                      <div className="text-center w-[100%] flex justify-center mt-[calc(-4.1%+0.4vw)] mb-[4%] lg:mb-[3%] text-[calc(0.5vw+9px)]">
+                      <div style={{color: projectColors[2][1]}} className="text-center w-[100%] flex justify-center mt-[calc(-4.1%+0.4vw)] mb-[4%] lg:mb-[3%] text-[calc(0.5vw+9px)]">
                         {coversRef.current[incomingProject].description
                           .toUpperCase()
                           .replaceAll("_", " ")}
@@ -502,7 +502,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                 style={{ objectFit: "cover" }}
               />
 
-              <div className="w-[100%] py-[4px] aspect-[6/1] flex justify-center klivora text-[7vw] text-center">
+              <div style={{color: projectColors[1][1]}} className="w-[100%] py-[4px] aspect-[6/1] flex justify-center klivora text-[7vw] text-center">
                 {selectedProjectName[1] !== null &&
                   coversRef.current !== null &&
                   coversRef.current[selectedProjectName[1]].title
@@ -510,7 +510,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                     .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
                     .join(" ")}
               </div>
-              <div className="text-center w-[100%] flex justify-center mt-[calc(-4.1%+0.4vw)] mb-[4%] lg:mb-[3%] text-[calc(0.5vw+9px)]">
+              <div style={{color: projectColors[1][1]}} className="text-center w-[100%] flex justify-center mt-[calc(-4.1%+0.4vw)] mb-[4%] lg:mb-[3%] text-[calc(0.5vw+9px)]">
                 {selectedProjectName[1] !== null &&
                   coversRef.current !== null &&
                   coversRef.current[selectedProjectName[1]].description
