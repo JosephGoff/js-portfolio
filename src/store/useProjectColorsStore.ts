@@ -11,7 +11,7 @@ type StateType = {
 };
 
 const useProjectColorsState = create<StateType>((set) => ({
-  projectColors: [["white", "white"],["white", "white"],["white", "white"]],
+  projectColors: [["white", "black"],["white", "black"],["white", "black"]],
   setProjectColors: (newVal: ProjectColors) =>
     set((state) => ({ projectColors: newVal })),
 }));

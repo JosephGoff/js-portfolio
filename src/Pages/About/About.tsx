@@ -313,10 +313,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         return;
 
       const topPosition =
-        section2Ref.current.offsetTop - 0.6 * window.innerHeight;
-      // console.log(topPosition)
-
-      // const topPosition = 300
+        section2Ref.current.offsetTop - 0.75 * window.innerHeight;
 
       let fourImagesProgress = (window.scrollY - topPosition) / 23;
       fourImagesProgress = Math.min(30, Math.max(0, fourImagesProgress));
@@ -590,7 +587,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       </div> */}
 
       <div
-        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[80px] md:mt-[-60px] mt-[-130px]"
+        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[-10px] lg:mb-[50px] md:mt-[-60px] mt-[-130px]"
         ref={section2Ref}
       >
         <div
@@ -640,7 +637,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
         </div>
 
-        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] pt-[50px] lg:py-0 lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
+        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] pt-[50px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
           <div
             ref={section5Text1Ref}
             style={{ opacity: 0 }}
@@ -663,11 +660,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             our timber has earned the love and trust of local carpenters as well
             as architects, construction firms, and individual customers, far and
             wide, who appreciate top-quality materials. With unwavering
-            dedication, we have been engaging with wood for over 60 years. Our
-            founder established the business as a sawmill that used horses to
-            transport logs that they harvested from the mountains and passed
-            down the tradition to the second and third generations, which are
-            managing it now.
+            dedication, we have been engaging with wood for over 60 years.
           </div>
 
           <div
@@ -689,16 +682,53 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      <div className="w-[100vw] bg-red-300 mt-[calc(3vh+20px)] h-[60vh] min-h-[500px]"></div>
-      <div className="w-[100vw] bg-red-300 mt-[calc(3vh+20px)] h-[60vh] min-h-[500px]"></div>
-      <div className="w-[100vw] bg-red-300 mt-[calc(2vh+10px)] h-[calc(5vh+100px)] min-h-[110px]flex text-center kayonest text-[calc(2vw+35px)] pt-[calc(1vh+20px)]">
-        My Services
+      <div className="relative w-[100vw] aspect-[1.4/1] lg:mt-[30px] mt-[calc(3vw+80px)] bg-green-300 flex justify-center">
+        <div className="h-[100%] bg-white w-[40px] absolute left-0 top-0"></div>
+        <img
+          alt=""
+          className="w-[calc(100vw] aspect-[1.4/1] object-cover"
+          src={coversRef.current === null ? "" : coversRef.current[0].url}
+        />
+        <div className="h-[100%] bg-white w-[40px] absolute right-0 top-0"></div>
       </div>
 
-      {/* Scroll images */}
+      <div className="w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[400px] h-[auto] flex flex-col lg:flex-row">
+        <div className="lg:pl-[30px] kayonest text-[calc(3vw+50px)] leading-[calc(3vw+50px)] mb-[calc(2vw+30px)] lg:w-[calc(45vw-35px)] lg:mb-0[font-[500]">
+          Overview
+        </div>
+        <div className="lg:mt-[5px] text-[calc(0.57vw+11px)] font-[300] leading-[calc(0.92vw+22px)] lg:w-[calc(55vw-35px)] lg:pr-[25px]">
+          The interior and furniture of the “Open Innovation Platform,” an
+          industry-academic collaboration office at Kyushu University, was
+          furnished with cedar cut from the university's research forest. The
+          design concept focused on taking advantage of the charm of
+          large-diameter trees without waste. From a single tree, the walls of a
+          conference room, tables, a reception desk, and stools were born. This
+          efficient use of lumber was realized through the collaboration of
+          Kyushu University students. The conference room, revealing the natural
+          curves of the wood, was crafted by carpenters from Oguni Town.
+        </div>
+      </div>
+
+      <div className="lg:w-[70vw] lg:ml-[14vw] w-[96vw] h-[calc(100vw*0.57)] min-h-[480px] flex flex-row gap-[12.5vw] justify-center">
+        <div className="w-[37vw] aspect-[1/1.33] object-cover flex items-center">
+          <img
+            alt=""
+            className="w-[100%]] aspect-[1/1.33] object-cover"
+            src={coversRef.current === null ? "" : coversRef.current[0].url}
+          />
+        </div>
+        <div className="w-[25vw] aspect-[1/1.39] object-cover flex items-center">
+          <img
+            alt=""
+            className="w-[100%] aspect-[1/1.39] object-cover"
+            src={coversRef.current === null ? "" : coversRef.current[0].url}
+          />
+        </div>
+      </div>
+
       <div
         ref={translateDiv1}
-        className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
+        className="h-[100vh] mt-[100px] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
       >
         <img
           className="w-[100%] h-[100%] object-cover"
@@ -735,7 +765,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      <div
+      {/* <div
         style={{ borderTop: "0.5px solid #bbbbbb" }}
         className="flex flex-row mx-[calc(2vw+15px)] py-[40px]"
       >
@@ -754,7 +784,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         >
           <ContactForm2 text={aboutText} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

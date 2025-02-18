@@ -202,11 +202,7 @@ const Projects: React.FC<ProjectsPageProps> = ({
                               //   ? `${Math.pow(index, 0.75) * 0.045}s`
                               //   : "none",
                               transition: "color 0.8s ease",
-                              color: animate
-                                ? "black"
-                                : selectedProject === null
-                                ? "black"
-                                : projectColors[1][1],
+                              color: projectColors[1][1],
                               opacity:
                                 selectedProject === null
                                   ? "1"

@@ -421,15 +421,11 @@ const App = () => {
       page === "Projects" &&
       Object.keys(appFile.children[pageKey]).length > 0
     ) {
-      const newProjectsList: string[] = [];
       if (collectAllImagesCopy[2].length === 0) {
         collectNewImages = true;
       }
       const folder = appFile.children[pageKey].children;
       const mappedEntries: any = Object.keys(folder).map((imageFolder: any) => {
-        newProjectsList.push(
-          folder[imageFolder].name.replaceAll("_", "").replaceAll("&", "and")
-        );
         const mappedImages: Entry[] = Object.keys(folder[imageFolder].children)
           .filter(
             (imgKey) =>
@@ -474,6 +470,10 @@ const App = () => {
       });
       const sortedEntries = mappedEntries.sort(
         (a: any, b: any) => a.index - b.index
+      );
+
+      const newProjectsList = sortedEntries.map((project: any, index: number) =>
+        sortedEntries[index].title.replaceAll("_", "").replaceAll("&", "and")
       );
 
       result = appFile.children[pageKey];
@@ -623,19 +623,25 @@ const App = () => {
         projectIndex !== -1 &&
         project &&
         project !== null &&
-        project["projects"]
+        project["Projects"]
       ) {
         setSelectedProject(projectIndex);
         setSelectedProjectName([null, projectIndex, null]);
-        const newColor1 = project["projects"][projectIndex].bg_color || "white";
-        const newColor2 =
-          project["projects"][projectIndex].text_color || "white";
-        const newColors = [
-          ["white", "white"],
-          [newColor1, newColor2],
-          ["white", "white"],
-        ] as ProjectColors;
-        setProjectColors(newColors);
+        const foundIndex = project["Projects"].children.findIndex(
+          (item: any) => item.title === projectsList[projectIndex]
+        );
+        if (foundIndex !== -1) {
+          const newColor1 =
+            project["Projects"].children[foundIndex].bg_color || "white";
+          const newColor2 =
+            project["Projects"].children[foundIndex].text_color || "black";
+          const newColors = [
+            ["white", "black"],
+            [newColor1, newColor2],
+            ["white", "black"],
+          ] as ProjectColors;
+          setProjectColors(newColors);
+        }
       }
     }
   }, [location, projectsList, projectAssets]);
@@ -646,6 +652,7 @@ const App = () => {
   const { currentNavColor, setCurrentNavColor } = useCurrentNavColorState();
   const [canSelectPage, setCanSelectPage] = useState<boolean>(true);
   const [zTrigger, setZTrigger] = useState<null | number>(null);
+
   const navigate = (page: Page) => {
     if (page === currentPage || !canSelectPage) return;
 
@@ -655,10 +662,35 @@ const App = () => {
         setCurrentNavColor("white");
       }, 2000);
     } else {
-      setCurrentNavColor("black");
-      setTimeout(() => {
+      if (
+        page.startsWith("projects/") &&
+        projectsList.includes(page.split("/")[1]) &&
+        page.split("/").length === 2
+      ) {
+        setTimeout(() => {
+          if (
+            projectColors[1][0] !== "white" &&
+            projectColors[1][1] !== "#FFF" &&
+            projectColors[1][1] !== "#FFFFFF"
+          ) {
+            setCurrentNavColor("white");
+          }
+        }, 1200);
+      } else {
         setCurrentNavColor("black");
-      }, 2000);
+        setTimeout(() => {
+          setCurrentNavColor("black");
+        }, 2000);
+      }
+    }
+
+    // Projects
+    if (page.startsWith("projects") && page.split("/").length === 1) {
+      setTimeout(() => {
+        const projectColorsCopy = projectColors;
+        projectColorsCopy[1] = ["white", "black"];
+        setProjectColors(projectColorsCopy);
+      }, 1000);
     }
 
     // Archives

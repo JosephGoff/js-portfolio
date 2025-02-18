@@ -85,7 +85,6 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
         incomingImageDimensions.length !== 0 &&
         incomingImageStyles.length !== 0
       ) {
-        // console.log("setting", incomingImageDimensions)
         setImageDimensions(incomingImageDimensions);
         setImageStyles(incomingImageStyles);
       }

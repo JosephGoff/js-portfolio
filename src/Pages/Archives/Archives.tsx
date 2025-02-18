@@ -85,10 +85,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
 
   useEffect(() => {
     const project = projectAssets as any;
-    if (
-      project !== null &&
-      project["Archives"]
-    ) {
+    if (project !== null && project["Archives"]) {
       const archivesOutput = project["Archives"].children as ArchivesEntry[];
       archivesRef.current = archivesOutput;
       const newbgColors = archivesOutput.map((item) =>
@@ -175,6 +172,8 @@ const Archives: React.FC<ArchivesPageProps> = ({
     }
   };
 
+  const finalTitle = useRef<HTMLDivElement>(null);
+
   const handleOpenArchive = (index: number) => {
     setSelectedArchiveGroup(index);
 
@@ -200,6 +199,11 @@ const Archives: React.FC<ArchivesPageProps> = ({
             setRevealGallery(true);
             setTimeout(() => {
               setFinalTitleTouch(true);
+              setTimeout(() => {
+                if (finalTitle.current) {
+                  finalTitle.current.style.transition = "none";
+                }
+              }, 700);
             }, 500);
           },
           window.innerWidth <= 1048 ? 1600 : 1000
@@ -992,11 +996,15 @@ const Archives: React.FC<ArchivesPageProps> = ({
                     }}
                   >
                     <div
+                      ref={finalTitle}
                       className={`
                       max-w-[calc(80px+29vw+(10px+7vw)-2px-(30px+3vw))] h-[auto]
                       z-[109] kayonest leading-[calc((clamp(1rem,10vw+20px,10vw+20px)))]`}
                       style={{
-                        fontSize: "clamp(1rem, 10vw + 20px, 10vw + 20px)",
+                        fontSize: revealGallery
+                          ? "calc(6vw + 30px)"
+                          : "clamp(1rem, 10vw + 20px, 10vw + 20px)",
+                        transition: "font-size 1s ease-in-out",
                         wordBreak: finalTitleTouch ? "break-word" : "normal",
                       }}
                     >
