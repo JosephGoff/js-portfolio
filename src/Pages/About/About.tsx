@@ -68,22 +68,14 @@ const ContactForm2 = (text: any) => {
           <p className="baskara text-[calc(3.5vw+30px)] text-[#323232]">
             {displayText.section7.text1}
           </p>
-          <div className="abygaer w-[80%] text-center">
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder=""
-              required
-              className="abygaer w-[100%] py-[10px] text-center min-h-[160px] resize-none border-none outline-none"
-              style={{
-                borderBottom: "1px solid #999999",
-                borderTop: "1px solid #999999",
-              }}
-            />
-          </div>
-
-          <div className="flex flex-row mt-[15px] w-[80%]">
+          <div
+            className="flex flex-row  w-[80%] mt-[-10px]"
+            style={
+              {
+                // borderTop: "1px solid #999999",
+              }
+            }
+          >
             <div className="w-[50%] flex flex-row">
               <input
                 type="text"
@@ -111,6 +103,21 @@ const ContactForm2 = (text: any) => {
               />
             </div>
           </div>
+          <div className="abygaer w-[80%] text-center">
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder=""
+              required
+              className="abygaer w-[100%] py-[10px] text-center min-h-[160px] resize-none border-none outline-none"
+              style={{
+                borderBottom: "1px solid #999999",
+                // borderTop: "1px solid #999999",
+              }}
+            />
+          </div>
+
           <button
             className="flex flex-row items-center gap-[10px] priestacy cursor-pointer mt-[25px] pl-[30px] pr-[25px] text-[#BBBBBB] text-[calc((0.5vw+10px)*1.4)] leading-[calc((0.5vw+10px)*1.5)]"
             style={{ borderRadius: "24px", border: "1px solid #DDDDDD" }}
@@ -153,17 +160,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
 
   useEffect(() => {
     const project = projectAssets as any;
-    if (
-      project !== null &&
-      project["about"] &&
-      Array.isArray(project["about"]) &&
-      project["about"].length > 0
-    ) {
-      coversRef.current = project["about"] as CoverEntryImage[];
-      setCoversReady(project["about"] as CoverEntryImage[]);
-      let newAboutText = projectAssets as any;
-      newAboutText = newAboutText["aboutText"];
-      if (Object.keys(newAboutText).length > 0) {
+    if (project !== null) {
+      coversRef.current = project["About"].children as CoverEntryImage[];
+      setCoversReady(project["About"].children as CoverEntryImage[]);
+      const newAboutText = project["About"].details.text;
+      if (newAboutText.length > 0) {
         setAboutText(newAboutText);
       }
     }
@@ -279,121 +280,218 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     }
   }, []);
 
-  const scroll1AnimationFrame = useRef<number | null>(null);
+  const section2Ref = useRef<HTMLDivElement | null>(null);
 
-  const scroll1Div1 = useRef<HTMLDivElement | null>(null);
-  const scroll1Div1Value = useRef(1);
-
-  const scroll1Div2 = useRef<HTMLDivElement | null>(null);
-
-  const scroll1Div3 = useRef<HTMLDivElement | null>(null);
-
-  const scroll1Div4 = useRef<HTMLDivElement | null>(null);
-  const scroll1Div4Value = useRef(0);
+  const section5TranslateDiv1 = useRef<HTMLDivElement | null>(null);
+  const section5img1Ref = useRef<HTMLImageElement | null>(null);
+  const section5img2Ref = useRef<HTMLImageElement | null>(null);
+  const section5img3Ref = useRef<HTMLImageElement | null>(null);
+  const section5img4Ref = useRef<HTMLImageElement | null>(null);
+  const section5Text1Ref = useRef<HTMLDivElement | null>(null);
+  const section5Text2Ref = useRef<HTMLDivElement | null>(null);
+  const section5Text3Ref = useRef<HTMLDivElement | null>(null);
+  const section5TranslateY1 = useRef(-50);
+  const section5Opacity1 = useRef(0);
+  const section5Text1Opacity = useRef(0);
+  const section5Text2Opacity = useRef(0);
+  const section5Text3Opacity = useRef(0);
+  const section5AnimationFrame = useRef<number | null>(null);
 
   useEffect(() => {
-    const handleScroll1 = () => {
-      if (!scroll1Div1.current || !scroll1Div2.current) return;
-      // const div = scroll1Div1.current;
-      // const divHeight = div.clientHeight;
-      // const scrollRelation = 1;
-      // const scrollRelation = -(div.getBoundingClientRect().y - divHeight);
+    const handleParallax = () => {
+      if (
+        !section5TranslateDiv1.current ||
+        !section5img1Ref.current ||
+        !section5img2Ref.current ||
+        !section5img3Ref.current ||
+        !section5img4Ref.current ||
+        !section5Text1Ref.current ||
+        !section5Text2Ref.current ||
+        !section5Text3Ref.current ||
+        !section2Ref.current
+      )
+        return;
 
-      // if (scrollRelation >= 0) {
-      // let progress = scrollRelation / (2 * divHeight);
-      // progress = Math.min(1, Math.max(0, progress));
+      const topPosition =
+        section2Ref.current.offsetTop - 0.6 * window.innerHeight;
+      // console.log(topPosition)
 
-      // let progress1 = window.scrollY;
-      // const newScroll1TranslateY1 = 1 - progress1 * 0.01;
+      // const topPosition = 300
 
-      function easeOutCubic(t: any) {
-        return 1 - Math.pow(1 - t, 3);
+      let fourImagesProgress = (window.scrollY - topPosition) / 23;
+      fourImagesProgress = Math.min(30, Math.max(0, fourImagesProgress));
+
+      let fourImagesOpacityProgress = (window.scrollY - topPosition) / 300;
+      fourImagesOpacityProgress = Math.min(
+        1,
+        Math.max(0, fourImagesOpacityProgress)
+      );
+
+      let fourImagesOpacityText1Progress =
+        (window.scrollY - (topPosition + 150)) / 300;
+      fourImagesOpacityText1Progress = Math.min(
+        1,
+        Math.max(0, fourImagesOpacityText1Progress)
+      );
+      console.log(fourImagesOpacityText1Progress);
+
+      let fourImagesOpacityText2Progress =
+        (window.scrollY - (topPosition + 250)) / 300;
+      fourImagesOpacityText2Progress = Math.min(
+        1,
+        Math.max(0, fourImagesOpacityText2Progress)
+      );
+
+      let fourImagesOpacityText3Progress =
+        (window.scrollY - (topPosition + 500)) / 300;
+      fourImagesOpacityText3Progress = Math.min(
+        1,
+        Math.max(0, fourImagesOpacityText3Progress)
+      );
+
+      if (section5AnimationFrame.current) {
+        cancelAnimationFrame(section5AnimationFrame.current);
       }
 
-      const mark2 = 200;
-      let progress1 = window.scrollY / window.innerHeight;
-      let progress2 = (window.scrollY - mark2) / window.innerHeight;
-      progress1 = Math.min(Math.max(progress1, 0), 1);
+      section5AnimationFrame.current = requestAnimationFrame(() => {
+        section5TranslateY1.current = fourImagesProgress;
+        section5Opacity1.current = fourImagesOpacityProgress;
+        section5Text1Opacity.current = fourImagesOpacityText1Progress;
+        section5Text2Opacity.current = fourImagesOpacityText2Progress;
+        section5Text3Opacity.current = fourImagesOpacityText3Progress;
+        if (section5TranslateDiv1.current) {
+          section5TranslateDiv1.current.style.opacity = `${fourImagesOpacityProgress}`;
+        }
+        if (section5Text1Ref.current) {
+          section5Text1Ref.current.style.opacity = `${section5Text1Opacity.current}`;
+          section5Text1Ref.current.style.transform = `translate3d(0, ${
+            section5Text1Opacity.current * -15
+          }px, 0)`;
+        }
+        if (section5Text2Ref.current) {
+          section5Text2Ref.current.style.opacity = `${section5Text2Opacity.current}`;
+          section5Text2Ref.current.style.transform = `translate3d(0, ${
+            section5Text2Opacity.current * -15
+          }px, 0)`;
+        }
+        if (section5Text3Ref.current) {
+          section5Text3Ref.current.style.opacity = `${section5Text3Opacity.current}`;
+          section5Text3Ref.current.style.transform = `translate3d(0, ${
+            section5Text3Opacity.current * -15
+          }px, 0)`;
+        }
 
-      const newScroll1Value1 = 1 - easeOutCubic(progress1) * 2;
-      const newScroll1Value2 = 1 - easeOutCubic(progress2) * 1.2;
+        if (section5img1Ref.current) {
+          section5img1Ref.current.style.transform = `translate3d(${section5TranslateY1.current}px, ${section5TranslateY1.current}px, 0)`;
+        }
 
-      if (scroll1AnimationFrame.current) {
-        cancelAnimationFrame(scroll1AnimationFrame.current);
-      }
+        if (section5img2Ref.current) {
+          section5img2Ref.current.style.transform = `translate3d(${
+            section5TranslateY1.current
+          }px, ${-section5TranslateY1.current}px, 0)`;
+        }
 
-      scroll1AnimationFrame.current = requestAnimationFrame(() => {
-        scroll1Div1Value.current = newScroll1Value1;
-        scroll1Div4Value.current = newScroll1Value2;
-        // if (scroll1Div1.current) {
-        //   scroll1Div1.current.style.opacity = `${scroll1Div1Value.current}`;
-        // }
+        if (section5img3Ref.current) {
+          section5img3Ref.current.style.transform = `translate3d(${-section5TranslateY1.current}px, ${
+            section5TranslateY1.current
+          }px, 0)`;
+        }
 
-        // if (scroll1Div2.current) {
-        //   scroll1Div2.current.style.opacity = `${scroll1Div1Value.current}`;
-        // }
-
-        // if (scroll1Div3.current) {
-        //   scroll1Div3.current.style.opacity = `${1 - scroll1Div1Value.current}`;
-        // }
-
-        // if (scroll1Div4.current) {
-        //   if (window.scrollY > mark2) {
-        //     scroll1Div4.current.style.opacity = `1`;
-        //     scroll1Div4.current.style.transition = "opacity 0.8s ease-in-out";
-        //   } else {
-        //     scroll1Div4.current.style.opacity = `0`;
-        //     scroll1Div4.current.style.transition = "opacity 0.2s ease-in-out";
-        //   }
-        // }
+        if (section5img4Ref.current) {
+          section5img4Ref.current.style.transform = `translate3d(${-section5TranslateY1.current}px, ${-section5TranslateY1.current}px, 0)`;
+        }
       });
     };
 
-    window.addEventListener("scroll", handleScroll1);
+    const observer2 = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          window.addEventListener("scroll", handleParallax);
+        } else {
+          window.removeEventListener("scroll", handleParallax);
+        }
+      },
+      { threshold: 0.01 }
+    );
 
-    // const observer = new IntersectionObserver(
-    //   (entries) => {
-    //     if (entries[0].isIntersecting) {
-    //       window.addEventListener("scroll", handleScroll1);
-    //     } else {
-    //       window.removeEventListener("scroll", handleScroll1);
-    //     }
-    //   },
-    //   { threshold: 0.01 }
-    // );
-
-    // if (scroll1TranslateDiv1.current) observer.observe(scroll1TranslateDiv1.current);
+    if (section5TranslateDiv1.current)
+      observer2.observe(section5TranslateDiv1.current);
 
     return () => {
-      // observer.disconnect();
-      window.removeEventListener("scroll", handleScroll1);
-      // if (scroll1AnimationFrame.current) cancelAnimationFrame(scroll1AnimationFrame.current);
+      observer2.disconnect();
+      window.removeEventListener("scroll", handleParallax);
+      if (section5AnimationFrame.current)
+        cancelAnimationFrame(section5AnimationFrame.current);
+    };
+  }, []);
+
+  const aboutNavBar = useRef<HTMLDivElement>(null);
+  const showAboutNavBar = useRef<boolean>(false);
+  const aboutCoverRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (aboutCoverRef.current && !slideUpComponent) {
+        aboutCoverRef.current.style.opacity = "1";
+        aboutCoverRef.current.style.transform = "translateY(0)";
+      }
+    }, 500);
+
+    const handleScroll = () => {
+      if (
+        window.scrollY > 120 &&
+        aboutNavBar.current &&
+        !showAboutNavBar.current
+      ) {
+        aboutNavBar.current.style.transform = "translateY(-80)";
+        aboutNavBar.current.style.opacity = "1";
+        showAboutNavBar.current = true;
+      }
+      if (
+        window.scrollY < 120 &&
+        aboutNavBar.current &&
+        showAboutNavBar.current
+      ) {
+        aboutNavBar.current.style.transform = "translateY(0)";
+        aboutNavBar.current.style.opacity = "0";
+        showAboutNavBar.current = false;
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
     <div className="w-[100vw] min-h-[100vh] select-none">
-      <div className="w-[100vw] h-[100vh] min-h-[600px]">
-        <div
-          ref={scroll1Div1}
-          className="z-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[600px]"
-        >
-          <div
-            style={{
-              opacity: imagesOpacity ? 1 : 0,
-              transition: "opacity 0.8s ease-in-out",
-            }}
-            className="lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]"
-          >
+      <div
+        className="z-[201] fixed top-0 left-0 w-[100vw] h-[58px] md:h-[76px] lg:h-[80px] "
+        ref={aboutNavBar}
+        style={{
+          pointerEvents: "none",
+          opacity: showAboutNavBar.current ? 1 : 0,
+          transition:
+            "transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1)",
+          backgroundColor: "white",
+        }}
+      ></div>
+
+      <div
+        className="w-[100vw] h-[100vh] min-h-[600px]"
+        style={{
+          opacity: 0,
+          transform: "translateY(7px)",
+          transition:
+            "opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.8s ease-in-out",
+        }}
+        ref={aboutCoverRef}
+      >
+        <div className="z-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[600px]">
+          <div className="lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]">
             Jess Shulman
           </div>
-          <div
-            style={{
-              opacity: imagesOpacity ? 1 : 0,
-              transition: "opacity 0.8s ease-in-out",
-            }}
-            className="sephir lg:hidden absolute left-[14%] sm:left-[17%] text-[calc(1vw+10px)] bottom-[37%] md:bottom-[35%]"
-          >
+          <div className="sephir lg:hidden absolute left-[18%] sm:left-[21%] text-[calc(1vw+10px)] bottom-[37%] md:bottom-[35%]">
             <span> Graphic Designer</span> & <br />{" "}
             <span className="ml-[44%]">Photographer</span>
           </div>
@@ -401,67 +499,36 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
 
         <div className=" h-[100vh] min-h-[600px] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
           <div className="w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
-            <div
-              style={{
-                opacity: imagesOpacity ? 1 : 0,
-                transition: "opacity 0.8s ease-in-out",
-              }}
-              className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] lg:w-[100%] max-w-[550px]"
-            >
+            <div className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] lg:w-[100%] max-w-[550px]">
               <img
                 className="w-[100%] h-[100%] lg:ml-0 ml-[20px] object-cover object-[50%_50%]"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 1"
               />
             </div>
-            <div
-              ref={scroll1Div2}
-              className="z-[105] w-[100%] h-[100%] flex flex-col items-end"
-            >
-              <div
-                style={{
-                  opacity: imagesOpacity ? 1 : 0,
-                  transition: "opacity 0.8s ease-in-out",
-                }}
-                className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end"
-              >
+            <div className="z-[105] w-[100%] h-[100%] flex flex-col items-end">
+              <div className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end">
                 Jess Shulman
               </div>
-              <div
-                style={{
-                  opacity: imagesOpacity ? 1 : 0,
-                  transition: "opacity 0.8s ease-in-out",
-                }}
-                className="sephir hidden lg:flex lg:mr-[-1%] mr-[9%] mt-[calc(1vw+25px)] text-[calc(1vw+10px)] flex-col lg:flex-row"
-              >
+              <div className="sephir hidden lg:flex lg:mr-[-23%] mr-[9%] mt-[calc(1vw+25px)] text-[calc(1vw+10px)] flex-col lg:flex-row">
                 <span>Graphic Designer</span>
                 <span className="mx-2">&</span>
-                <span className="lg:ml-0 ml-[61%]">Photographer</span>
+                <span className="lg:ml-[-22%] ml-[61%] mt-[30px]">
+                  Photographer
+                </span>
               </div>
             </div>
           </div>
 
           <div className="lg:mt-[-2px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
-            <div
-              style={{
-                opacity: imagesOpacity ? 1 : 0,
-                transition: "opacity 0.8s ease-in-out",
-              }}
-              className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]"
-            >
+            <div className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]">
               <img
                 className="w-[100%] h-[100%] object-cover object-[50%_50%]"
                 src={coversRef.current === null ? "" : coversRef.current[1].url}
                 alt="about 2"
               />
             </div>
-            <div
-              style={{
-                opacity: imagesOpacity ? 1 : 0,
-                transition: "opacity 0.8s ease-in-out",
-              }}
-              className="absolute top-[55%] lg:top-[45%] max-w-[330px] w-[55%] lg:w-[65%] aspect-[1/1.1]"
-            >
+            <div className="absolute top-[55%] lg:top-[45%] ml-[20px] max-w-[330px] w-[55%] lg:w-[65%] aspect-[1/1.1]">
               <img
                 className="w-[100%] h-[100%] object-cover object-[50%_50%]"
                 src={coversRef.current === null ? "" : coversRef.current[2].url}
@@ -471,23 +538,23 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
         </div>
       </div>
-{/* 
-      <div className="w-[100vw] h-[100vh] justify-center flex bg-[white]">
+
+      {/* <div className="w-[100vw] h-[100vh] justify-center flex bg-[white] mb-[300px]">
         <img
-          className="aspect-[1.6/1] w-[85%] max-w-[1000px] object-cover object-[50%_20%]"
-          src={coversRef.current === null ? "" : coversRef.current[6].url}
+          className="aspect-[1.6/1] w-[100%] object-cover"
+          src={coversRef.current === null ? "" : coversRef.current[17].url}
           alt="about 1"
         />
         <div className="bg-[red] w-[30%] aspect-[1/1.5] absolute"></div>
-      </div> */}
-      {/* <div className="w-[100vw] bg-white h-[1000vh] "></div> */}
+      </div>  */}
+      {/* <div className="w-[100vw] bg-white bg-[#a6c379] h-[1000vh] "></div>
 
       {/* TEXT */}
-      <div className="ml-[50vw] w-[50vw] bg-[lightgreen] flex flex-col items-center px-[calc(5%+20px)]">
+      {/* <div className="text-black pt-[0px] w-[100vw]  flex flex-col items-center px-[calc(10vw+40px)]">
         <p className="abygaer pb-[calc(2vw+20px)] text-[calc(20px+5vw)] font-[600]">
           About Me
         </p>
-        <p className="sandemore flex text-center pb-[61px] text-[calc(10px+1vw)]">
+        <p className=" sandemore flex text-center pb-[61px] text-[calc(10px+1vw)]">
           Hi! I’m Jess Shulman—a photographer, designer, and lover of all things
           creative
           <br /> <br />I get my inspiration from the lovely humans around me,
@@ -520,10 +587,116 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           <br /> I'd love to meet you and see how I can help capture your story.
           Send me a message and let’s make something beautiful together!
         </p>
+      </div> */}
+
+      <div
+        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[80px] md:mt-[-60px] mt-[-130px]"
+        ref={section2Ref}
+      >
+        <div
+          className="lg:w-[49vw] w-[91vw] px-[5vw] md:px-[14vw] lg:px-[2vw] lg:h-[90%] h-[65vw] mb-[10vw] md:mb-0 flex flex-row mt-[40px] md:mt-[-10px] lg:mt-0"
+          ref={section5TranslateDiv1}
+          style={{ opacity: 0 }}
+        >
+          <div className="w-[calc((100%-27px)*0.45)] mr-[27px] h-[100%] flex flex-col">
+            <div className="relative w-[100%] h-[calc((100%-27px)*0.54)] mb-[27px] ">
+              <img
+                ref={section5img1Ref}
+                style={{ marginBottom: "30px", marginRight: "30px" }}
+                className="absolute bottom-0 right-0 aspect-[1/1.38] w-[43%] object-cover"
+                src={coversRef.current === null ? "" : coversRef.current[0].url}
+                alt="about 1"
+              />
+            </div>
+            <div className="relative w-[100%] h-[calc((100%-27px)*0.46)] ">
+              <img
+                ref={section5img2Ref}
+                style={{ marginTop: "30px", marginRight: "30px" }}
+                className="absolute top-0 right-0 aspect-[1/1.35] w-[53%] object-cover"
+                src={coversRef.current === null ? "" : coversRef.current[0].url}
+                alt="about 2"
+              />
+            </div>
+          </div>
+          <div className="w-[calc((100%-27px)*0.55)] h-[100%] ">
+            <div className="relative w-[100%] h-[calc((100%-27px)*0.61)] mb-[27px] ">
+              <img
+                ref={section5img3Ref}
+                style={{ marginBottom: "30px", marginLeft: "30px" }}
+                className="absolute bottom-0 left-0 aspect-[1/1.35] w-[72%] object-cover"
+                src={coversRef.current === null ? "" : coversRef.current[0].url}
+                alt="about 3"
+              />
+            </div>
+            <div className="relative w-[100%] h-[calc((100%-27px)*0.39)] ">
+              <img
+                ref={section5img4Ref}
+                style={{ marginTop: "30px", marginLeft: "30px" }}
+                className="absolute top-0 left-0 aspect-[1/1.38] w-[52%] object-cover"
+                src={coversRef.current === null ? "" : coversRef.current[0].url}
+                alt="about 4"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] pt-[50px] lg:py-0 lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
+          <div
+            ref={section5Text1Ref}
+            style={{ opacity: 0 }}
+            className="text-[calc(0.9vw+11px)] font-[300]"
+          >
+            About me
+          </div>
+          <div
+            ref={section5Text2Ref}
+            style={{ opacity: 0 }}
+            className="mt-[20px] leading-[calc(1vw+18px)] font-[300] text-[calc(0.5vw+11px)]"
+          >
+            Anai Wood Factory, established in 1964 in the Aso Minamioguni region
+            of Kumamoto Prefecture, is situated alongside a river, right next to
+            a cluster of residential homes. We specialize in the production and
+            sale of all construction-related components, ranging from structural
+            materials to interior finishes, using the renowned Oguni cedar and
+            cypress, which are local specialties of Minamioguni. Known for our
+            extensive forestry knowledge and unique geothermal drying process,
+            our timber has earned the love and trust of local carpenters as well
+            as architects, construction firms, and individual customers, far and
+            wide, who appreciate top-quality materials. With unwavering
+            dedication, we have been engaging with wood for over 60 years. Our
+            founder established the business as a sawmill that used horses to
+            transport logs that they harvested from the mountains and passed
+            down the tradition to the second and third generations, which are
+            managing it now.
+          </div>
+
+          <div
+            ref={section5Text3Ref}
+            style={{ opacity: 0 }}
+            className="relative mt-[30px] cursor-pointer"
+          >
+            <div
+              className="lg:flex hidden w-[10px] h-[10px] absolute  mt-[calc(0.3vw+5px)] left-[-18px] top-0"
+              style={{ borderRadius: "50%", border: "0.5px solid #999" }}
+            ></div>
+            <div
+              className="text-[calc(0.6vw+11px)]  inline-block font-[300]"
+              style={{ borderBottom: "1px solid black" }}
+            >
+              Get in touch
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-[100vw] bg-red-300 mt-[calc(3vh+20px)] h-[60vh] min-h-[500px]"></div>
+      <div className="w-[100vw] bg-red-300 mt-[calc(3vh+20px)] h-[60vh] min-h-[500px]"></div>
+      <div className="w-[100vw] bg-red-300 mt-[calc(2vh+10px)] h-[calc(5vh+100px)] min-h-[110px]flex text-center kayonest text-[calc(2vw+35px)] pt-[calc(1vh+20px)]">
+        My Services
       </div>
 
       {/* Scroll images */}
-      {/* <div
+      <div
         ref={translateDiv1}
         className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
       >
@@ -555,12 +728,33 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
 
           <img
             className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
-            src={coversRef.current === null ? "" : coversRef.current[3].url}
+            src={coversRef.current === null ? "" : coversRef.current[0].url}
             alt=""
             style={{ borderRadius: 5 }}
           />
         </div>
-      </div> */}
+      </div>
+
+      <div
+        style={{ borderTop: "0.5px solid #bbbbbb" }}
+        className="flex flex-row mx-[calc(2vw+15px)] py-[40px]"
+      >
+        <div className="md:flex hidden w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px)*0.65)] bg-[#EEEEEE] relative p-[4vw]">
+          <img
+            alt=""
+            style={{}}
+            className="w-[100%] h-[100%] object-cover"
+            src="assets/about/contact.png"
+          />
+          <div className="absolute top-0 left-0 w-[100%] h-[100%] opacity-[0%] bg-white"></div>
+        </div>
+        <div
+          ref={contactRef}
+          className="w-[100%] md:w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px))] md:h-[calc((96vw-30px)*0.65)]"
+        >
+          <ContactForm2 text={aboutText} />
+        </div>
+      </div>
     </div>
   );
 };

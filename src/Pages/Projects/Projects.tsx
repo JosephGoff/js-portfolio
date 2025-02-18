@@ -61,14 +61,12 @@ const Projects: React.FC<ProjectsPageProps> = ({
   const [coversReady, setCoversReady] = useState<ProjectEntry[] | null>(null);
 
   useEffect(() => {
-    const projects = projectAssets as any;
+    const project = projectAssets as any;
     if (
-      projects !== null &&
-      projects["projects"] &&
-      Array.isArray(projects["projects"]) &&
-      projects["projects"].length > 0
+      project !== null &&
+      project["Projects"]
     ) {
-      const coversList = projects["projects"] as ProjectEntry[];
+      const coversList = project["Projects"].children as ProjectEntry[];
       const newProjectsList = coversList.map((item) =>
         item.title.replaceAll("_", "").replaceAll("&", "and")
       );

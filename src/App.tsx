@@ -139,7 +139,7 @@ export type Tree = {
 
 export type Entry = {
   id?: string;
-  title: string;
+  title?: string;
   url: string;
   index: number;
   description?: string;
@@ -149,9 +149,9 @@ export type Entry = {
 };
 
 export const GIT_KEYS = {
-  owner: "JosephGoff",
+  owner: "open-dream-studios",
   repo: "js-portfolio",
-  branch: "master",
+  branch: "main",
   token: process.env.REACT_APP_GIT_PAT,
 };
 
@@ -167,59 +167,41 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   // FULL REPOSITORY & APP FILE
-  const fetchAppFileContents = async (blobUrl: string) => {
-    try {
-      const response = await fetch(blobUrl, {
-        headers: {
-          Authorization: `Bearer ${process.env.REACT_APP_GIT_PAT}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      });
+  const [projectImages, setProjectImages] = useState<string[]>([]);
+  const [projectFile, setProjectFile] = useState<any>({});
+  const collectAllImages = useRef<string[][]>([[], [], [], []]);
+  // Generate an array where each number is unique to the two next to it
+  const [layoutOrder, setLayoutOrder] = useState<number[]>([]);
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch blob: ${blobUrl}`);
+  useEffect(() => {
+    const fetchProject = async () => {
+      const project = await getProject();
+      if (project === null) {
+        setLoading(false);
       }
+    };
 
-      const data = await response.json();
+    fetchProject();
+  }, []);
 
-      // Correctly decode Base64 content into UTF-8
-      const base64Content = data.content;
-      const decodedContent = new TextDecoder("utf-8").decode(
-        Uint8Array.from(atob(base64Content), (char) => char.charCodeAt(0))
-      );
-
-      if (decodedContent) {
-        try {
-          const parsedContent = JSON.parse(decodedContent);
-          setAppDataFile(parsedContent);
-          return parsedContent;
-        } catch (error) {
-          console.error("Error parsing JSON content:", error);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching file contents:", error);
-    }
-  };
-
-  const fetchFullRepoTree = async (
-    owner: string,
-    repo: string,
-    branch = "master"
-  ) => {
-    const url = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
-    const token = GIT_KEYS.token;
+  const getProject = async () => {
+    const returnedProject: any[] = [null, null];
+    const url = `https://api.github.com/repos/${GIT_KEYS.owner}/${
+      GIT_KEYS.repo
+    }/git/trees/${GIT_KEYS.branch}?recursive=1&t=${new Date().getTime()}`;
 
     try {
       const response = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${GIT_KEYS.token}`,
         },
       });
+
       if (!response.ok) {
         console.error("Failed to fetch repository tree:", response.statusText);
         return null;
       }
+
       const data = await response.json();
       const tree = data.tree.reduce((acc: any, item: any) => {
         const parts = item.path.split("/");
@@ -234,31 +216,97 @@ const App = () => {
         return acc;
       }, {});
 
-      return tree;
+      if (
+        Object.keys(tree).length > 0 &&
+        Object.keys(tree).includes("project.json")
+      ) {
+        if (Object.keys(tree).includes("images")) {
+          returnedProject[0] = Object.keys(tree["images"]);
+          setProjectImages(Object.keys(tree["images"]));
+        } else {
+          returnedProject[0] = [];
+          setProjectImages([]);
+        }
+
+        const projectJSONLink = tree["project.json"];
+
+        try {
+          const response = await fetch(projectJSONLink, {
+            headers: {
+              Authorization: `Bearer ${GIT_KEYS.token}`,
+              Accept: "application/vnd.github.v3+json",
+            },
+          });
+
+          if (!response.ok) {
+            return null;
+          }
+
+          const data = await response.json();
+
+          // Correctly decode Base64 content into UTF-8
+          const base64Content = data.content;
+          const decodedContent = new TextDecoder("utf-8").decode(
+            Uint8Array.from(atob(base64Content), (char) => char.charCodeAt(0))
+          );
+
+          if (decodedContent) {
+            try {
+              const parsedContent = JSON.parse(decodedContent);
+              setProjectFile(parsedContent);
+              returnedProject[1] = parsedContent;
+            } catch (error) {
+              console.error("Error parsing JSON content:", error);
+            }
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.error("Error fetching file contents:", error);
+          return null;
+        }
+      } else {
+        return null;
+      }
     } catch (error) {
       console.error("Error fetching repository tree:", error);
       return null;
     }
-  };
-  const collectAllImages = useRef<string[][]>([[], [], [], []]);
-  const getRepoTree = async () => {
-    const fullRepo = await fetchFullRepoTree("JosephGoff", "js-portfolio");
-    let appFile = null;
-    if (fullRepo["src"]["app.json"]) {
-      const appFileURL = fullRepo["src"]["app.json"];
-      appFile = await fetchAppFileContents(appFileURL);
-    }
 
-    if (fullRepo && fullRepo["public"]?.["assets"] && appFile !== null) {
-      const { icons, ...filteredProject } = fullRepo["public"]["assets"];
+    if (returnedProject[0] === null || returnedProject[1] === null) {
+      return null;
+    } else {
       const tree: any = {};
-      const pageNames = Object.keys(filteredProject);
-      pageNames.push("home");
-      pageNames.push("aboutText");
-
+      let pageNames = [];
+      let pageKeys = [];
+      let projectKey = null;
+      for (
+        let i = 0;
+        i < Object.keys(returnedProject[1].children).length;
+        i++
+      ) {
+        pageKeys.push(Object.keys(returnedProject[1].children)[i]);
+        pageNames.push(
+          returnedProject[1].children[
+            Object.keys(returnedProject[1].children)[i]
+          ].name
+        );
+        if (
+          returnedProject[1].children[
+            Object.keys(returnedProject[1].children)[i]
+          ].name === "Projects"
+        ) {
+          projectKey = Object.keys(returnedProject[1].children)[i];
+        }
+      }
+      if (projectKey !== null) {
+        pageNames.push("Home");
+        pageKeys.push(projectKey);
+      }
+      const appFile = { ...returnedProject[1] };
       for (let i = 0; i < pageNames.length; i++) {
-        const newPage = sortPages(pageNames[i], filteredProject, appFile);
-        if (newPage !== null) {
+        const newPage = sortPages(pageNames[i], pageKeys[i], appFile);
+        if (newPage !== null && pageNames[i] !== "Home") {
           tree[pageNames[i]] = newPage;
         }
       }
@@ -292,350 +340,224 @@ const App = () => {
       }
 
       //  HOME PAGE COVER LAYOUT ORDER (num covers, 2 layouts available so far)
-      const projectCovers = appFile["pages"]["projects"].filter(
-        (item: any) => item.home_page === true
-      );
-      if (projectCovers.length !== 0) {
-        const numberOfCovers = 3;
-        const numberOfLayoutsCreated = 7;
+      const numberOfCovers = 3;
+      const numberOfLayoutsCreated = 7;
 
-        let previous = -1; // Start with a value that can't match the first random number
-        const newLayoutOrder = Array.from(
-          { length: numberOfCovers },
-          (_, index) => {
-            let next;
-            do {
-              next = Math.floor(Math.random() * numberOfLayoutsCreated);
-            } while (next === previous);
-            previous = next;
-            return next;
-          }
-        );
-
-        // Ensure the first and last elements are different
-        if (
-          newLayoutOrder.length > 1 &&
-          newLayoutOrder[0] === newLayoutOrder[newLayoutOrder.length - 1]
-        ) {
-          let replacement;
+      let previous = -1; // Start with a value that can't match the first random number
+      const newLayoutOrder = Array.from(
+        { length: numberOfCovers },
+        (_, index) => {
+          let next;
           do {
-            replacement = Math.floor(Math.random() * numberOfLayoutsCreated);
-          } while (
-            replacement === newLayoutOrder[newLayoutOrder.length - 2] ||
-            replacement === newLayoutOrder[0]
-          );
-          newLayoutOrder[newLayoutOrder.length - 1] = replacement;
+            next = Math.floor(Math.random() * numberOfLayoutsCreated);
+          } while (next === previous);
+          previous = next;
+          return next;
         }
+      );
 
-        setLayoutOrder(newLayoutOrder);
+      // Ensure the first and last elements are different
+      if (
+        newLayoutOrder.length > 1 &&
+        newLayoutOrder[0] === newLayoutOrder[newLayoutOrder.length - 1]
+      ) {
+        let replacement;
+        do {
+          replacement = Math.floor(Math.random() * numberOfLayoutsCreated);
+        } while (
+          replacement === newLayoutOrder[newLayoutOrder.length - 2] ||
+          replacement === newLayoutOrder[0]
+        );
+        newLayoutOrder[newLayoutOrder.length - 1] = replacement;
       }
+
+      setLayoutOrder(newLayoutOrder);
+
+      return returnedProject;
     }
   };
 
-  // Generate an array where each number is unique to the two next to it
-  const [layoutOrder, setLayoutOrder] = useState<number[]>([]);
-
-  function sortPages(page: any, project: any, appFile: any) {
+  function sortPages(page: any, pageKey: string, appFile: any) {
     let result = null;
     let collectNewImages = false;
     const collectAllImagesCopy = collectAllImages.current;
 
-    if (page === "aboutText" && Object.keys(project["about"]).length > 0) {
-      const folder = appFile["pages"]["about"]["sections"];
-      return folder;
-    }
-
-    if (page === "about" && Object.keys(project[page]).length > 0) {
+    if (page === "About" && Object.keys(appFile.children[pageKey]).length > 0) {
       if (collectAllImagesCopy[1].length === 0) {
         collectNewImages = true;
       }
-      const folder = appFile["pages"]["about"]["images"];
-      const mappedImages: CoverEntryImage[] = Object.keys(project[page])
-        .filter((item) => item !== "blank.png")
-        .filter(
-          (img: any) =>
-            folder.findIndex((item: any) => item.name === img) !== -1
-        )
-        .map((img: any) => {
-          const index = folder.findIndex((item: any) => item.name === img);
+      const folder = appFile.children[pageKey].children;
+      const mappedImages: CoverEntryImage[] = Object.keys(folder)
+        .filter((item) => folder[item].name !== "blank.png")
+        .map((imgKey: any) => {
           if (collectNewImages) {
-            collectAllImagesCopy[1].push(BASE_URL + page + "/" + img);
+            collectAllImagesCopy[1].push(folder[imgKey].link);
           }
           return {
-            title: img,
-            url: BASE_URL + page + "/" + img,
-            index: folder[index].index,
-            width: folder[index].width,
-            height: folder[index].height,
+            url: folder[imgKey].link,
+            index: folder[imgKey].index,
+            width: folder[imgKey].width,
+            height: folder[imgKey].height,
           };
         });
       const sortedImages = mappedImages.sort(
         (a: any, b: any) => a.index - b.index
       );
-      result = sortedImages;
+      result = appFile.children[pageKey];
+      result.children = sortedImages;
+      result.details.text = result.details.text.sort(
+        (a: any, b: any) => a.index - b.index
+      );
+      result.details.colors = result.details.colors.sort(
+        (a: any, b: any) => a.index - b.index
+      );
     }
 
-    if (page === "projects" && Object.keys(project[page]).length > 0) {
+    if (
+      page === "Projects" &&
+      Object.keys(appFile.children[pageKey]).length > 0
+    ) {
       const newProjectsList: string[] = [];
       if (collectAllImagesCopy[2].length === 0) {
         collectNewImages = true;
       }
-      const indexMap: any =
-        appFile["pages"] === undefined
-          ? null
-          : Object.values(appFile["pages"])
-              .flat()
-              .reduce((map: any, item: any) => {
-                map[item.id] = item.title;
-                return map;
-              }, {});
-
-      const appFilePage = appFile["pages"][page];
-      const mappedEntries: any = Object.keys(project[page])
-        .filter((item) => item !== "blank.png")
-        .filter(
-          (folder: any) =>
-            appFilePage.findIndex((item: any) => item.id === folder) !== -1
-        )
-        .map((folder: any) => {
-          if (indexMap !== null) {
-            newProjectsList.push(
-              indexMap[folder].replaceAll("_", "").replaceAll("&", "and")
-            );
-          }
-          const appFolderIndex = appFilePage.findIndex(
-            (item: any) => item.id === folder
-          );
-          const appFileFolder =
-            appFile["pages"][page][appFolderIndex]["images"];
-          const mappedImages: Entry[] = Object.keys(project[page][folder])
-            .filter((item) => item !== "blank.png")
-            .filter(
-              (img: any) =>
-                appFileFolder.findIndex((item: any) => item.name === img) !== -1
-            )
-            .map((folderItem: any) => {
-              const foundIndex = appFileFolder.findIndex(
-                (item: any) => item.name === folderItem
+      const folder = appFile.children[pageKey].children;
+      const mappedEntries: any = Object.keys(folder).map((imageFolder: any) => {
+        newProjectsList.push(
+          folder[imageFolder].name.replaceAll("_", "").replaceAll("&", "and")
+        );
+        const mappedImages: Entry[] = Object.keys(folder[imageFolder].children)
+          .filter(
+            (imgKey) =>
+              folder[imageFolder].children[imgKey].name !== "blank.png"
+          )
+          .map((imgKey: any) => {
+            if (collectNewImages) {
+              collectAllImagesCopy[2].push(
+                folder[imageFolder].children[imgKey].link
               );
-              const imgIndex = appFileFolder[foundIndex].index;
+            }
 
-              if (collectNewImages) {
-                collectAllImagesCopy[2].push(
-                  BASE_URL + page + "/" + folder + "/" + folderItem
-                );
-              }
+            return {
+              url: folder[imageFolder].children[imgKey].link,
+              index: folder[imageFolder].children[imgKey].index,
+              width: folder[imageFolder].children[imgKey].width,
+              height: folder[imageFolder].children[imgKey].height,
+            };
+          });
 
-              return {
-                title: folderItem,
-                url: BASE_URL + page + "/" + folder + "/" + folderItem,
-                index: imgIndex,
-                width: appFileFolder[foundIndex].width,
-                height: appFileFolder[foundIndex].height,
-              };
-            });
+        const sortedImages = mappedImages.sort(
+          (a: any, b: any) => a.index - b.index
+        );
 
-          const sortedImages = mappedImages.sort(
-            (a: any, b: any) => a.index - b.index
-          );
-
-          if (!appFile["pages"][page]) return null;
-          const appFileProjectIndex = appFile["pages"][page].findIndex(
-            (item: any) => item.id === folder
-          );
-          const appFileProject = appFile["pages"][page][appFileProjectIndex];
-          return {
-            title: appFileProject.title,
-            description: appFileProject.description,
-            id: appFileProject.id,
-            bg_color: isColor(appFileProject.bg_color)
-              ? appFileProject.bg_color
+        return {
+          title: folder[imageFolder].name,
+          description:
+            folder[imageFolder].details.text.length > 0
+              ? folder[imageFolder].details.text[0].value
+              : "",
+          bg_color:
+            folder[imageFolder].details.colors.length > 0
+              ? folder[imageFolder].details.colors[0].value
               : "#FFFFFF",
-            text_color: isColor(appFileProject.text_color)
-              ? appFileProject.text_color
+          text_color:
+            folder[imageFolder].details.colors.length > 1
+              ? folder[imageFolder].details.colors[1].value
               : "#000000",
-            images: sortedImages,
-            index: appFileProject.index,
-          };
-        });
+          images: sortedImages,
+          index: folder[imageFolder].index,
+        };
+      });
       const sortedEntries = mappedEntries.sort(
         (a: any, b: any) => a.index - b.index
       );
 
-      result = sortedEntries;
+      result = appFile.children[pageKey];
+      result.children = sortedEntries;
+      result.details.text = result.details.text.sort(
+        (a: any, b: any) => a.index - b.index
+      );
+      result.details.colors = result.details.colors.sort(
+        (a: any, b: any) => a.index - b.index
+      );
       setProjectsList(newProjectsList);
     }
 
-    if (page === "archives" && Object.keys(project[page]).length > 0) {
+    if (
+      page === "Archives" &&
+      Object.keys(appFile.children[pageKey]).length > 0
+    ) {
       if (collectAllImagesCopy[3].length === 0) {
         collectNewImages = true;
       }
-      const appFilePage = appFile["pages"][page];
-      const mappedEntries: any = Object.keys(project[page])
-        .filter((item) => item !== "blank.png")
-        .filter(
-          (folder: any) =>
-            appFilePage.findIndex((item: any) => item.id === folder) !== -1
-        )
-        .map((folder: any) => {
-          const appFolderIndex = appFilePage.findIndex(
-            (item: any) => item.id === folder
-          );
-          const appFileFolder =
-            appFile["pages"][page][appFolderIndex]["images"];
-          const mappedImages: Entry[] = Object.keys(project[page][folder])
-            .filter((item) => item !== "blank.png")
-            .filter(
-              (img: any) =>
-                appFileFolder.findIndex((item: any) => item.name === img) !== -1
-            )
-            .map((folderItem: any) => {
-              const foundIndex = appFileFolder.findIndex(
-                (item: any) => item.name === folderItem
+      const folder = appFile.children[pageKey].children;
+      const mappedEntries: any = Object.keys(folder).map((imageFolder: any) => {
+        const mappedImages: Entry[] = Object.keys(folder[imageFolder].children)
+          .filter(
+            (imgKey) =>
+              folder[imageFolder].children[imgKey].name !== "blank.png"
+          )
+          .map((imgKey: any) => {
+            if (collectNewImages) {
+              collectAllImagesCopy[3].push(
+                folder[imageFolder].children[imgKey].link
               );
-              const imgIndex = appFileFolder[foundIndex].index;
+            }
 
-              if (collectNewImages) {
-                collectAllImagesCopy[3].push(
-                  BASE_URL + page + "/" + folder + "/" + folderItem
-                );
-              }
-              return {
-                title: folderItem,
-                url: BASE_URL + page + "/" + folder + "/" + folderItem,
-                index: imgIndex,
-                width: appFileFolder[foundIndex].width,
-                height: appFileFolder[foundIndex].height,
-              };
-            });
-          const sortedImages = mappedImages.sort(
-            (a: any, b: any) => a.index - b.index
-          );
+            return {
+              url: folder[imageFolder].children[imgKey].link,
+              index: folder[imageFolder].children[imgKey].index,
+              width: folder[imageFolder].children[imgKey].width,
+              height: folder[imageFolder].children[imgKey].height,
+            };
+          });
 
-          if (!appFile["pages"][page]) return null;
-          const appFileProjectIndex = appFile["pages"][page].findIndex(
-            (item: any) => item.id === folder
-          );
-          const appFileProject = appFile["pages"][page][appFileProjectIndex];
-          return {
-            title: appFileProject.title,
-            description: appFileProject.description
-              .replaceAll("_", " ")
-              .toUpperCase(),
-            description2: appFileProject.description2
-              .replaceAll("_", " ")
-              .toUpperCase(),
-            description3: appFileProject.description3
-              .replaceAll("_", " ")
-              .toUpperCase(),
-            id: appFileProject.id,
-            bg_color: isColor(appFileProject.bg_color)
-              ? appFileProject.bg_color
+        const sortedImages = mappedImages.sort(
+          (a: any, b: any) => a.index - b.index
+        );
+
+        return {
+          title: folder[imageFolder].name,
+          description:
+            folder[imageFolder].details.text.length > 0
+              ? folder[imageFolder].details.text[0].value
+              : "",
+          bg_color:
+            folder[imageFolder].details.colors.length > 0
+              ? folder[imageFolder].details.colors[0].value
               : "#FFFFFF",
-            images: sortedImages,
-            index: appFileProject.index,
-          };
-        });
+          text_color:
+            folder[imageFolder].details.colors.length > 1
+              ? folder[imageFolder].details.colors[1].value
+              : "#000000",
+          images: sortedImages,
+          index: folder[imageFolder].index,
+        };
+      });
       const sortedEntries = mappedEntries.sort(
         (a: any, b: any) => a.index - b.index
       );
-      result = sortedEntries;
+
+      result = appFile.children[pageKey];
+      result.children = sortedEntries;
+      result.details.text = result.details.text.sort(
+        (a: any, b: any) => a.index - b.index
+      );
+      result.details.colors = result.details.colors.sort(
+        (a: any, b: any) => a.index - b.index
+      );
     }
 
-    if (page === "home" && Object.keys(project["projects"]).length > 0) {
-      page = "projects";
+    if (page === "Home") {
       if (collectAllImagesCopy[0].length === 0) {
         collectNewImages = true;
       }
-
-      const appFilePage = appFile["pages"][page];
-      const mappedEntries: any = Object.keys(project[page])
-        .filter((item) => item !== "blank.png")
-        .filter(
-          (folder: any) =>
-            appFilePage.findIndex((item: any) => item.id === folder) !== -1
-        )
-        .filter(
-          (folder: any) =>
-            appFile["pages"][page][
-              appFilePage.findIndex((item: any) => item.id === folder)
-            ].home_page === true
-        )
-        .map((folder: any) => {
-          const appFolderIndex = appFilePage.findIndex(
-            (item: any) => item.id === folder
-          );
-          const appFileFolder =
-            appFile["pages"][page][appFolderIndex]["images"];
-          const mappedImages: Entry[] = Object.keys(project[page][folder])
-            .filter((item) => item !== "blank.png")
-            .filter(
-              (img: any) =>
-                appFileFolder.findIndex((item: any) => item.name === img) !== -1
-            )
-            .filter(
-              (img: any) =>
-                appFileFolder[
-                  appFileFolder.findIndex((item: any) => item.name === img)
-                ].projectCover === true
-            )
-            // .filter((item: any) => item.projectCover === true)
-            .map((folderItem: any) => {
-              const foundIndex = appFileFolder.findIndex(
-                (item: any) => item.name === folderItem
-              );
-              const imgIndex = appFileFolder[foundIndex].index;
-
-              if (collectNewImages) {
-                collectAllImagesCopy[0].push(
-                  BASE_URL + page + "/" + folder + "/" + folderItem
-                );
-              }
-
-              return {
-                title: folderItem,
-                url: BASE_URL + page + "/" + folder + "/" + folderItem,
-                index: imgIndex,
-                width: appFileFolder[foundIndex].width,
-                height: appFileFolder[foundIndex].height,
-              };
-            });
-
-          const sortedImages = mappedImages.sort(
-            (a: any, b: any) => a.index - b.index
-          );
-
-          if (!appFile["pages"][page]) return null;
-          const appFileProjectIndex = appFile["pages"][page].findIndex(
-            (item: any) => item.id === folder
-          );
-          const appFileProject = appFile["pages"][page][appFileProjectIndex];
-          return {
-            title: appFileProject.title,
-            description: appFileProject.description,
-            id: appFileProject.id,
-            bg_color: isColor(appFileProject.bg_color)
-              ? appFileProject.bg_color
-              : "#FFFFFF",
-            text_color: isColor(appFileProject.text_color)
-              ? appFileProject.text_color
-              : "#000000",
-            images: sortedImages,
-            index: appFileProject.index,
-          };
-        });
-      const sortedEntries = mappedEntries.sort(
-        (a: any, b: any) => a.index - b.index
-      );
-      result = sortedEntries;
+      collectAllImages.current = collectAllImagesCopy;
+    } else {
+      collectAllImages.current = collectAllImagesCopy;
+      return result;
     }
-    collectAllImages.current = collectAllImagesCopy;
-    return result;
   }
-
-  useEffect(() => {
-    getRepoTree();
-  }, []);
 
   const [incomingPage, setIncomingPage] = useState<IncomingPage>(null);
   const [incomingPageDecision, setIncomingPageDecision] =
@@ -859,7 +781,9 @@ const App = () => {
               animate={true}
             />
           )}
-          {currentPage === "about" && <About slideUpComponent={false} navigate={navigate} />}
+          {currentPage === "about" && (
+            <About slideUpComponent={false} navigate={navigate} />
+          )}
           {currentPage === "archives" && (
             <Archives navigate={navigate} slideUpComponent={false} />
           )}

@@ -13,7 +13,6 @@ export interface HomePageProps {
 }
 
 export type CoverEntryImage = {
-  title: string;
   index: number;
   url: string;
   height: number | undefined;
@@ -50,33 +49,14 @@ const Home: React.FC<HomePageProps> = ({
     const project = projectAssets as any;
     if (
       project !== null &&
-      project["home"] &&
-      Array.isArray(project["home"]) &&
-      project["home"].length > 0
+      project["Projects"]
     ) {
-      coversRef.current = project["home"];
+      console.log(project["Projects"].children)
+      coversRef.current = project["Projects"].children;
       readyToTransition.current = true;
-      setCoversReady(project["home"]);
-      // console.log(project["home"])
+      setCoversReady(project["Projects"].children);
     }
   }, [projectAssets]);
-
-  // const getDescription = (): string[] => {
-  //   const covers = coversRef.current;
-  //   const currentIndex = currentCoverRef.current;
-
-  //   if (
-  //     covers &&
-  //     typeof currentIndex === "number" &&
-  //     covers[currentIndex]?.description
-  //   ) {
-  //     // Assert that description is definitely not undefined
-  //     const description = covers[currentIndex].description!;
-  //     return description.replace(" ", "_").toUpperCase().split("");
-  //   }
-
-  //   return [""];
-  // };
 
   const coverLayouts = [
     [
@@ -262,10 +242,10 @@ const Home: React.FC<HomePageProps> = ({
         .split("_")
         .map((word: any) => word.charAt(0).toUpperCase() + word.slice(1))
         .join("_")
-        .replace(" ", "_")
+        .replaceAll(" ", "_")
         .split("");
       const text2 = coversRef.current[currentCoverRef.current].description
-        .replace(" ", "_")
+        .replaceAll(" ", "_")
         .toUpperCase()
         .split("");
       setCoverTitle(text);
@@ -292,10 +272,10 @@ const Home: React.FC<HomePageProps> = ({
       .split("_")
       .map((word: any) => word.charAt(0).toUpperCase() + word.slice(1))
       .join("_")
-      .replace(" ", "_")
+      .replaceAll(" ", "_")
       .split("");
     const text2 = coversRef.current[incomingProject].description
-      .replace(" ", "_")
+      .replaceAll(" ", "_")
       .toUpperCase()
       .split("");
 

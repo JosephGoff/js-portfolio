@@ -60,11 +60,9 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
     const project = projectAssets as any;
     if (
       project !== null &&
-      project["projects"] &&
-      Array.isArray(project["projects"]) &&
-      project["projects"].length > 0
+      project["Projects"]
     ) {
-      const coversList = project["projects"] as ProjectEntry[];
+      const coversList = project["Projects"].children as ProjectEntry[];
       const newProjectsList = coversList.map((item) =>
         item.title.replace("_", "")
       );
