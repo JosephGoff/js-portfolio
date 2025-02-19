@@ -280,122 +280,173 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     }
   }, []);
 
-  const section2Ref = useRef<HTMLDivElement | null>(null);
+  const animationFrame2 = useRef<number | null>(null);
 
-  const section5TranslateDiv1 = useRef<HTMLDivElement | null>(null);
-  const section5img1Ref = useRef<HTMLImageElement | null>(null);
-  const section5img2Ref = useRef<HTMLImageElement | null>(null);
-  const section5img3Ref = useRef<HTMLImageElement | null>(null);
-  const section5img4Ref = useRef<HTMLImageElement | null>(null);
-  const section5Text1Ref = useRef<HTMLDivElement | null>(null);
-  const section5Text2Ref = useRef<HTMLDivElement | null>(null);
-  const section5Text3Ref = useRef<HTMLDivElement | null>(null);
-  const section5TranslateY1 = useRef(-50);
-  const section5Opacity1 = useRef(0);
-  const section5Text1Opacity = useRef(0);
-  const section5Text2Opacity = useRef(0);
-  const section5Text3Opacity = useRef(0);
-  const section5AnimationFrame = useRef<number | null>(null);
+  const section2Ref = useRef<HTMLDivElement | null>(null);
+  const section2TranslateDiv1 = useRef<HTMLDivElement | null>(null);
+  const section2img1Ref = useRef<HTMLImageElement | null>(null);
+  const section2img2Ref = useRef<HTMLImageElement | null>(null);
+  const section2img3Ref = useRef<HTMLImageElement | null>(null);
+  const section2img4Ref = useRef<HTMLImageElement | null>(null);
+  const section2Text1Ref = useRef<HTMLDivElement | null>(null);
+  const section2Text2Ref = useRef<HTMLDivElement | null>(null);
+  const section2Text3Ref = useRef<HTMLDivElement | null>(null);
+  const section2TranslateY1 = useRef(-50);
+  const section2Opacity1 = useRef(0);
+  const section2Text1Opacity = useRef(0);
+  const section2Text2Opacity = useRef(0);
+  const section2Text3Opacity = useRef(0);
+
+  const section3Ref = useRef<HTMLDivElement | null>(null);
+  const section3RefLeft = useRef<HTMLDivElement | null>(null);
+  const section3RefRight = useRef<HTMLDivElement | null>(null);
+  const section3Opacity = useRef(0);
+  const section3Widths = useRef(40);
 
   useEffect(() => {
     const handleParallax = () => {
       if (
-        !section5TranslateDiv1.current ||
-        !section5img1Ref.current ||
-        !section5img2Ref.current ||
-        !section5img3Ref.current ||
-        !section5img4Ref.current ||
-        !section5Text1Ref.current ||
-        !section5Text2Ref.current ||
-        !section5Text3Ref.current ||
-        !section2Ref.current
+        !section2TranslateDiv1.current ||
+        !section2img1Ref.current ||
+        !section2img2Ref.current ||
+        !section2img3Ref.current ||
+        !section2img4Ref.current ||
+        !section2Text1Ref.current ||
+        !section2Text2Ref.current ||
+        !section2Text3Ref.current ||
+        !section2Ref.current ||
+        !section3Ref.current ||
+        !section3RefLeft.current ||
+        !section3RefRight.current
       )
         return;
 
-      const topPosition =
-        section2Ref.current.offsetTop - 0.8 * window.innerHeight;
+      // SECTION 2
+      const section2TextOffset = window.innerWidth > 1024 ? 300 : 180;
+      const section2ImagesOffset = window.innerWidth > 1024 ? 300 : 550;
+      const section2TopPosition =
+        section2Ref.current.offsetTop - window.innerHeight;
 
-      let fourImagesProgress = (window.scrollY - topPosition) / 23;
-      console.log(topPosition)
+      let fourImagesProgress =
+        (window.scrollY - section2TopPosition - section2ImagesOffset + 180) /
+        23;
       fourImagesProgress = Math.min(30, Math.max(0, fourImagesProgress));
 
-      let fourImagesOpacityProgress = (window.scrollY - topPosition) / 300;
+      let fourImagesOpacityProgress =
+        (window.scrollY - section2TopPosition - section2ImagesOffset) / 300;
       fourImagesOpacityProgress = Math.min(
         1,
         Math.max(0, fourImagesOpacityProgress)
       );
 
       let fourImagesOpacityText1Progress =
-        (window.scrollY - (topPosition + 150)) / 300;
+        (window.scrollY - section2TopPosition - section2TextOffset) / 300;
       fourImagesOpacityText1Progress = Math.min(
         1,
         Math.max(0, fourImagesOpacityText1Progress)
       );
 
       let fourImagesOpacityText2Progress =
-        (window.scrollY - (topPosition + 250)) / 300;
+        (window.scrollY - (section2TopPosition + 50) - section2TextOffset) /
+        300;
       fourImagesOpacityText2Progress = Math.min(
         1,
         Math.max(0, fourImagesOpacityText2Progress)
       );
 
       let fourImagesOpacityText3Progress =
-        (window.scrollY - (topPosition + 350)) / 300;
+        (window.scrollY - (section2TopPosition + 100) - section2TextOffset) /
+        300;
       fourImagesOpacityText3Progress = Math.min(
         1,
         Math.max(0, fourImagesOpacityText3Progress)
       );
 
-      if (section5AnimationFrame.current) {
-        cancelAnimationFrame(section5AnimationFrame.current);
+      // SECTION 3
+      const section3TopPosition =
+        section3Ref.current.offsetTop - window.innerHeight;
+      let section3OpacityProgress =
+        (window.scrollY - section3TopPosition) / 100;
+      section3OpacityProgress = Math.min(
+        1,
+        Math.max(0, section3OpacityProgress)
+      );
+      let section3WidthsProgress =
+        (window.scrollY - (section3TopPosition + 100)) / 20;
+      section3OpacityProgress = Math.min(
+        40,
+        Math.max(0, section3WidthsProgress)
+      );
+
+      if (animationFrame2.current) {
+        cancelAnimationFrame(animationFrame2.current);
       }
 
-      section5AnimationFrame.current = requestAnimationFrame(() => {
-        section5TranslateY1.current = fourImagesProgress;
-        section5Opacity1.current = fourImagesOpacityProgress;
-        section5Text1Opacity.current = fourImagesOpacityText1Progress;
-        section5Text2Opacity.current = fourImagesOpacityText2Progress;
-        section5Text3Opacity.current = fourImagesOpacityText3Progress;
-        if (section5TranslateDiv1.current) {
-          section5TranslateDiv1.current.style.opacity = `${fourImagesOpacityProgress}`;
+      animationFrame2.current = requestAnimationFrame(() => {
+        // SECTION 2
+        section2TranslateY1.current = fourImagesProgress;
+        section2Opacity1.current = fourImagesOpacityProgress;
+        section2Text1Opacity.current = fourImagesOpacityText1Progress;
+        section2Text2Opacity.current = fourImagesOpacityText2Progress;
+        section2Text3Opacity.current = fourImagesOpacityText3Progress;
+
+        if (section2TranslateDiv1.current) {
+          section2TranslateDiv1.current.style.opacity = `${fourImagesOpacityProgress}`;
         }
-        if (section5Text1Ref.current) {
-          section5Text1Ref.current.style.opacity = `${section5Text1Opacity.current}`;
-          section5Text1Ref.current.style.transform = `translate3d(0, ${
-            section5Text1Opacity.current * -15
+        if (section2Text1Ref.current) {
+          section2Text1Ref.current.style.opacity = `${section2Text1Opacity.current}`;
+          section2Text1Ref.current.style.transform = `translate3d(0, ${
+            section2Text1Opacity.current * -15
           }px, 0)`;
         }
-        if (section5Text2Ref.current) {
-          section5Text2Ref.current.style.opacity = `${section5Text2Opacity.current}`;
-          section5Text2Ref.current.style.transform = `translate3d(0, ${
-            section5Text2Opacity.current * -15
+        if (section2Text2Ref.current) {
+          section2Text2Ref.current.style.opacity = `${section2Text2Opacity.current}`;
+          section2Text2Ref.current.style.transform = `translate3d(0, ${
+            section2Text2Opacity.current * -15
           }px, 0)`;
         }
-        if (section5Text3Ref.current) {
-          section5Text3Ref.current.style.opacity = `${section5Text3Opacity.current}`;
-          section5Text3Ref.current.style.transform = `translate3d(0, ${
-            section5Text3Opacity.current * -15
-          }px, 0)`;
-        }
-
-        if (section5img1Ref.current) {
-          section5img1Ref.current.style.transform = `translate3d(${section5TranslateY1.current}px, ${section5TranslateY1.current}px, 0)`;
-        }
-
-        if (section5img2Ref.current) {
-          section5img2Ref.current.style.transform = `translate3d(${
-            section5TranslateY1.current
-          }px, ${-section5TranslateY1.current}px, 0)`;
-        }
-
-        if (section5img3Ref.current) {
-          section5img3Ref.current.style.transform = `translate3d(${-section5TranslateY1.current}px, ${
-            section5TranslateY1.current
+        if (section2Text3Ref.current) {
+          section2Text3Ref.current.style.opacity = `${section2Text3Opacity.current}`;
+          section2Text3Ref.current.style.transform = `translate3d(0, ${
+            section2Text3Opacity.current * -15
           }px, 0)`;
         }
 
-        if (section5img4Ref.current) {
-          section5img4Ref.current.style.transform = `translate3d(${-section5TranslateY1.current}px, ${-section5TranslateY1.current}px, 0)`;
+        if (section2img1Ref.current) {
+          section2img1Ref.current.style.transform = `translate3d(${section2TranslateY1.current}px, ${section2TranslateY1.current}px, 0)`;
+        }
+
+        if (section2img2Ref.current) {
+          section2img2Ref.current.style.transform = `translate3d(${
+            section2TranslateY1.current
+          }px, ${-section2TranslateY1.current}px, 0)`;
+        }
+
+        if (section2img3Ref.current) {
+          section2img3Ref.current.style.transform = `translate3d(${-section2TranslateY1.current}px, ${
+            section2TranslateY1.current
+          }px, 0)`;
+        }
+
+        if (section2img4Ref.current) {
+          section2img4Ref.current.style.transform = `translate3d(${-section2TranslateY1.current}px, ${-section2TranslateY1.current}px, 0)`;
+        }
+
+        // SECTION 3
+        section3Opacity.current = section3OpacityProgress;
+        section3Widths.current = section3WidthsProgress;
+        if (section3Ref.current) {
+          section3Ref.current.style.opacity = `${section3Opacity.current}`;
+        }
+        if (section3RefLeft.current) {
+          section3RefLeft.current.style.width = `${
+            40 - section3Widths.current
+          }px`;
+        }
+        if (section3RefRight.current) {
+          section3RefRight.current.style.width = `${
+            40 - section3Widths.current
+          }px`;
         }
       });
     };
@@ -403,8 +454,8 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     window.addEventListener("scroll", handleParallax);
     return () => {
       window.removeEventListener("scroll", handleParallax);
-      if (section5AnimationFrame.current)
-        cancelAnimationFrame(section5AnimationFrame.current);
+      if (animationFrame2.current)
+        cancelAnimationFrame(animationFrame2.current);
     };
   }, []);
 
@@ -461,7 +512,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       ></div>
 
       <div
-        className="w-[100vw] h-[100vh] min-h-[600px]"
+        className="w-[100vw] h-[100vh] min-h-[620px] md:min-h-[680px] lg:min-h-[800px]"
         style={{
           opacity: 0,
           transform: "translateY(7px)",
@@ -470,11 +521,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         }}
         ref={aboutCoverRef}
       >
-        <div className="bz-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[600px]">
-          <div className="lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]">
+        <div className="bz-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[620px] md:min-h-[680px] lg:min-h-[800px]">
+          <div className="z-[200] lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]">
             Jess Shulman
           </div>
-          <div className="sephir lg:hidden absolute left-[18%] sm:left-[21%] text-[calc(1vw+10px)] bottom-[37%] md:bottom-[35%]">
+          <div className="sephir lg:hidden absolute left-[18%] sm:left-[21%] text-[calc(1vw+10px)] bottom-[calc(35%+2vw)] md:bottom-[calc(32%+2vw)]">
             <span> Graphic Designer</span> & <br />{" "}
             <span className="ml-[44%]">Photographer</span>
           </div>
@@ -522,69 +573,19 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      {/* <div className="w-[100vw] h-[100vh] justify-center flex bg-[white] mb-[300px]">
-        <img
-          className="aspect-[1.6/1] w-[100%] object-cover"
-          src={coversRef.current === null ? "" : coversRef.current[17].url}
-          alt="about 1"
-        />
-        <div className="bg-[red] w-[30%] aspect-[1/1.5] absolute"></div>
-      </div>  */}
-      {/* <div className="w-[100vw] bg-white bg-[#a6c379] h-[1000vh] "></div>
-
-      {/* TEXT */}
-      {/* <div className="text-black pt-[0px] w-[100vw]  flex flex-col items-center px-[calc(10vw+40px)]">
-        <p className="abygaer pb-[calc(2vw+20px)] text-[calc(20px+5vw)] font-[600]">
-          About Me
-        </p>
-        <p className=" sandemore flex text-center pb-[61px] text-[calc(10px+1vw)]">
-          Hi! I’m Jess Shulman—a photographer, designer, and lover of all things
-          creative
-          <br /> <br />I get my inspiration from the lovely humans around me,
-          this amazing earth, and all the little things that make life beautiful
-          <br /> <br /> You can find me gardening, behind the camera, sketching,
-          making something handmade, spending time with my favorite people —
-          whatever it is, you can expect I’ll be laughing
-        </p>
-
-        <div
-          style={{
-            opacity: imagesOpacity ? 1 : 0,
-            transition: "opacity 0.8s ease-in-out",
-          }}
-          className="aspect-[1/1.2] w-[37vw]"
-        >
-          <img
-            className="w-[100%] h-[100%] object-cover object-[50%_50%]"
-            src={coversRef.current === null ? "" : coversRef.current[0].url}
-            alt="about 1"
-          />
-        </div>
-
-        <p className="sandemore flex text-center text-[calc(10px+1vw)] pt-[32px] pb-[130px] ">
-          <br /> <br /> I care deeply about the earth, sustainability, and am
-          always looking for ways to bring the beauty of nature into your daily
-          life, whether it’s flowers from the farm or the artistry in my
-          designs.
-          <br />
-          <br /> I'd love to meet you and see how I can help capture your story.
-          Send me a message and let’s make something beautiful together!
-        </p>
-      </div> */}
-
       <div
-        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[50px] lg:mb-[90px] md:mt-[-60px] mt-[-130px]"
+        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[50px] lg:mb-[90px]"
         ref={section2Ref}
       >
         <div
-          className="lg:w-[49vw] w-[91vw] px-[5vw] md:px-[14vw] lg:px-[2vw] lg:h-[90%] h-[65vw] mb-[10vw] md:mb-0 flex flex-row mt-[40px] md:mt-[-10px] lg:mt-0"
-          ref={section5TranslateDiv1}
+          className="w-[91vw] lg:w-[49vw] xl:w-[46vw] px-[5vw] md:px-[14vw] lg:px-[2vw] xl:pl-[6vw] lg:h-[90%] h-[65vw] mb-[10vw] md:mb-0 flex flex-row mt-[90px] md:mt-[-10px] lg:mt-0"
+          ref={section2TranslateDiv1}
           style={{ opacity: 0 }}
         >
           <div className="w-[calc((100%-27px)*0.45)] mr-[27px] h-[100%] flex flex-col">
             <div className="relative w-[100%] h-[calc((100%-27px)*0.54)] mb-[27px] ">
               <img
-                ref={section5img1Ref}
+                ref={section2img1Ref}
                 style={{ marginBottom: "30px", marginRight: "30px" }}
                 className="absolute bottom-0 right-0 aspect-[1/1.38] w-[43%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
@@ -593,7 +594,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             </div>
             <div className="relative w-[100%] h-[calc((100%-27px)*0.46)] ">
               <img
-                ref={section5img2Ref}
+                ref={section2img2Ref}
                 style={{ marginTop: "30px", marginRight: "30px" }}
                 className="absolute top-0 right-0 aspect-[1/1.35] w-[53%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
@@ -604,7 +605,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           <div className="w-[calc((100%-27px)*0.55)] h-[100%] ">
             <div className="relative w-[100%] h-[calc((100%-27px)*0.61)] mb-[27px] ">
               <img
-                ref={section5img3Ref}
+                ref={section2img3Ref}
                 style={{ marginBottom: "30px", marginLeft: "30px" }}
                 className="absolute bottom-0 left-0 aspect-[1/1.35] w-[72%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
@@ -613,7 +614,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             </div>
             <div className="relative w-[100%] h-[calc((100%-27px)*0.39)] ">
               <img
-                ref={section5img4Ref}
+                ref={section2img4Ref}
                 style={{ marginTop: "30px", marginLeft: "30px" }}
                 className="absolute top-0 left-0 aspect-[1/1.38] w-[52%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
@@ -623,16 +624,16 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
         </div>
 
-        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] pt-[90px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
+        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
           <div
-            ref={section5Text1Ref}
+            ref={section2Text1Ref}
             style={{ opacity: 0 }}
             className="text-[calc(0.9vw+11px)] font-[300]"
           >
             About me
           </div>
           <div
-            ref={section5Text2Ref}
+            ref={section2Text2Ref}
             style={{ opacity: 0 }}
             className="mt-[20px] leading-[calc(1vw+18px)] font-[300] text-[calc(0.5vw+11px)]"
           >
@@ -650,7 +651,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
 
           <div
-            ref={section5Text3Ref}
+            ref={section2Text3Ref}
             style={{ opacity: 0 }}
             className="relative mt-[30px] cursor-pointer"
           >
@@ -668,21 +669,30 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      <div className="relative w-[100vw] aspect-[1.4/1] lg:mt-[30px] mt-[calc(3vw+80px)] bg-green-300 flex justify-center">
-        <div className="h-[100%] bg-white w-[40px] absolute left-0 top-0"></div>
+      <div
+        ref={section3Ref}
+        className="relative w-[100vw] aspect-[1.4/1] lg:mt-[30px] mt-[calc(3vw+80px)]  flex justify-center"
+      >
+        <div
+          ref={section3RefLeft}
+          className="h-[100%] bg-white w-[40px] absolute left-0 top-0"
+        ></div>
         <img
           alt=""
-          className="w-[calc(100vw] aspect-[1.4/1] object-cover"
+          className="w-[calc(100vw] h-[100%] object-cover"
           src={coversRef.current === null ? "" : coversRef.current[0].url}
         />
-        <div className="h-[100%] bg-white w-[40px] absolute right-0 top-0"></div>
+        <div
+          ref={section3RefRight}
+          className="h-[100%] bg-white w-[40px] absolute right-0 top-0"
+        ></div>
       </div>
 
       <div className="w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[350px] h-[auto] flex flex-col lg:flex-row">
-        <div className="lg:pl-[30px] kayonest text-[calc(3vw+50px)] leading-[calc(3vw+50px)] mb-[calc(2vw+30px)] lg:w-[calc(45vw-35px)] lg:mb-0[font-[500]">
+        <div className="lg:pl-[1vw] xl:pl-[5vw] kayonest text-[calc(3vw+50px)] leading-[calc(3vw+50px)] mb-[calc(2vw+30px)] md:w-[calc(45vw-35px)] xl:w-[calc(40vw-35px)] lg:mb-0 font-[500]">
           Overview
         </div>
-        <div className="lg:mt-[5px] text-[calc(0.57vw+11px)] font-[300] leading-[calc(0.92vw+22px)] lg:w-[calc(55vw-35px)] lg:pr-[25px]">
+        <div className="lg:mt-[7px] lg:mb-[70px] xl:mb-0 text-[calc(0.57vw+11px)] font-[300] leading-[calc(0.92vw+22px)] lg:w-[calc(55vw-35px)] lg:pr-[35px] xl:pr-[45px] lg:pl-[2vw]">
           The interior and furniture of the “Open Innovation Platform,” an
           industry-academic collaboration office at Kyushu University, was
           furnished with cedar cut from the university's research forest. The
