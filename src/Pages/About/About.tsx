@@ -280,7 +280,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           100,
           (windowHeight - rect.bottom + 280) / 2
         );
-        console.log(extraScroll);
+
         setScrollProgress(extraScroll / 100);
         scrollProgressRef.current = extraScroll / 100;
       } else {

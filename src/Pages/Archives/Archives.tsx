@@ -156,6 +156,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
   };
 
   const handleArchiveGroupClick = (index: number) => {
+    document.body.style.overflow = "hidden"
     if (containerRef.current && archivesRef.current) {
       setStartingShowGallery(true);
       smoothScrollTo(
@@ -198,6 +199,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
             setRevealGallery(true);
             setTimeout(() => {
               setFinalTitleTouch(true);
+              document.body.style.overflow = ""
               setTimeout(() => {
                 if (finalTitle.current) {
                   finalTitle.current.style.transition = "none";
