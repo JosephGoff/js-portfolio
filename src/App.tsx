@@ -677,7 +677,9 @@ const App = () => {
           }
         }, 1200);
       } else {
-        setCurrentNavColor("black");
+        setTimeout(() => {
+          setCurrentNavColor("black");
+        }, 900);
         setTimeout(() => {
           setCurrentNavColor("black");
         }, 2000);

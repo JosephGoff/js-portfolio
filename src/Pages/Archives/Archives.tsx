@@ -1,5 +1,5 @@
 import React, { RefObject, useEffect, useRef, useState } from "react";
-import { Page } from "../../App";
+import { GIT_KEYS, Page } from "../../App";
 import Slider from "../../Components/Slider/Slider";
 // import ArchivesDisplay from "../../Components/ArchivesDisplay/ArchivesDisplay";
 import "./Archives.css";
@@ -50,9 +50,8 @@ const Archives: React.FC<ArchivesPageProps> = ({
   const { selectedArchiveGroup, setSelectedArchiveGroup } =
     useSelectedArchiveGroupStore();
   const [imageDisplayOpen, setImageDisplayOpen] = useState<boolean>(false);
-  const [currentDisplayBG, setCurrentDisplayBG] = useState<string>("white");
-  const closeIconRef = useRef<HTMLDivElement>(null);
-  const playIconRef = useRef<HTMLDivElement>(null);
+  // const closeIconRef = useRef<HTMLDivElement>(null);
+  // const playIconRef = useRef<HTMLDivElement>(null);
   const { projectAssets, setProjectAssets } = useProjectAssetsStore();
   const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
   const archivesRef = useRef<ArchivesEntry[] | null>(null);
@@ -100,10 +99,10 @@ const Archives: React.FC<ArchivesPageProps> = ({
       }
 
       setArrowSRC(
-        `https://raw.githubusercontent.com/JosephGoff/js-portfolio/refs/heads/master/public/assets/icons/arrow1.png`
+        `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/arrow1.png`
       );
       setArrowBlackSRC(
-        `https://raw.githubusercontent.com/JosephGoff/js-portfolio/refs/heads/master/public/assets/icons/arrow1-black.png`
+        `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/arrow1-black.png`
       );
     }
   }, [projectAssets]);
@@ -212,17 +211,17 @@ const Archives: React.FC<ArchivesPageProps> = ({
     }, 1000);
   };
 
-  const handleCloseArchiveGroup = () => {
-    setImageDisplayOpen(false);
+  // const handleCloseArchiveGroup = () => {
+  //   setImageDisplayOpen(false);
 
-    setTimeout(() => {
-      setSelectedArchiveGroup(null);
-      if (closeIconRef.current && playIconRef.current) {
-        closeIconRef.current.style.opacity = "0";
-        playIconRef.current.style.opacity = "0";
-      }
-    }, 1000);
-  };
+  //   setTimeout(() => {
+  //     setSelectedArchiveGroup(null);
+  //     if (closeIconRef.current && playIconRef.current) {
+  //       closeIconRef.current.style.opacity = "0";
+  //       playIconRef.current.style.opacity = "0";
+  //     }
+  //   }, 1000);
+  // };
 
   function validateColor(input: string) {
     const isColorName = (color: string) => {
@@ -353,15 +352,15 @@ const Archives: React.FC<ArchivesPageProps> = ({
     return [parseInt(rgb[0], 10), parseInt(rgb[1], 10), parseInt(rgb[2], 10)];
   };
 
-  const extractImgColor = (imgName: string) => {
-    if (imgName.split("--").length > 1) {
-      const color = imgName.split("--").pop() || "white";
-      if (isColor(color)) {
-        return validateColor(color);
-      }
-    }
-    return "#FFFFFF";
-  };
+  // const extractImgColor = (imgName: string) => {
+  //   if (imgName.split("--").length > 1) {
+  //     const color = imgName.split("--").pop() || "white";
+  //     if (isColor(color)) {
+  //       return validateColor(color);
+  //     }
+  //   }
+  //   return "#FFFFFF";
+  // };
 
   const handleGalleryButtonClick = (direction: number) => {
     setSwitchPage(true);

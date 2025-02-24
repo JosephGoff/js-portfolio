@@ -177,6 +177,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const translateY1 = useRef(-20);
   const translateCover1 = useRef(-20);
   const animationFrame = useRef<number | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleParallax = () => {
@@ -227,6 +228,77 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       observer.disconnect();
       window.removeEventListener("scroll", handleParallax);
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
+    };
+  }, []);
+
+  const imgRef7 = useRef<HTMLImageElement | null>(null);
+  const translateDiv7 = useRef<HTMLDivElement | null>(null);
+  const whiteCoverRef7 = useRef<HTMLDivElement | null>(null);
+
+  const translateY7 = useRef(-20);
+  const translateCover7 = useRef(-20);
+  const animationFrame7 = useRef<number | null>(null);
+
+  const scrollProgressRef = useRef<number>(0);
+
+  useEffect(() => {
+    const handleParallax = () => {
+      if (!translateDiv7.current || !imgRef7.current || !whiteCoverRef7.current)
+        return;
+
+      const div = translateDiv7.current;
+      const divHeight = div.clientHeight;
+      const scrollRelation = -(div.getBoundingClientRect().y - divHeight);
+
+      if (scrollRelation >= 0) {
+        let progress = scrollRelation / (2 * divHeight);
+        progress = Math.min(1, Math.max(0, progress));
+        const newTranslateY7 = -20 + progress * 40;
+        const newTranslateCover7 = 72.5 - progress * 72.5;
+
+        if (animationFrame.current) {
+          cancelAnimationFrame(animationFrame.current);
+        }
+
+        animationFrame7.current = requestAnimationFrame(() => {
+          translateY7.current = newTranslateY7;
+          translateCover7.current = newTranslateCover7;
+          if (imgRef7.current) {
+            imgRef7.current.style.transform = `translate3d(0, ${translateY7.current}%, 0)`;
+          }
+          if (whiteCoverRef7.current) {
+            whiteCoverRef7.current.style.transform = `translate3d(0, ${translateCover7.current}%, 0)`;
+          }
+        });
+      }
+
+      const rect = translateDiv7.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      if (rect.bottom <= windowHeight + 300) {
+        const extraScroll = Math.min(
+          100,
+          (windowHeight - rect.bottom + 280) / 2
+        );
+        console.log(extraScroll);
+        setScrollProgress(extraScroll / 100);
+        scrollProgressRef.current = extraScroll / 100;
+      } else {
+        setScrollProgress(0);
+        scrollProgressRef.current = 0;
+      }
+      if (rect.bottom <= windowHeight + 3 && scrollProgress !== 100) {
+        setScrollProgress(100);
+        scrollProgressRef.current = 100;
+      }
+    };
+
+    window.addEventListener("scroll", handleParallax);
+
+    return () => {
+      window.removeEventListener("scroll", handleParallax);
+      if (animationFrame7.current)
+        cancelAnimationFrame(animationFrame7.current);
     };
   }, []);
 
@@ -300,8 +372,21 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const section3Ref = useRef<HTMLDivElement | null>(null);
   const section3RefLeft = useRef<HTMLDivElement | null>(null);
   const section3RefRight = useRef<HTMLDivElement | null>(null);
+  const section3Img = useRef<HTMLImageElement | null>(null);
   const section3Opacity = useRef(0);
   const section3Widths = useRef(40);
+  const section3Translate = useRef(-60);
+
+  const section4Text1 = useRef<HTMLDivElement | null>(null);
+  const section4Text2 = useRef<HTMLDivElement | null>(null);
+  const section4Text1Opacity = useRef(0);
+  const section4Text2Opacity = useRef(0);
+  const section4TextTranslate = useRef(-23);
+
+  const section5Ref = useRef<HTMLDivElement | null>(null);
+  const section5img1 = useRef<HTMLImageElement | null>(null);
+  const section5img2 = useRef<HTMLImageElement | null>(null);
+  const section5Translate = useRef(-40);
 
   useEffect(() => {
     const handleParallax = () => {
@@ -317,7 +402,13 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         !section2Ref.current ||
         !section3Ref.current ||
         !section3RefLeft.current ||
-        !section3RefRight.current
+        !section3RefRight.current ||
+        !section3Img.current ||
+        !section4Text1.current ||
+        !section4Text2.current ||
+        !section5Ref.current ||
+        !section5img1.current ||
+        !section5img2.current
       )
         return;
 
@@ -366,16 +457,59 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       const section3TopPosition =
         section3Ref.current.offsetTop - window.innerHeight;
       let section3OpacityProgress =
-        (window.scrollY - section3TopPosition) / 100;
+        (window.scrollY - (section3TopPosition + 80)) / 300;
       section3OpacityProgress = Math.min(
         1,
         Math.max(0, section3OpacityProgress)
       );
+      let widthPace = window.innerWidth > 1024 ? 22 : 18;
       let section3WidthsProgress =
-        (window.scrollY - (section3TopPosition + 100)) / 20;
-      section3OpacityProgress = Math.min(
+        (window.scrollY - (section3TopPosition + 200)) / widthPace;
+      section3WidthsProgress = Math.min(
         40,
         Math.max(0, section3WidthsProgress)
+      );
+      const parallaxPace3 = window.innerWidth > 1024 ? 20 : 14;
+      let section3TranslateProgress =
+        (window.scrollY - (section3TopPosition + 30)) / parallaxPace3;
+      section3TranslateProgress = Math.min(
+        100,
+        Math.max(0, section3TranslateProgress)
+      );
+
+      // SECTION 4
+      const section4TopPosition =
+        section4Text1.current.offsetTop - window.innerHeight;
+
+      let section4Text1OpacityProgress =
+        (window.scrollY - (section4TopPosition + 180)) / 300;
+      section4Text1OpacityProgress = Math.min(
+        1,
+        Math.max(0, section4Text1OpacityProgress)
+      );
+      let text2Offset = window.innerWidth > 1024 ? 150 : 100;
+      let section4Text2OpacityProgress =
+        (window.scrollY - (section4TopPosition + 180 + text2Offset)) / 300;
+      section4Text2OpacityProgress = Math.min(
+        1,
+        Math.max(0, section4Text2OpacityProgress)
+      );
+      let section4TextTranslateProgress =
+        (window.scrollY - (section4TopPosition + 150)) / 12;
+      section4TextTranslateProgress = Math.min(
+        23,
+        Math.max(0, section4TextTranslateProgress)
+      );
+
+      // SECTION 5
+      const section5TopPosition =
+        section5Ref.current.offsetTop - window.innerHeight;
+      const parallaxPace5 = window.innerWidth > 1024 ? 21 : 15;
+      let section5TranslateProgress =
+        (window.scrollY - (section5TopPosition + 30)) / parallaxPace5;
+      section5TranslateProgress = Math.min(
+        80,
+        Math.max(0, section5TranslateProgress)
       );
 
       if (animationFrame2.current) {
@@ -396,7 +530,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         if (section2Text1Ref.current) {
           section2Text1Ref.current.style.opacity = `${section2Text1Opacity.current}`;
           section2Text1Ref.current.style.transform = `translate3d(0, ${
-            section2Text1Opacity.current * -15
+            section2Text2Opacity.current * -15
           }px, 0)`;
         }
         if (section2Text2Ref.current) {
@@ -408,7 +542,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         if (section2Text3Ref.current) {
           section2Text3Ref.current.style.opacity = `${section2Text3Opacity.current}`;
           section2Text3Ref.current.style.transform = `translate3d(0, ${
-            section2Text3Opacity.current * -15
+            section2Text2Opacity.current * -15
           }px, 0)`;
         }
 
@@ -435,18 +569,56 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         // SECTION 3
         section3Opacity.current = section3OpacityProgress;
         section3Widths.current = section3WidthsProgress;
+        section3Translate.current = section3TranslateProgress;
+
         if (section3Ref.current) {
           section3Ref.current.style.opacity = `${section3Opacity.current}`;
         }
+        if (section3Img.current) {
+          section3Img.current.style.transform = `translate3d(0, ${
+            -50 + section3Translate.current
+          }px, 0)`;
+        }
         if (section3RefLeft.current) {
           section3RefLeft.current.style.width = `${
-            40 - section3Widths.current
+            25 - section3Widths.current
           }px`;
         }
         if (section3RefRight.current) {
           section3RefRight.current.style.width = `${
-            40 - section3Widths.current
+            25 - section3Widths.current
           }px`;
+        }
+
+        // SECTION 4
+        section4Text1Opacity.current = section4Text1OpacityProgress;
+        section4Text2Opacity.current = section4Text2OpacityProgress;
+        section4TextTranslate.current = section4TextTranslateProgress;
+
+        if (section4Text1.current) {
+          section4Text1.current.style.opacity = `${section4Text1Opacity.current}`;
+          section4Text1.current.style.transform = `translate3d(0, ${
+            23 - section4TextTranslate.current
+          }px, 0)`;
+        }
+        if (section4Text2.current) {
+          section4Text2.current.style.opacity = `${section4Text2Opacity.current}`;
+          section4Text2.current.style.transform = `translate3d(0, ${
+            23 - section4TextTranslate.current
+          }px, 0)`;
+        }
+
+        // SECTION 5
+        section5Translate.current = section5TranslateProgress;
+        if (section5img1.current) {
+          section5img1.current.style.transform = `translate3d(0, ${
+            -40 + section5Translate.current
+          }px, 0)`;
+        }
+        if (section5img2.current) {
+          section5img2.current.style.transform = `translate3d(0, ${
+            -40 + section5Translate.current
+          }px, 0)`;
         }
       });
     };
@@ -496,9 +668,99 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const [bgColors, setbgColors] = useState<string[]>([
+    "white",
+    "rgb(131, 162, 115)",
+    "rgb(75, 101, 56)"
+  ])
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.style.backgroundColor = bgColors[0];
+    }
+  }, [bgColors]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current || !section3RefLeft.current || !section3RefRight.current) return;
+
+      const scrollTop = window.scrollY;
+      const screenHeight = window.innerHeight;
+      const gapHeight = screenHeight * 0.2; // 20vh gap
+
+      // Effective height of each "page" including the gap
+      const totalPageHeight = screenHeight + gapHeight;
+
+      // Get the index of the page currently in view
+      const currentPage = Math.floor(scrollTop / totalPageHeight);
+      const nextPage = currentPage + 1;
+
+      const progress =
+        (scrollTop - currentPage * totalPageHeight) / screenHeight;
+
+      // Calculate interpolated color between the current and the next page
+      const currentColor =
+        bgColors[currentPage] || bgColors[bgColors.length - 1];
+      const nextColor = bgColors[nextPage] || bgColors[bgColors.length - 1];
+      const interpolatedColor = interpolateColor(
+        currentColor,
+        nextColor,
+        Math.max(0, Math.min(1, progress))
+      );
+
+      // Apply the background color
+      containerRef.current.style.backgroundColor = interpolatedColor;
+      section3RefLeft.current.style.backgroundColor = interpolatedColor;
+      section3RefRight.current.style.backgroundColor = interpolatedColor;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [bgColors]);
+
+  const interpolateColor = (color1: string, color2: string, factor: number) => {
+    const [r1, g1, b1] = parseColor(color1);
+    const [r2, g2, b2] = parseColor(color2);
+
+    const r = Math.round(r1 + (r2 - r1) * factor);
+    const g = Math.round(g1 + (g2 - g1) * factor);
+    const b = Math.round(b1 + (b2 - b1) * factor);
+
+    return `rgb(${r}, ${g}, ${b})`;
+  };
+
+  const parseColor = (color: string): [number, number, number] => {
+    const ctx = document.createElement("canvas").getContext("2d");
+    if (!ctx) throw new Error("Failed to create canvas context");
+
+    ctx.fillStyle = color; // Set the color
+    const computedColor = ctx.fillStyle; // Get the computed color (browser-standardized)
+
+    // Convert to `rgb(r, g, b)` format if it's in hex
+    if (computedColor.startsWith("#")) {
+      const bigint = parseInt(computedColor.slice(1), 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return [r, g, b];
+    }
+
+    // Match RGB components from `rgb()` format
+    const rgb = computedColor.match(/\d+/g);
+    if (!rgb || rgb.length < 3) {
+      throw new Error(`Invalid color format: ${computedColor}`);
+    }
+
+    return [parseInt(rgb[0], 10), parseInt(rgb[1], 10), parseInt(rgb[2], 10)];
+  };
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="w-[100vw] min-h-[100vh] select-none">
+    <div
+      ref={containerRef}
+      className="w-[100vw] min-h-[100vh] select-none"
+      style={{ backgroundColor: "white" }}
+    >
       <div
         className="z-[201] fixed top-0 left-0 w-[100vw] h-[58px] md:h-[76px] lg:h-[80px] "
         ref={aboutNavBar}
@@ -521,7 +783,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         }}
         ref={aboutCoverRef}
       >
-        <div className="bz-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[620px] md:min-h-[680px] lg:min-h-[800px]">
+        <div className="text-[black] bz-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[620px] md:min-h-[680px] lg:min-h-[800px]">
           <div className="z-[200] lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]">
             Jess Shulman
           </div>
@@ -540,7 +802,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
                 alt="about 1"
               />
             </div>
-            <div className=" z-[105] w-[100%] h-[100%] flex flex-col items-end">
+            <div className="text-[black] z-[105] w-[100%] h-[100%] flex flex-col items-end">
               <div className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end">
                 Jess Shulman
               </div>
@@ -574,11 +836,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       </div>
 
       <div
-        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row lg:mt-[50px] lg:mb-[90px]"
+        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row mt-[calc(-10vh)] sm:mt-[calc(-5vh)] md:mt-[calc(-3vh)] lg:mt-[-2vh] xl:mt-0 lg:mb-[90px]"
         ref={section2Ref}
       >
         <div
-          className="w-[91vw] lg:w-[49vw] xl:w-[46vw] px-[5vw] md:px-[14vw] lg:px-[2vw] xl:pl-[6vw] lg:h-[90%] h-[65vw] mb-[10vw] md:mb-0 flex flex-row mt-[90px] md:mt-[-10px] lg:mt-0"
+          className="w-[91vw] lg:w-[49vw] xl:w-[46vw] sm:px-[2vw] md:px-[9vw] lg:px-[2vw] xl:pl-[6vw] lg:h-[90%] h-[65vw] mb-[10vw] md:mb-0 flex flex-row mt-[90px] md:mt-[25px] lg:mt-0"
           ref={section2TranslateDiv1}
           style={{ opacity: 0 }}
         >
@@ -586,7 +848,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.54)] mb-[27px] ">
               <img
                 ref={section2img1Ref}
-                style={{ marginBottom: "30px", marginRight: "30px" }}
+                style={{ marginBottom: "30px", marginRight: "30px", border: "3px solid white" }}
                 className="absolute bottom-0 right-0 aspect-[1/1.38] w-[43%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 1"
@@ -595,7 +857,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.46)] ">
               <img
                 ref={section2img2Ref}
-                style={{ marginTop: "30px", marginRight: "30px" }}
+                style={{ marginTop: "30px", marginRight: "30px", border: "3px solid white" }}
                 className="absolute top-0 right-0 aspect-[1/1.35] w-[53%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 2"
@@ -606,7 +868,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.61)] mb-[27px] ">
               <img
                 ref={section2img3Ref}
-                style={{ marginBottom: "30px", marginLeft: "30px" }}
+                style={{ marginBottom: "30px", marginLeft: "30px", border: "3px solid white" }}
                 className="absolute bottom-0 left-0 aspect-[1/1.35] w-[72%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 3"
@@ -615,7 +877,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.39)] ">
               <img
                 ref={section2img4Ref}
-                style={{ marginTop: "30px", marginLeft: "30px" }}
+                style={{ marginTop: "30px", marginLeft: "30px", border: "3px solid white" }}
                 className="absolute top-0 left-0 aspect-[1/1.38] w-[52%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 4"
@@ -624,11 +886,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           </div>
         </div>
 
-        <div className="lg:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
+        <div className="text-[white] g:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
           <div
             ref={section2Text1Ref}
             style={{ opacity: 0 }}
-            className="text-[calc(0.9vw+11px)] font-[300]"
+            className="kayonest text-[calc(3vw+15px)] font-[300]"
           >
             About me
           </div>
@@ -655,13 +917,13 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             style={{ opacity: 0 }}
             className="relative mt-[30px] cursor-pointer"
           >
-            <div
+            {/* <div
               className="lg:flex hidden w-[10px] h-[10px] absolute  mt-[calc(0.3vw+5px)] left-[-18px] top-0"
-              style={{ borderRadius: "50%", border: "0.5px solid #999" }}
-            ></div>
+              style={{ borderRadius: "50%", border: "0.5px solid #dddddd" }}
+            ></div> */}
             <div
-              className="text-[calc(0.6vw+11px)]  inline-block font-[300]"
-              style={{ borderBottom: "1px solid black" }}
+              className="kayonest text-[calc(0.6vw+11px)]  inline-block font-[300]"
+              style={{ borderBottom: "1px solid white" }}
             >
               Get in touch
             </div>
@@ -669,69 +931,86 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      <div
-        ref={section3Ref}
-        className="relative w-[100vw] aspect-[1.4/1] lg:mt-[30px] mt-[calc(3vw+80px)]  flex justify-center"
-      >
+      <div className="flex lg:flex-col flex-col-reverse w-[100vw]">
         <div
-          ref={section3RefLeft}
-          className="h-[100%] bg-white w-[40px] absolute left-0 top-0"
-        ></div>
-        <img
-          alt=""
-          className="w-[calc(100vw] h-[100%] object-cover"
-          src={coversRef.current === null ? "" : coversRef.current[0].url}
-        />
-        <div
-          ref={section3RefRight}
-          className="h-[100%] bg-white w-[40px] absolute right-0 top-0"
-        ></div>
-      </div>
-
-      <div className="w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[350px] h-[auto] flex flex-col lg:flex-row">
-        <div className="lg:pl-[1vw] xl:pl-[5vw] kayonest text-[calc(3vw+50px)] leading-[calc(3vw+50px)] mb-[calc(2vw+30px)] md:w-[calc(45vw-35px)] xl:w-[calc(40vw-35px)] lg:mb-0 font-[500]">
-          Overview
-        </div>
-        <div className="lg:mt-[7px] lg:mb-[70px] xl:mb-0 text-[calc(0.57vw+11px)] font-[300] leading-[calc(0.92vw+22px)] lg:w-[calc(55vw-35px)] lg:pr-[35px] xl:pr-[45px] lg:pl-[2vw]">
-          The interior and furniture of the “Open Innovation Platform,” an
-          industry-academic collaboration office at Kyushu University, was
-          furnished with cedar cut from the university's research forest. The
-          design concept focused on taking advantage of the charm of
-          large-diameter trees without waste. From a single tree, the walls of a
-          conference room, tables, a reception desk, and stools were born. This
-          efficient use of lumber was realized through the collaboration of
-          Kyushu University students. The conference room, revealing the natural
-          curves of the wood, was crafted by carpenters from Oguni Town.
-        </div>
-      </div>
-
-      <div className="lg:w-[70vw] lg:ml-[14vw] w-[96vw] lg:mt-0 mt-[50px] h-[calc(100vw*0.57)] min-h-[480px] flex flex-row gap-[12.5vw] justify-center items-center">
-        <div className="w-[37vw] h-[calc(37vw*1.33)] object-cover flex items-center bg-red-500">
+          ref={section3Ref}
+          className="overflow-hidden relative w-[100vw] aspect-[1.4/1] lg:mt-[30px] mt-[calc(3vw+80px)]  flex justify-center max-h-[calc(100vh-60px)]"
+        >
+          <div
+            ref={section3RefLeft}
+            className="h-[100%] bg-white  w-[25px] absolute left-0 top-0 z-[500]"
+          ></div>
           <img
+            ref={section3Img}
             alt=""
-            className="w-[100%]] h-[100%] object-cover"
+            className="w-[100vw] h-[calc(100%+100px)] object-cover"
             src={coversRef.current === null ? "" : coversRef.current[0].url}
           />
+          <div
+            ref={section3RefRight}
+            className="h-[100%] bg-white w-[25px] absolute right-0 top-0 z-[500]"
+          ></div>
         </div>
-        <div className="w-[25vw] h-[calc(25vw*1.39)] object-cover flex items-center">
+
+        <div className="text-[white] w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[350px] h-[auto] flex flex-col lg:flex-row">
+          <div
+            ref={section4Text1}
+            className="flex flex-col lg:pl-[1vw] xl:pl-[5vw] kayonest text-[calc(2vw+45px)] leading-[calc(2vw+50px)] mb-[calc(2vw+30px)] md:w-[calc(45vw-35px)] xl:w-[calc(40vw-35px)] lg:mb-0 font-[500]"
+          >
+            <p>Creativity</p>
+          </div>
+          <div
+            ref={section4Text2}
+            className="lg:mt-[7px] lg:mb-[70px] xl:mb-0 text-[calc(0.57vw+11px)] font-[300] leading-[calc(0.92vw+22px)] lg:w-[calc(55vw-35px)] lg:pr-[35px] xl:pr-[45px] lg:pl-[2vw]"
+          >
+            The interior and furniture of the “Open Innovation Platform,” an
+            industry-academic collaboration office at Kyushu University, was
+            furnished with cedar cut from the university's research forest. The
+            design concept focused on taking advantage of the charm of
+            large-diameter trees without waste. From a single tree, the walls of
+            a conference room, tables, a reception desk, and stools were born.
+            This efficient use of lumber was realized through the collaboration
+            of Kyushu University students. The conference room, revealing the
+            natural curves of the wood, was crafted by carpenters from Oguni
+            Town.
+          </div>
+        </div>
+      </div>
+
+      <div
+        ref={section5Ref}
+        className="xl:mt-[-50px] my-[79px] md:my-[100px] lg:mb-[80px] lg:mt-0 lg:w-[70vw] xl:w-[70vw] lg:ml-[14vw] w-[96vw] h-[calc(100vw*0.57)] min-h-[400px] md:min-h-[480px] flex flex-row gap-[12.5vw] xl:gap-[10vw] justify-center items-center"
+      >
+        <div className=" w-[37vw] xl:w-[32vw] h-[calc(37vw*1.33)] xl:h-[calc(32vw*1.33)] object-cover flex items-center overflow-hidden">
           <img
             alt=""
-            className="w-[100%] h-[100%] object-cover"
+            ref={section5img1}
+            className="w-[100%]] h-[calc(100%+40px)] object-cover"
             src={coversRef.current === null ? "" : coversRef.current[0].url}
+            style={{ transform: `translate3d(0, -40px, 0)` }}
+          />
+        </div>
+        <div className="w-[25vw] xl:w-[22vw] h-[calc(25vw*1.39)] xl:h-[calc(22vw*1.39)] object-cover flex items-center overflow-hidden">
+          <img
+            alt=""
+            ref={section5img2}
+            className="w-[100%] h-[calc(100%+40px)] object-cover"
+            src={coversRef.current === null ? "" : coversRef.current[0].url}
+            style={{ transform: `translate3d(0, -40px, 0)` }}
           />
         </div>
       </div>
 
       <div
         ref={translateDiv1}
-        className="h-[100vh] mt-[100px] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
+        className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
       >
         <img
           className="w-[100%] h-[100%] object-cover"
           ref={imgRef}
-          src={coversRef.current === null ? "" : coversRef.current[2].url}
+          src={coversRef.current === null ? "" : coversRef.current[0].url}
           alt=""
-          style={{ transform: `translate3d(0, -20%, 0)` }} // Initial position
+          style={{ transform: `translate3d(0, -20%, 0)` }}
         />
 
         <div
@@ -761,24 +1040,75 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      {/* <div
-        style={{ borderTop: "0.5px solid #bbbbbb" }}
-        className="flex flex-row mx-[calc(2vw+15px)] py-[40px]"
+      <div
+        ref={translateDiv7}
+        className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
       >
-        <div className="md:flex hidden w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px)*0.65)] bg-[#EEEEEE] relative p-[4vw]">
-          <img
-            alt=""
-            style={{}}
-            className="w-[100%] h-[100%] object-cover"
-            src="assets/about/contact.png"
-          />
-          <div className="absolute top-0 left-0 w-[100%] h-[100%] opacity-[0%] bg-white"></div>
+        <img
+          className="w-[100%] h-[100%] object-cover absolute"
+          ref={imgRef7}
+          src={coversRef.current === null ? "" : coversRef.current[1].url}
+          alt=""
+          style={{ transform: `translate3d(0, -20%, 0)` }}
+        />
+
+        <div className="h-[100vh] w-full overflow-hidden relative flex justify-center">
+          <div
+            ref={whiteCoverRef7}
+            className="bg-white absolute top-0 aspect-[1/1.15] h-[58%] flex justify-center items-center flex-col"
+            style={{
+              borderRadius: "6px",
+              transform: `translate3d(0, 72.5%, 0)`,
+            }}
+          >
+            <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
+              {item.text1}
+            </div>
+            <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
+              {item.text2}
+            </div>
+            <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
+              {item.text3}
+            </div>
+            <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
+              {item.text4}
+            </div>
+
+            <img
+              className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
+              src={coversRef.current === null ? "" : coversRef.current[0].url}
+              alt=""
+              style={{ borderRadius: 5 }}
+            />
+          </div>
         </div>
+      </div>
+
+      <div className="h-[calc(100vh-58px)] md:h-[calc(100vh-76px)] lg:h-[calc(100vh-80px)]"></div>
+
+      {/* <div
+        className="z-[600] fixed top-0 left-0 w-full h-full bg-white pointer-events-none"
+        style={{ opacity: scrollProgress }}
+      >
         <div
-          ref={contactRef}
-          className="w-[100%] md:w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px))] md:h-[calc((96vw-30px)*0.65)]"
+          style={{ borderTop: "0.5px solid #bbbbbb" }}
+          className="flex flex-row mx-[calc(2vw+15px)] py-[40px]"
         >
-          <ContactForm2 text={aboutText} />
+          <div className="md:flex hidden w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px)*0.65)] bg-[#EEEEEE] relative p-[4vw]">
+            <img
+              alt=""
+              style={{}}
+              className="w-[100%] h-[100%] object-cover"
+              src="assets/about/contact.png"
+            />
+            <div className="absolute top-0 left-0 w-[100%] h-[100%] opacity-[0%] bg-white"></div>
+          </div>
+          <div
+            ref={contactRef}
+            className="w-[100%] md:w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px))] md:h-[calc((96vw-30px)*0.65)]"
+          >
+            <ContactForm2 text={aboutText} />
+          </div>
         </div>
       </div> */}
     </div>
