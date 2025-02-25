@@ -1,15 +1,11 @@
-import React, { RefObject, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GIT_KEYS, Page } from "../../App";
-import Slider from "../../Components/Slider/Slider";
-// import ArchivesDisplay from "../../Components/ArchivesDisplay/ArchivesDisplay";
 import "./Archives.css";
 import Hero from "../../Components/Slider/Hero/Hero";
 import useCurrentNavColorState from "../../store/useCurrentNavColorStore";
-import { IoPlayCircleOutline } from "react-icons/io5";
 import useSelectedArchiveGroupStore from "../../store/useSelectedArchiveGroupStore";
 import usePreloadedImagesStore from "../../store/usePreloadedImagesStore";
 import useProjectAssetsStore from "../../store/useProjectAssetsStore";
-import { isColor } from "../Admin/Admin";
 import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";

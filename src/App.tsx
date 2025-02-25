@@ -21,7 +21,7 @@ import useIncomingImageSpeedState from "./store/useIncomingImageSpeedState";
 import useProjectAssetsStore from "./store/useProjectAssetsStore";
 import usePreloadedImagesStore from "./store/usePreloadedImagesStore";
 import useSelectedArchiveGroupStore from "./store/useSelectedArchiveGroupStore";
-import Admin, { isColor } from "./Pages/Admin/Admin";
+import Admin from "./Pages/Admin/Admin";
 import useAppDataFileStore from "./store/useAppDataFileStore";
 
 export interface SlideUpPageProps {
