@@ -344,7 +344,7 @@ const App = () => {
       }
 
       //  HOME PAGE COVER LAYOUT ORDER (num covers, 2 layouts available so far)
-      const numberOfCovers = 3;
+      const numberOfCovers  = returnedProject[1].children[0].children.length
       const numberOfLayoutsCreated = 7;
 
       let previous = -1; // Start with a value that can't match the first random number
