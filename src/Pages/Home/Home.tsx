@@ -54,7 +54,6 @@ const Home: React.FC<HomePageProps> = ({
       coversRef.current = project["Projects"].children;
       readyToTransition.current = true;
       setCoversReady(project["Projects"].children);
-      console.log( project["Projects"].children)
     }
   }, [projectAssets]);
 
@@ -546,7 +545,7 @@ const Home: React.FC<HomePageProps> = ({
         {isDisplayed && (
           <div
             style={{ opacity: isVisible ? 1 : 0 }}
-            className={`home-text-reveal-wrapper inverted-text klivora text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
+            className={`home-text-reveal-wrapper inverted-text klivora text-[calc(13px+8vw)] md:text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
           >
             <div className="klivora wave-container">
               {coverTitle.map((letter, index) => (
@@ -576,7 +575,7 @@ const Home: React.FC<HomePageProps> = ({
           <div
             style={{ opacity: isVisible ? 1 : 0 }}
             className={`home-text-reveal-wrapper 
-           inverted-text-black klivora text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
+           inverted-text-black klivora text-[calc(13px+8vw)] md:text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
           >
             <div className="klivora wave-container">
               {coverTitle.map((letter, index) => (
@@ -606,7 +605,7 @@ const Home: React.FC<HomePageProps> = ({
         {isNextDisplayed && (
           <div
             style={{ opacity: isNextVisible ? 1 : 0 }}
-            className={`home-text-reveal-wrapper inverted-text klivora text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
+            className={`home-text-reveal-wrapper inverted-text klivora text-[calc(13px+8vw)] md:text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
           >
             <div className="klivora wave-container">
               {nextTitle.map((letter, index) => (
@@ -635,7 +634,7 @@ const Home: React.FC<HomePageProps> = ({
         {isNextDisplayed && (
           <div
             style={{ opacity: isNextVisible ? 1 : 0 }}
-            className={`home-text-reveal-wrapper inverted-text-black klivora text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
+            className={`home-text-reveal-wrapper inverted-text-black klivora text-[calc(13px+8vw)] md:text-[calc(20px+9vw)] leading-[calc(20px+9vw)]`}
           >
             <div className="klivora wave-container">
               {nextTitle.map((letter, index) => (

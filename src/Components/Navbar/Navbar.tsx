@@ -61,7 +61,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
   // }, [selectedArchiveGroup]);
 
   useEffect(() => {
-    const projects = projectAssets as any
+    const projects = projectAssets as any;
     if (
       projects !== null &&
       projects["projects"] &&
@@ -140,11 +140,14 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
   }
 
   const [isAnimatingNav, setIsAnimatingNav] = useState<boolean>(false);
+  const prevNavColorRef = useRef("black");
+
   function toggleNav() {
     if (isOpenRef) {
       const newVal = !isOpenRef.current;
       if (isOpenRef.current) {
         // Close Nav
+        setCurrentNavColor(prevNavColorRef.current);
         document.body.style.overflow = "";
         hideText();
         setIsAnimatingNav(true);
@@ -158,6 +161,8 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
         }, 680);
       } else {
         // Open Nav
+        prevNavColorRef.current = currentNavColor;
+        setCurrentNavColor("black");
         document.body.style.overflow = "hidden";
         setNavOpen(newVal);
         setNavOpenSpin(newVal);
@@ -349,7 +354,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
   };
 
   return (
-    <div ref={navRef} style={{transition: "opacity 0.9s ease-in-out"}}>
+    <div ref={navRef} style={{ transition: "opacity 0.9s ease-in-out" }}>
       <div
         className="w-[100vw] h-[88px] fixed z-[910] flex justify-between lg:px-[32px] px-[18px]"
         style={{
@@ -439,7 +444,8 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
               backgroundColor: currentNavColor,
               marginTop: navOpenSpin ? 0 : "-4.5px",
               transform: navOpenSpin ? "rotate(45deg)" : "none",
-              transition: "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)"
+              transition:
+                "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)",
             }}
           ></div>
           <div
@@ -447,7 +453,8 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
             style={{
               backgroundColor: currentNavColor,
               opacity: navOpenSpin ? 0 : 1,
-              transition: "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)"
+              transition:
+                "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)",
             }}
           ></div>
           <div
@@ -456,7 +463,8 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
               backgroundColor: currentNavColor,
               marginTop: navOpenSpin ? 0 : "4.5px",
               transform: navOpenSpin ? "rotate(-45deg)" : "none",
-              transition: "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)"
+              transition:
+                "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)",
             }}
           ></div>
         </div>
@@ -479,7 +487,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
         style={{ backgroundColor: "transparent" }}
       >
         <div
-          className="h-[160px] w-[100%] flex flex-col gap-[26px]"
+          className="h-[160px] w-[100%] flex flex-col gap-[15px] sm:gap-[26px]"
           style={{ backgroundColor: "transparent" }}
         >
           <div
@@ -494,7 +502,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
               className={`klivora ${
                 isRevealing1 ? "text-reveal" : "text-conceal"
               } 
-      hover-dim5 text-[42px] tracking-[1px] leading-[29px] dimmer cursor-pointer`}
+      hover-dim5 text-[34px] sm:text-[42px] tracking-[1px] leading-[25px] sm:leading-[29px] dimmer cursor-pointer`}
             >
               INDEX
             </div>
@@ -511,7 +519,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
               className={`klivora ${
                 isRevealing2 ? "text-reveal" : "text-conceal"
               } 
-      hover-dim5 text-[42px] tracking-[1px] leading-[29px] dimmer cursor-pointer`}
+      hover-dim5 text-[34px] sm:text-[42px] tracking-[1px] leading-[25px] sm:leading-[29px] dimmer cursor-pointer`}
             >
               INFOS
             </div>
@@ -528,7 +536,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
               className={`klivora ${
                 isRevealing3 ? "text-reveal" : "text-conceal"
               } 
-      hover-dim5 text-[42px] tracking-[1px] leading-[29px] dimmer cursor-pointer`}
+      hover-dim5 text-[34px] sm:text-[42px] tracking-[1px] leading-[25px] sm:leading-[29px] dimmer cursor-pointer`}
             >
               ARCHIVES
             </div>

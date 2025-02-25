@@ -83,7 +83,6 @@ const Archives: React.FC<ArchivesPageProps> = ({
     if (project !== null && project["Archives"]) {
       const archivesOutput = project["Archives"].children as ArchivesEntry[];
       archivesRef.current = archivesOutput;
-      console.log(archivesOutput)
       const newbgColors = archivesOutput.map((item) =>
         validateColor(item.bg_color)
       );
@@ -306,7 +305,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
       }
       if (cardBorderRef1.current) {
         cardBorderRef1.current.forEach((ref) => {
-          if (ref) ref.style.border = `3px solid ${interpolatedColor}`;
+          if (ref) ref.style.border = `2px solid ${interpolatedColor}`;
         });
       }
     };
@@ -596,7 +595,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                       style={{
                         borderRadius: "30px",
                       }}
-                      className="absolute z-[110] left-0 sm:left-[30px] w-[calc(52px+5vw)] flex items-center justify-center"
+                      className="absolute z-[110] sm:scale-[0.7] scale-1 md:scale-1 left-0 md:left-[30px] w-[calc(52px+5vw)] flex items-center justify-center"
                     >
                       <div
                         onMouseEnter={() => setGalleryButtonHover(-1)}
@@ -623,7 +622,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                       style={{
                         borderRadius: "30px",
                       }}
-                      className="absolute z-[110] right-0 sm:right-[30px] w-[calc(52px+5vw)] flex items-center justify-center"
+                      className="absolute z-[110] sm:scale-[0.7] scale-1 md:scale-1 right-0 md:right-[30px] w-[calc(52px+5vw)] flex items-center justify-center"
                     >
                       <div
                         onMouseEnter={() => setGalleryButtonHover(1)}
@@ -710,7 +709,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                     <div
                       className="relative flex lg:w-[100%] w-[600%] pr-[calc(20px+1vw)] lg:pr-[calc(10px+0.5vw)] pl-[calc(20px+1vw)] lg:pl-[calc(10px+0.5vw)] 
                       h-[auto] py-[calc((18px+0.5vw)+30px+1.8vw+28px)]
-                      flex-col
+                      flex-col min-w-[70vw] md:min-w-[60vw] lg:min-w-0
                       bg-white lg:bg-inherit"
                       style={{
                         border: "1px solid white",
@@ -720,7 +719,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                     >
                       <div
                         ref={(el) => (cardBorderRef1.current[index] = el)}
-                        style={{ border: `3px solid ${bgColors[index]}` }}
+                        style={{ border: `2px solid ${bgColors[index]}` }}
                         className="lg:hidden z-[108] w-[calc(100%-10px)] h-[calc(100%-10px)] absolute top-[5px] left-[5px]"
                       ></div>
 
@@ -865,7 +864,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                 <div
                   className="relative flex justify-center lg:w-[100%] w-[600%] pr-[calc(20px+1vw)] lg:pr-[calc(10px+0.5vw)]  pl-[calc(20px+1vw)] lg:pl-[calc(10px+0.5vw)] 
                       h-[auto] py-[calc((18px+0.5vw)+30px+1.8vw+28px)]
-                      flex-col
+                      flex-col min-w-[70vw] md:min-w-[60vw] lg:min-w-0
                       bg-white lg:bg-inherit"
                   style={{
                     border: "1px solid white",
@@ -878,7 +877,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                 >
                   <div
                     style={{
-                      border: `3px solid ${bgColors[selectedArchiveGroup]}`,
+                      border: `2px solid ${bgColors[selectedArchiveGroup]}`,
                     }}
                     className="lg:hidden z-[108] w-[calc(100%-10px)] h-[calc(100%-10px)] absolute top-[5px] left-[5px]"
                   ></div>
