@@ -83,6 +83,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
     if (project !== null && project["Archives"]) {
       const archivesOutput = project["Archives"].children as ArchivesEntry[];
       archivesRef.current = archivesOutput;
+      console.log(archivesOutput)
       const newbgColors = archivesOutput.map((item) =>
         validateColor(item.bg_color)
       );

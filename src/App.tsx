@@ -526,6 +526,14 @@ const App = () => {
             folder[imageFolder].details.text.length > 0
               ? folder[imageFolder].details.text[0].value
               : "",
+          description2:
+            folder[imageFolder].details.text.length > 1
+              ? folder[imageFolder].details.text[1].value
+              : "",
+          description3:
+            folder[imageFolder].details.text.length > 2
+              ? folder[imageFolder].details.text[2].value
+              : "",
           bg_color:
             folder[imageFolder].details.colors.length > 0
               ? folder[imageFolder].details.colors[0].value
@@ -670,10 +678,12 @@ const App = () => {
         setTimeout(() => {
           if (
             projectColors[1][0] !== "white" &&
-            projectColors[1][1] !== "#FFF" &&
-            projectColors[1][1] !== "#FFFFFF"
+            projectColors[1][0] !== "#FFF" &&
+            projectColors[1][0] !== "#FFFFFF"
           ) {
             setCurrentNavColor("white");
+          } else {
+            setCurrentNavColor("black");
           }
         }, 1200);
       } else {

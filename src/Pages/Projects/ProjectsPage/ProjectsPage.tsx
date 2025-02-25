@@ -406,7 +406,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
               transition={{ duration: 0.3, delay: 0.5, ease: "easeInOut" }}
             >
               <>
-                <div className="w-[100%] pl-[5px]">
+                <div className="w-[100%] pl-[calc(30px+3vw)] md:pl-[5px]">
                   <img
                     alt=""
                     // src={
@@ -482,7 +482,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
 
         {!slideUpComponent && (
           <>
-            <div className="w-[100%] pl-[5px]">
+            <div className="w-[100%] pl-[calc(30px+3vw)] md:pl-[5px]">
               <img
                 alt=""
                 src={

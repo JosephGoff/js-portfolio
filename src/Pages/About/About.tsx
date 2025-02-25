@@ -152,40 +152,44 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
 
   const coversRef = useRef<CoverEntryImage[] | null>(null);
-  const [coversReady, setCoversReady] = useState<CoverEntryImage[] | null>(
-    null
-  );
-  const contactRef = useRef<HTMLDivElement | null>(null);
-  const [aboutText, setAboutText] = useState<any>({});
+
+  const [aboutText, setAboutText] = useState<any[]>([]);
   const tree1Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees1.png`;
   const tree2Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees2.png`;
-  const tree3Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees3.png`;
-  const tree4Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees4.png`;
+
+  const [bgColors, setbgColors] = useState<string[]>([
+    "white",
+    "#83A273",
+    "#4B6538",
+  ]);
 
   useEffect(() => {
     const project = projectAssets as any;
     if (project !== null) {
       coversRef.current = project["About"].children as CoverEntryImage[];
-      setCoversReady(project["About"].children as CoverEntryImage[]);
       const newAboutText = project["About"].details.text;
       if (newAboutText.length > 0) {
         setAboutText(newAboutText);
       }
+      const newAboutColors = project["About"].details.colors;
+      if (newAboutColors.length > 0) {
+        setbgColors(newAboutColors.map((item: any) => item.value));
+      }
     }
   }, [projectAssets]);
 
-  const imgRef = useRef<HTMLImageElement | null>(null);
+  const imgRef1 = useRef<HTMLImageElement | null>(null);
   const translateDiv1 = useRef<HTMLDivElement | null>(null);
-  const whiteCoverRef = useRef<HTMLDivElement | null>(null);
+  const whiteCoverRef1 = useRef<HTMLDivElement | null>(null);
 
   const translateY1 = useRef(-20);
   const translateCover1 = useRef(-20);
-  const animationFrame = useRef<number | null>(null);
+  const animationFrame1 = useRef<number | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleParallax = () => {
-      if (!translateDiv1.current || !imgRef.current || !whiteCoverRef.current)
+      if (!translateDiv1.current || !imgRef1.current || !whiteCoverRef1.current)
         return;
 
       const div = translateDiv1.current;
@@ -198,40 +202,29 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         const newTranslateY1 = -20 + progress * 40;
         const newTranslateCover1 = 72.5 - progress * 72.5;
 
-        if (animationFrame.current) {
-          cancelAnimationFrame(animationFrame.current);
+        if (animationFrame1.current) {
+          cancelAnimationFrame(animationFrame1.current);
         }
 
-        animationFrame.current = requestAnimationFrame(() => {
+        animationFrame1.current = requestAnimationFrame(() => {
           translateY1.current = newTranslateY1;
           translateCover1.current = newTranslateCover1;
-          if (imgRef.current) {
-            imgRef.current.style.transform = `translate3d(0, ${translateY1.current}%, 0)`;
+          if (imgRef1.current) {
+            imgRef1.current.style.transform = `translate3d(0, ${translateY1.current}%, 0)`;
           }
-          if (whiteCoverRef.current) {
-            whiteCoverRef.current.style.transform = `translate3d(0, ${translateCover1.current}%, 0)`;
+          if (whiteCoverRef1.current) {
+            whiteCoverRef1.current.style.transform = `translate3d(0, ${translateCover1.current}%, 0)`;
           }
         });
       }
     };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          window.addEventListener("scroll", handleParallax);
-        } else {
-          window.removeEventListener("scroll", handleParallax);
-        }
-      },
-      { threshold: 0.01 }
-    );
-
-    if (translateDiv1.current) observer.observe(translateDiv1.current);
+    window.addEventListener("scroll", handleParallax);
 
     return () => {
-      observer.disconnect();
       window.removeEventListener("scroll", handleParallax);
-      if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
+      if (animationFrame1.current)
+        cancelAnimationFrame(animationFrame1.current);
     };
   }, []);
 
@@ -243,7 +236,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const translateCover7 = useRef(-20);
   const animationFrame7 = useRef<number | null>(null);
 
-  const scrollProgressRef = useRef<number>(0);
+  // const scrollProgressRef = useRef<number>(0);
 
   useEffect(() => {
     const handleParallax = () => {
@@ -260,8 +253,8 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         const newTranslateY7 = -20 + progress * 40;
         const newTranslateCover7 = 72.5 - progress * 72.5;
 
-        if (animationFrame.current) {
-          cancelAnimationFrame(animationFrame.current);
+        if (animationFrame7.current) {
+          cancelAnimationFrame(animationFrame7.current);
         }
 
         animationFrame7.current = requestAnimationFrame(() => {
@@ -311,17 +304,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     requestAnimationFrame(animateScroll);
   };
 
-  const items = [
-    {
-      text1: "01",
-      text2: "PHOTOGRAPHY",
-      text3: "PRICE ¥200,000〜",
-      text4:
-        "We offer original floral arrangements, blizzard flower gift boxes, pressed flower panels, and other original floral arrangements suitable for your project as promotional tools for distribution at events, commemorative parties, and various campaigns.",
-    },
-  ];
-
-  const item = items[0];
   const [imagesOpacity, setImagesOpacity] = useState(false);
 
   useEffect(() => {
@@ -748,12 +730,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     };
   }, []);
 
-  const [bgColors, setbgColors] = useState<string[]>([
-    "white",
-    "rgb(131, 162, 115)",
-    "rgb(75, 101, 56)",
-  ]);
-
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.style.backgroundColor = bgColors[0];
@@ -847,11 +823,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     message: "",
   });
 
-  const [displayText, setDisplayText] = useState<any>({});
-  useEffect(() => {
-    setDisplayText(aboutText.text);
-  }, [aboutText]);
-
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -890,466 +861,510 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       className="w-[100vw] min-h-[100vh] select-none"
       style={{ backgroundColor: "white" }}
     >
-      <div
-        className="z-[201] fixed top-0 left-0 w-[100vw] h-[58px] md:h-[76px] lg:h-[80px] "
-        ref={aboutNavBar}
-        style={{
-          pointerEvents: "none",
-          opacity: showAboutNavBar.current ? 1 : 0,
-          transition:
-            "transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1)",
-          backgroundColor: "white",
-        }}
-      ></div>
-
-      <div
-        className="w-[100vw] h-[100vh] min-h-[620px] md:min-h-[680px] lg:min-h-[800px]"
-        style={{
-          opacity: 0,
-          transform: "translateY(7px)",
-          transition:
-            "opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.8s ease-in-out",
-        }}
-        ref={aboutCoverRef}
-      >
-        <div className="text-[black] bz-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[620px] md:min-h-[680px] lg:min-h-[800px]">
-          <div className="z-[200] lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]">
-            Jess Shulman
-          </div>
-          <div className="sephir lg:hidden absolute left-[18%] sm:left-[21%] text-[calc(1vw+10px)] bottom-[calc(35%+2vw)] md:bottom-[calc(32%+2vw)]">
-            <span> Graphic Designer</span> & <br />{" "}
-            <span className="ml-[44%]">Photographer</span>
-          </div>
-        </div>
-
-        <div className="h-[100vh] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
-          <div className="min-h-[500px] w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
-            <div className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] max-h-[70%] lg:w-[100%] max-w-[550px]">
-              <img
-                className="w-[100%] h-[100%] lg:ml-0 ml-[20px] object-cover object-[50%_50%]"
-                src={coversRef.current === null ? "" : coversRef.current[0].url}
-                alt="about 1"
-              />
-            </div>
-            <div className="text-[black] z-[105] w-[100%] h-[100%] flex flex-col items-end">
-              <div className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end">
-                Jess Shulman
-              </div>
-              <div className="sephir hidden lg:flex lg:mr-[-23%] mr-[9%] mt-[calc(1vw+25px)] text-[calc(1vw+10px)] flex-col lg:flex-row">
-                <span>Graphic Designer</span>
-                <span className="mx-2">&</span>
-                <span className="lg:ml-[-22%] ml-[61%] mt-[30px]">
-                  Photographer
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:mt-[-2px] min-h-[500px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
-            <div className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]">
-              <img
-                className="w-[100%] h-[100%] object-cover object-[50%_50%]"
-                src={coversRef.current === null ? "" : coversRef.current[1].url}
-                alt="about 2"
-              />
-            </div>
-            <div className="absolute top-[55%] lg:top-[45%] ml-[20px] max-w-[330px] w-[55%] lg:w-[65%] aspect-[1/1.1]">
-              <img
-                className="w-[100%] h-[100%] object-cover object-[50%_50%]"
-                src={coversRef.current === null ? "" : coversRef.current[2].url}
-                alt="about 3"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row mt-[calc(-10vh)] sm:mt-[calc(-5vh)] md:mt-[calc(-3vh)] lg:mt-[-2vh] xl:mt-0 lg:mb-[90px]"
-        ref={section2Ref}
-      >
-        <div
-          className="w-[91vw] lg:w-[49vw] xl:w-[46vw] sm:px-[2vw] md:px-[9vw] lg:px-[2vw] xl:pl-[6vw] lg:h-[90%] h-[65vw] mb-[10vw] md:mb-0 flex flex-row mt-[90px] md:mt-[25px] lg:mt-0"
-          ref={section2TranslateDiv1}
-          style={{ opacity: 0 }}
-        >
-          <div className="w-[calc((100%-27px)*0.45)] mr-[27px] h-[100%] flex flex-col">
-            <div className="relative w-[100%] h-[calc((100%-27px)*0.54)] mb-[27px] ">
-              <img
-                ref={section2img1Ref}
-                style={{
-                  marginBottom: "30px",
-                  marginRight: "30px",
-                  border: "3px solid white",
-                }}
-                className="absolute bottom-0 right-0 aspect-[1/1.38] w-[43%] object-cover"
-                src={coversRef.current === null ? "" : coversRef.current[0].url}
-                alt="about 1"
-              />
-            </div>
-            <div className="relative w-[100%] h-[calc((100%-27px)*0.46)] ">
-              <img
-                ref={section2img2Ref}
-                style={{
-                  marginTop: "30px",
-                  marginRight: "30px",
-                  border: "3px solid white",
-                }}
-                className="absolute top-0 right-0 aspect-[1/1.35] w-[53%] object-cover"
-                src={coversRef.current === null ? "" : coversRef.current[0].url}
-                alt="about 2"
-              />
-            </div>
-          </div>
-          <div className="w-[calc((100%-27px)*0.55)] h-[100%] ">
-            <div className="relative w-[100%] h-[calc((100%-27px)*0.61)] mb-[27px] ">
-              <img
-                ref={section2img3Ref}
-                style={{
-                  marginBottom: "30px",
-                  marginLeft: "30px",
-                  border: "3px solid white",
-                }}
-                className="absolute bottom-0 left-0 aspect-[1/1.35] w-[72%] object-cover"
-                src={coversRef.current === null ? "" : coversRef.current[0].url}
-                alt="about 3"
-              />
-            </div>
-            <div className="relative w-[100%] h-[calc((100%-27px)*0.39)] ">
-              <img
-                ref={section2img4Ref}
-                style={{
-                  marginTop: "30px",
-                  marginLeft: "30px",
-                  border: "3px solid white",
-                }}
-                className="absolute top-0 left-0 aspect-[1/1.38] w-[52%] object-cover"
-                src={coversRef.current === null ? "" : coversRef.current[0].url}
-                alt="about 4"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="text-[white] g:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
-          <div
-            ref={section2Text1Ref}
-            style={{ opacity: 0 }}
-            className="kayonest text-[calc(3vw+15px)] font-[300]"
-          >
-            About me
-          </div>
-          <div
-            ref={section2Text2Ref}
-            style={{ opacity: 0 }}
-            className="mt-[20px] leading-[calc(1vw+18px)] font-[300] text-[calc(0.5vw+11px)]"
-          >
-            Anai Wood Factory, established in 1964 in the Aso Minamioguni region
-            of Kumamoto Prefecture, is situated alongside a river, right next to
-            a cluster of residential homes. We specialize in the production and
-            sale of all construction-related components, ranging from structural
-            materials to interior finishes, using the renowned Oguni cedar and
-            cypress, which are local specialties of Minamioguni. Known for our
-            extensive forestry knowledge and unique geothermal drying process,
-            our timber has earned the love and trust of local carpenters as well
-            as architects, construction firms, and individual customers, far and
-            wide, who appreciate top-quality materials. With unwavering
-            dedication, we have been engaging with wood for over 60 years.
-          </div>
-
-          <div
-            ref={section2Text3Ref}
-            style={{ opacity: 0 }}
-            className="relative mt-[30px] cursor-pointer"
-          >
-            {/* <div
-              className="lg:flex hidden w-[10px] h-[10px] absolute  mt-[calc(0.3vw+5px)] left-[-18px] top-0"
-              style={{ borderRadius: "50%", border: "0.5px solid #dddddd" }}
-            ></div> */}
+      {aboutText.length >= 15 &&
+        coversRef.current !== null &&
+        coversRef.current.length >= 14 && (
+          <>
             <div
-              className="hover-dim7 cursor-pointer kayonest text-[calc(0.6vw+11px)]  inline-block font-[300]"
-              style={{ borderBottom: "1px solid white" }}
-              onClick={() => {
-                if (containerRef.current) {
-                  smoothScrollTo(
-                    containerRef.current.clientHeight - window.innerHeight
-                  );
-                }
-              }}
-            >
-              Get in touch
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex lg:flex-col flex-col-reverse w-[100vw]">
-        <div
-          ref={section3Ref}
-          className="overflow-hidden relative w-[100vw] aspect-[1.4/1] lg:mt-[30px] mt-[calc(3vw+80px)]  flex justify-center max-h-[calc(100vh-60px)]"
-        >
-          <div
-            ref={section3RefLeft}
-            className="h-[100%] bg-white  w-[25px] absolute left-0 top-0 z-[500]"
-          ></div>
-          <img
-            ref={section3Img}
-            alt=""
-            className="w-[100vw] h-[calc(100%+100px)] object-cover"
-            src={coversRef.current === null ? "" : coversRef.current[0].url}
-          />
-          <div
-            ref={section3RefRight}
-            className="h-[100%] bg-white w-[25px] absolute right-0 top-0 z-[500]"
-          ></div>
-        </div>
-
-        <div className="text-[white] w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[350px] h-[auto] flex flex-col lg:flex-row">
-          <div
-            ref={section4Text1}
-            className="flex flex-col lg:pl-[1vw] xl:pl-[5vw] kayonest text-[calc(2vw+45px)] leading-[calc(2vw+50px)] mb-[calc(2vw+30px)] md:w-[calc(45vw-35px)] xl:w-[calc(40vw-35px)] lg:mb-0 font-[500]"
-          >
-            <p>Creativity</p>
-          </div>
-          <div
-            ref={section4Text2}
-            className="lg:mt-[7px] lg:mb-[70px] xl:mb-0 text-[calc(0.57vw+11px)] font-[300] leading-[calc(0.92vw+22px)] lg:w-[calc(55vw-35px)] lg:pr-[35px] xl:pr-[45px] lg:pl-[2vw]"
-          >
-            The interior and furniture of the “Open Innovation Platform,” an
-            industry-academic collaboration office at Kyushu University, was
-            furnished with cedar cut from the university's research forest. The
-            design concept focused on taking advantage of the charm of
-            large-diameter trees without waste. From a single tree, the walls of
-            a conference room, tables, a reception desk, and stools were born.
-            This efficient use of lumber was realized through the collaboration
-            of Kyushu University students. The conference room, revealing the
-            natural curves of the wood, was crafted by carpenters from Oguni
-            Town.
-          </div>
-        </div>
-      </div>
-
-      <div
-        ref={section5Ref}
-        className="xl:mt-[-50px] my-[79px] md:my-[100px] lg:mb-[80px] lg:mt-0 lg:w-[70vw] xl:w-[70vw] lg:ml-[14vw] w-[96vw] h-[calc(100vw*0.57)] min-h-[400px] md:min-h-[480px] flex flex-row gap-[12.5vw] xl:gap-[10vw] justify-center items-center"
-      >
-        <div className=" w-[37vw] xl:w-[32vw] h-[calc(37vw*1.33)] xl:h-[calc(32vw*1.33)] object-cover flex items-center overflow-hidden">
-          <img
-            alt=""
-            ref={section5img1}
-            className="w-[100%]] h-[calc(100%+40px)] object-cover"
-            src={coversRef.current === null ? "" : coversRef.current[0].url}
-            style={{ transform: `translate3d(0, -40px, 0)` }}
-          />
-        </div>
-        <div className="w-[25vw] xl:w-[22vw] h-[calc(25vw*1.39)] xl:h-[calc(22vw*1.39)] object-cover flex items-center overflow-hidden">
-          <img
-            alt=""
-            ref={section5img2}
-            className="w-[100%] h-[calc(100%+40px)] object-cover"
-            src={coversRef.current === null ? "" : coversRef.current[0].url}
-            style={{ transform: `translate3d(0, -40px, 0)` }}
-          />
-        </div>
-      </div>
-
-      <div
-        ref={translateDiv1}
-        className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
-      >
-        <img
-          className="w-[100%] h-[100%] object-cover"
-          ref={imgRef}
-          src={coversRef.current === null ? "" : coversRef.current[0].url}
-          alt=""
-          style={{ transform: `translate3d(0, -20%, 0)` }}
-        />
-
-        <div
-          ref={whiteCoverRef}
-          className="bg-white absolute top-0 aspect-[1/1.15] h-[58%] flex justify-center items-center flex-col"
-          style={{ borderRadius: "6px", transform: `translate3d(0, 72.5%, 0)` }}
-        >
-          <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
-            {item.text1}
-          </div>
-          <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
-            {item.text2}
-          </div>
-          <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
-            {item.text3}
-          </div>
-          <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
-            {item.text4}
-          </div>
-
-          <img
-            className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
-            src={coversRef.current === null ? "" : coversRef.current[0].url}
-            alt=""
-            style={{ borderRadius: 5 }}
-          />
-        </div>
-      </div>
-
-      <div
-        ref={translateDiv7}
-        className="z-[105] h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
-      >
-        <img
-          className="w-[100%] h-[100%] object-cover absolute"
-          ref={imgRef7}
-          src={coversRef.current === null ? "" : coversRef.current[1].url}
-          alt=""
-          style={{ transform: `translate3d(0, -20%, 0)` }}
-        />
-
-        <div className="h-[100vh] w-full overflow-hidden relative flex justify-center">
-          <div
-            ref={whiteCoverRef7}
-            className="bg-white absolute top-0 aspect-[1/1.15] h-[58%] flex justify-center items-center flex-col"
-            style={{
-              borderRadius: "6px",
-              transform: `translate3d(0, 72.5%, 0)`,
-            }}
-          >
-            <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
-              {item.text1}
-            </div>
-            <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
-              {item.text2}
-            </div>
-            <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
-              {item.text3}
-            </div>
-            <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
-              {item.text4}
-            </div>
-
-            <img
-              className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
-              src={coversRef.current === null ? "" : coversRef.current[0].url}
-              alt=""
-              style={{ borderRadius: 5 }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="pb-[1vh] h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)] bg-white flex flex-col">
-        <form
-          onSubmit={handleSubmit}
-          className="z-[11] w-full h-full flex flex-col items-center justify-center"
-        >
-          <div
-            style={{ transform: "translateY(30px)", opacity: 0 }}
-            ref={contactTitle}
-            onClick={() => {
-              if (containerRef.current) {
-                smoothScrollTo(
-                  containerRef.current.clientHeight - window.innerHeight
-                );
-              }
-            }}
-            className="cursor-pointer bestfriend leading-[calc(3vw+50px)] text-[calc(3vw+50px)]"
-          >
-            Get in touch
-          </div>
-
-          <div
-            ref={contactRow1}
-            className="flex flex-row w-[67%] md:w-[50%] mt-[5px] mb-[15px] md:mb-[15px]"
-            style={{ transform: "translateY(30px)", opacity: 0, backgroundColor: "transparent"}}
-          >
-            <div className="w-[calc(50%-10px)]">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                style={{ borderBottom: "1px solid #999999", color: "black" }}
-                placeholder={"Name"}
-                required
-                className="pb-[3px] pl-[5px] w-[100%] caster text-[calc(0.6vw+11px)] border-none outline-none"
-              />
-            </div>
-            <div className="ml-[20px] pl-[5px] w-[calc(50%-10px)]">
-              <input
-                type="text"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                style={{ borderBottom: "1px solid #999999", color: "black" }}
-                placeholder={"Email"}
-                required
-                inputMode="text"
-                autoComplete="off"
-                className="pl-[1px] pb-[3px] w-[100%] caster border-none outline-none text-[calc(0.6vw+11px)]"
-              />
-            </div>
-          </div>
-          <div
-            ref={contactRow2}
-            style={{ transform: "translateY(30px)", opacity: 0, backgroundColor: "transparent"}}
-            className="h-[150px] mb-[18px] abygaer w-[67%] md:w-[50%]"
-          >
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder=""
-              required
-              className="caster w-full h-full justify-end resize-none border-none outline-none"
+              className="z-[201] fixed top-0 left-0 w-[100vw] h-[58px] md:h-[76px] lg:h-[80px] "
+              ref={aboutNavBar}
               style={{
-                color: "black",
-                borderBottom: "1px solid #999999",
+                pointerEvents: "none",
+                opacity: showAboutNavBar.current ? 1 : 0,
+                transition:
+                  "transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1)",
+                backgroundColor: "white",
               }}
-            />
-          </div>
+            ></div>
 
-          <button
-            ref={contactSendButton}
-            className="bg-white cursor-pointer baskara text-[35px] w-[120px] h-[40px] flex items-center justify-center pt-[8px]"
-            type="submit"
-            style={{
-              transform: "translateY(30px)",
-              opacity: 0,
-              border: "1px solid #BBBBBB",
-              borderRadius: "25px",
-            }}
-          >
-            Send
-          </button>
-        </form>
-      </div>
+            <div
+              className="w-[100vw] h-[100vh] min-h-[620px] md:min-h-[680px] lg:min-h-[800px]"
+              style={{
+                opacity: 0,
+                transform: "translateY(7px)",
+                transition:
+                  "opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.8s ease-in-out",
+              }}
+              ref={aboutCoverRef}
+            >
+              <div className="text-[black] bz-[105] w-[100%] h-[100%] absolute top-0 left-0 min-h-[620px] md:min-h-[680px] lg:min-h-[800px]">
+                <div className="z-[200] lg:hidden absolute left-[10%] akitha text-[calc(4vw+20px)] bottom-[46%] md:bottom-[45%]">
+                  {aboutText[0].value}
+                </div>
+                <div className="sephir lg:hidden absolute left-[18%] sm:left-[21%] text-[calc(1vw+10px)] bottom-[calc(35%+2vw)] md:bottom-[calc(32%+2vw)]">
+                  {aboutText[1].value}
+                  <br /> <span className="ml-[44%]">{aboutText[2].value}</span>
+                </div>
+              </div>
 
-      <div
-        ref={contactTrees}
-        style={{
-          display: scrollProgress === 0 ? "none" : "flex",
-        }}
-        className="z-[10]  fixed bottom-0 left-0 flex-row w-full h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)]"
-      >
-        <div className="lg:w-[28%] w-[33%] h-[100%] flex items-end justify-end">
-          <img alt="" className="w-full object-contain" src={tree1Url} />
-        </div>
-        <div className="lg:w-[44%] w-[34%] h-[100%] flex flex-row gap-[10px]"></div>
-        <div className="lg:w-[28%] w-[33%] h-[100%] flex items-end justify-end">
-          <img alt="" className="w-full object-contain" src={tree2Url} />
-        </div>
-      </div>
+              <div className="h-[100vh] w-[100vw] p-[5%] pt-[60px] md:pt-[80px] flex flex-row">
+                <div className="min-h-[500px] w-[46%] md:w-[40%] lg:mt-[40px] mt-[5px] lg:w-[48%] relative flex flex-col items-end">
+                  <div className="aspect-[1.1/1] lg:relative absolute lg:bottom-0 bottom-[64%] w-[85%] max-h-[70%] lg:w-[100%] max-w-[550px]">
+                    <img
+                      className="w-[100%] h-[100%] lg:ml-0 ml-[20px] object-cover object-[50%_50%]"
+                      src={
+                        coversRef.current === null
+                          ? ""
+                          : coversRef.current[0].url
+                      }
+                      alt="about 1"
+                    />
+                  </div>
+                  <div className="text-[black] z-[105] w-[100%] h-[100%] flex flex-col items-end">
+                    <div className="lg:flex hidden akitha lg:text-[calc(50px+1vw)] mt-[48px] mr-[-5%] w-[110%] justify-end">
+                      {aboutText[0].value}
+                    </div>
+                    <div className="sephir hidden lg:flex lg:mr-[-23%] mr-[9%] mt-[calc(1vw+25px)] text-[calc(1vw+10px)] flex-col lg:flex-row">
+                      {aboutText[1].value}
+                      <span className="lg:ml-[-22%] ml-[61%] mt-[30px]">
+                        {aboutText[2].value}
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-      <div
-        ref={contactTreesEmail}
-        style={{
-          display: scrollProgress === 0 ? "none" : "flex",
-        }}
-        className="z-[12] justify-center fixed bottom-0 left-0 w-full h-[32px]"
-      >
-        <p onClick={handleSendNewEmailClick} className="cursor-pointer hover-dim7 lg:hidden flex text-[calc(0.8vw+8px)] caster">
-          jessshul27@gmail.com
-        </p>
-      </div>
+                <div className="lg:mt-[-2px] min-h-[500px] relative w-[53%] lg:w-[45%] ml-[1%] md:ml-[7%] h-[100%] flex flex-col">
+                  <div className="absolute bottom-[60%] w-[80%] max-w-[420px] ml-[20%] aspect-[1.5/1]">
+                    <img
+                      className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+                      src={
+                        coversRef.current === null
+                          ? ""
+                          : coversRef.current[1].url
+                      }
+                      alt="about 2"
+                    />
+                  </div>
+                  <div className="absolute top-[55%] lg:top-[45%] ml-[20px] max-w-[330px] w-[55%] lg:w-[65%] aspect-[1/1.1]">
+                    <img
+                      className="w-[100%] h-[100%] object-cover object-[50%_50%]"
+                      src={
+                        coversRef.current === null
+                          ? ""
+                          : coversRef.current[2].url
+                      }
+                      alt="about 3"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="w-[100vw] lg:h-[80vh] h-[auto] min-h-[700px] flex flex-col-reverse lg:flex-row mt-[calc(-10vh)] sm:mt-[calc(-5vh)] md:mt-[calc(-3vh)] lg:mt-[-2vh] xl:mt-0 lg:mb-[90px]"
+              ref={section2Ref}
+            >
+              <div
+                className="w-[91vw] lg:w-[49vw] xl:w-[46vw] sm:px-[2vw] md:px-[9vw] lg:px-[2vw] xl:pl-[6vw] lg:h-[90%] h-[65vw] mb-[10vw] md:mb-0 flex flex-row mt-[90px] md:mt-[25px] lg:mt-0"
+                ref={section2TranslateDiv1}
+                style={{ opacity: 0 }}
+              >
+                <div className="w-[calc((100%-27px)*0.45)] mr-[27px] h-[100%] flex flex-col">
+                  <div className="relative w-[100%] h-[calc((100%-27px)*0.54)] mb-[27px] ">
+                    <img
+                      ref={section2img1Ref}
+                      style={{
+                        marginBottom: "30px",
+                        marginRight: "30px",
+                        border: "3px solid white",
+                      }}
+                      className="absolute bottom-0 right-0 aspect-[1/1.38] w-[43%] object-cover"
+                      src={
+                        coversRef.current === null
+                          ? ""
+                          : coversRef.current[3].url
+                      }
+                      alt="about 1"
+                    />
+                  </div>
+                  <div className="relative w-[100%] h-[calc((100%-27px)*0.46)] ">
+                    <img
+                      ref={section2img2Ref}
+                      style={{
+                        marginTop: "30px",
+                        marginRight: "30px",
+                        border: "3px solid white",
+                      }}
+                      className="absolute top-0 right-0 aspect-[1/1.35] w-[53%] object-cover"
+                      src={
+                        coversRef.current === null
+                          ? ""
+                          : coversRef.current[4].url
+                      }
+                      alt="about 2"
+                    />
+                  </div>
+                </div>
+                <div className="w-[calc((100%-27px)*0.55)] h-[100%] ">
+                  <div className="relative w-[100%] h-[calc((100%-27px)*0.61)] mb-[27px] ">
+                    <img
+                      ref={section2img3Ref}
+                      style={{
+                        marginBottom: "30px",
+                        marginLeft: "30px",
+                        border: "3px solid white",
+                      }}
+                      className="absolute bottom-0 left-0 aspect-[1/1.35] w-[72%] object-cover"
+                      src={
+                        coversRef.current === null
+                          ? ""
+                          : coversRef.current[5].url
+                      }
+                      alt="about 3"
+                    />
+                  </div>
+                  <div className="relative w-[100%] h-[calc((100%-27px)*0.39)] ">
+                    <img
+                      ref={section2img4Ref}
+                      style={{
+                        marginTop: "30px",
+                        marginLeft: "30px",
+                        border: "3px solid white",
+                      }}
+                      className="absolute top-0 left-0 aspect-[1/1.38] w-[52%] object-cover"
+                      src={
+                        coversRef.current === null
+                          ? ""
+                          : coversRef.current[6].url
+                      }
+                      alt="about 4"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-[white] g:text-left text-center lg:w-[51vw] w-[100vw] h-[auto] pb-[30px] lg:pb-0 lg:pt-[18px] lg:h-[100%] pl-[calc(5vw+40px)] lg:pl-[10px] pr-[calc(5vw+40px)] flex flex-col justify-center ">
+                <div
+                  ref={section2Text1Ref}
+                  style={{ opacity: 0 }}
+                  className="kayonest text-[calc(3vw+15px)] font-[300]"
+                >
+                  {aboutText[3].value}
+                </div>
+                <div
+                  ref={section2Text2Ref}
+                  style={{ opacity: 0 }}
+                  className="mt-[20px] leading-[calc(1vw+18px)] font-[300] text-[calc(0.5vw+11px)]"
+                >
+                  {aboutText[4].value}
+                </div>
+
+                <div
+                  ref={section2Text3Ref}
+                  style={{ opacity: 0 }}
+                  className="relative mt-[30px] cursor-pointer"
+                >
+                  <div
+                    className="hover-dim7 cursor-pointer kayonest text-[calc(0.6vw+11px)]  inline-block font-[300]"
+                    style={{ borderBottom: "1px solid white" }}
+                    onClick={() => {
+                      if (containerRef.current) {
+                        smoothScrollTo(
+                          containerRef.current.clientHeight - window.innerHeight
+                        );
+                      }
+                    }}
+                  >
+                    {aboutText[5].value}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex lg:flex-col flex-col-reverse w-[100vw]">
+              <div
+                ref={section3Ref}
+                className="overflow-hidden relative w-[100vw] aspect-[1.4/1] lg:mt-[30px] mt-[calc(3vw+80px)]  flex justify-center max-h-[calc(100vh-60px)]"
+              >
+                <div
+                  ref={section3RefLeft}
+                  className="h-[100%] bg-white  w-[25px] absolute left-0 top-0 z-[500]"
+                ></div>
+                <img
+                  ref={section3Img}
+                  alt=""
+                  className="w-[100vw] h-[calc(100%+100px)] object-cover"
+                  src={
+                    coversRef.current === null ? "" : coversRef.current[7].url
+                  }
+                />
+                <div
+                  ref={section3RefRight}
+                  className="h-[100%] bg-white w-[25px] absolute right-0 top-0 z-[500]"
+                ></div>
+              </div>
+
+              <div className="text-[white] w-[100vw] px-[70px] mt-[calc(3vh+86px)] min-h-[350px] h-[auto] flex flex-col lg:flex-row">
+                <div
+                  ref={section4Text1}
+                  className="flex flex-col lg:pl-[1vw] xl:pl-[5vw] kayonest text-[calc(2vw+45px)] leading-[calc(2vw+50px)] mb-[calc(2vw+30px)] md:w-[calc(45vw-35px)] xl:w-[calc(40vw-35px)] lg:mb-0 font-[500]"
+                >
+                  <p>{aboutText[6].value}</p>
+                </div>
+                <div
+                  ref={section4Text2}
+                  className="lg:mt-[7px] lg:mb-[70px] xl:mb-0 text-[calc(0.57vw+11px)] font-[300] leading-[calc(0.92vw+22px)] lg:w-[calc(55vw-35px)] lg:pr-[35px] xl:pr-[45px] lg:pl-[2vw]"
+                >
+                  {aboutText[7].value}
+                </div>
+              </div>
+            </div>
+
+            <div
+              ref={section5Ref}
+              className="xl:mt-[-50px] my-[79px] md:my-[100px] lg:mb-[80px] lg:mt-0 lg:w-[70vw] xl:w-[70vw] lg:ml-[14vw] w-[96vw] h-[calc(100vw*0.57)] min-h-[400px] md:min-h-[480px] flex flex-row gap-[12.5vw] xl:gap-[10vw] justify-center items-center"
+            >
+              <div className=" w-[37vw] xl:w-[32vw] h-[calc(37vw*1.33)] xl:h-[calc(32vw*1.33)] object-cover flex items-center overflow-hidden">
+                <img
+                  alt=""
+                  ref={section5img1}
+                  className="w-[100%]] h-[calc(100%+40px)] object-cover"
+                  src={
+                    coversRef.current === null ? "" : coversRef.current[8].url
+                  }
+                  style={{ transform: `translate3d(0, -40px, 0)` }}
+                />
+              </div>
+              <div className="w-[25vw] xl:w-[22vw] h-[calc(25vw*1.39)] xl:h-[calc(22vw*1.39)] object-cover flex items-center overflow-hidden">
+                <img
+                  alt=""
+                  ref={section5img2}
+                  className="w-[100%] h-[calc(100%+40px)] object-cover"
+                  src={
+                    coversRef.current === null ? "" : coversRef.current[9].url
+                  }
+                  style={{ transform: `translate3d(0, -40px, 0)` }}
+                />
+              </div>
+            </div>
+
+            <div
+              ref={translateDiv1}
+              className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
+            >
+              <img
+                className="w-[100%] h-[100%] object-cover"
+                ref={imgRef1}
+                src={
+                  coversRef.current === null ? "" : coversRef.current[10].url
+                }
+                alt=""
+                style={{ transform: `translate3d(0, -20%, 0)` }}
+              />
+
+              <div
+                ref={whiteCoverRef1}
+                className="bg-white absolute top-0 aspect-[1/1.15] h-[58%] flex justify-center items-center flex-col"
+                style={{
+                  borderRadius: "6px",
+                  transform: `translate3d(0, 72.5%, 0)`,
+                }}
+              >
+                <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
+                  01
+                </div>
+                <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
+                  {aboutText[8].value}
+                </div>
+                <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
+                  {aboutText[9].value}
+                </div>
+                <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
+                  {aboutText[10].value}
+                </div>
+
+                <img
+                  className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
+                  src={
+                    coversRef.current === null ? "" : coversRef.current[11].url
+                  }
+                  alt=""
+                  style={{ borderRadius: 5 }}
+                />
+              </div>
+            </div>
+
+            <div
+              ref={translateDiv7}
+              className="z-[105] h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
+            >
+              <img
+                className="w-[100%] h-[100%] object-cover absolute"
+                ref={imgRef7}
+                src={
+                  coversRef.current === null ? "" : coversRef.current[12].url
+                }
+                alt=""
+                style={{ transform: `translate3d(0, -20%, 0)` }}
+              />
+
+              <div className="h-[100vh] w-full overflow-hidden relative flex justify-center">
+                <div
+                  ref={whiteCoverRef7}
+                  className="bg-white absolute top-0 aspect-[1/1.15] h-[58%] flex justify-center items-center flex-col"
+                  style={{
+                    borderRadius: "6px",
+                    transform: `translate3d(0, 72.5%, 0)`,
+                  }}
+                >
+                  <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
+                    02
+                  </div>
+                  <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
+                    {aboutText[11].value}
+                  </div>
+                  <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
+                    {aboutText[12].value}
+                  </div>
+                  <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
+                    {aboutText[13].value}
+                  </div>
+
+                  <img
+                    className="aspect-[1.5/1] mb-[2%] h-[31%] object-cover"
+                    src={
+                      coversRef.current === null
+                        ? ""
+                        : coversRef.current[13].url
+                    }
+                    alt=""
+                    style={{ borderRadius: 5 }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="pb-[1vh] h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)] bg-white flex flex-col">
+              <form
+                onSubmit={handleSubmit}
+                className="z-[11] w-full h-full flex flex-col items-center justify-center"
+              >
+                <div
+                  style={{ transform: "translateY(30px)", opacity: 0 }}
+                  ref={contactTitle}
+                  onClick={() => {
+                    if (containerRef.current) {
+                      smoothScrollTo(
+                        containerRef.current.clientHeight - window.innerHeight
+                      );
+                    }
+                  }}
+                  className="cursor-pointer bestfriend leading-[calc(3vw+50px)] text-[calc(3vw+50px)]"
+                >
+                  {aboutText[14].value}
+                </div>
+
+                <div
+                  ref={contactRow1}
+                  className="flex flex-row w-[67%] md:w-[50%] mt-[5px] mb-[15px] md:mb-[15px]"
+                  style={{
+                    transform: "translateY(30px)",
+                    opacity: 0,
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <div className="w-[calc(50%-10px)]">
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      style={{
+                        borderBottom: "1px solid #999999",
+                        color: "black",
+                      }}
+                      placeholder={"Name"}
+                      required
+                      className="pb-[3px] pl-[5px] w-[100%] caster text-[calc(0.6vw+11px)] border-none outline-none"
+                    />
+                  </div>
+                  <div className="ml-[20px] pl-[5px] w-[calc(50%-10px)]">
+                    <input
+                      type="text"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      style={{
+                        borderBottom: "1px solid #999999",
+                        color: "black",
+                      }}
+                      placeholder={"Email"}
+                      required
+                      inputMode="text"
+                      autoComplete="off"
+                      className="pl-[1px] pb-[3px] w-[100%] caster border-none outline-none text-[calc(0.6vw+11px)]"
+                    />
+                  </div>
+                </div>
+                <div
+                  ref={contactRow2}
+                  style={{
+                    transform: "translateY(30px)",
+                    opacity: 0,
+                    backgroundColor: "transparent",
+                  }}
+                  className="h-[150px] mb-[18px] abygaer w-[67%] md:w-[50%]"
+                >
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder=""
+                    required
+                    className="caster w-full h-full justify-end resize-none border-none outline-none"
+                    style={{
+                      color: "black",
+                      borderBottom: "1px solid #999999",
+                    }}
+                  />
+                </div>
+
+                <button
+                  ref={contactSendButton}
+                  className="bg-white cursor-pointer baskara text-[35px] w-[120px] h-[40px] flex items-center justify-center pt-[8px] border border-[#BBBBBB] rounded-[25px] transition-all duration-200 hover:bg-[#BBBBBB] hover:text-white"
+                  type="submit"
+                  style={{
+                    transform: "translateY(30px)",
+                    opacity: 0,
+                  }}
+                >
+                  Send
+                </button>
+              </form>
+            </div>
+
+            <div
+              ref={contactTrees}
+              style={{
+                display: scrollProgress === 0 ? "none" : "flex",
+              }}
+              className="z-[10]  fixed bottom-0 left-0 flex-row w-full h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)]"
+            >
+              <div className="lg:w-[28%] w-[33%] h-[100%] flex items-end justify-end">
+                <img alt="" className="w-full object-contain" src={tree1Url} />
+              </div>
+              <div className="lg:w-[44%] w-[34%] h-[100%] flex flex-row gap-[10px]"></div>
+              <div className="lg:w-[28%] w-[33%] h-[100%] flex items-end justify-end">
+                <img alt="" className="w-full object-contain" src={tree2Url} />
+              </div>
+            </div>
+
+            <div
+              ref={contactTreesEmail}
+              style={{
+                display: scrollProgress === 0 ? "none" : "flex",
+              }}
+              className="z-[12] justify-center fixed bottom-0 left-0 w-full h-[32px]"
+            >
+              <p
+                onClick={handleSendNewEmailClick}
+                className="cursor-pointer hover-dim7 lg:hidden flex text-[calc(0.8vw+8px)] caster"
+              >
+                jessshul27@gmail.com
+              </p>
+            </div>
+          </>
+        )}
     </div>
   );
 };

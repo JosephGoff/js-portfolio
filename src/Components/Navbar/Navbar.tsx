@@ -439,6 +439,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
               backgroundColor: currentNavColor,
               marginTop: navOpenSpin ? 0 : "-4.5px",
               transform: navOpenSpin ? "rotate(45deg)" : "none",
+              transition: "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)"
             }}
           ></div>
           <div
@@ -446,6 +447,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
             style={{
               backgroundColor: currentNavColor,
               opacity: navOpenSpin ? 0 : 1,
+              transition: "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)"
             }}
           ></div>
           <div
@@ -454,6 +456,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
               backgroundColor: currentNavColor,
               marginTop: navOpenSpin ? 0 : "4.5px",
               transform: navOpenSpin ? "rotate(-45deg)" : "none",
+              transition: "background-color 3s cubic-bezier(0.3, 0.8, 0.25, 0.8)"
             }}
           ></div>
         </div>

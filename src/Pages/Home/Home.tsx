@@ -54,6 +54,7 @@ const Home: React.FC<HomePageProps> = ({
       coversRef.current = project["Projects"].children;
       readyToTransition.current = true;
       setCoversReady(project["Projects"].children);
+      console.log( project["Projects"].children)
     }
   }, [projectAssets]);
 
@@ -236,7 +237,7 @@ const Home: React.FC<HomePageProps> = ({
   }, [coversReady]);
 
   useEffect(() => {
-    if (!slideUpComponent && currentCoverRef && currentCoverRef.current && coversRef.current !== null) {
+    if (!slideUpComponent && currentCoverRef && currentCoverRef.current !== null && coversRef.current !== null) {
       const text = coversRef.current[currentCoverRef.current].title
         .split("_")
         .map((word: any) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -422,7 +423,7 @@ const Home: React.FC<HomePageProps> = ({
 
   const generateRandomDelay = () => Math.random() * 0.3;
 
-  if (!currentCoverRef.current) return <></>
+  if (currentCoverRef.current === null || currentCoverRef.current === undefined) {return <></>}
 
   return (
     <div className="fixed w-[100vw] h-[100vh] py-[calc(20px+10vh)] md:py-0">
@@ -522,7 +523,7 @@ const Home: React.FC<HomePageProps> = ({
                             bottom: item.top ? "none" : `${item.y}vh`,
                           }}
                         >
-                          {coversRef.current !== null && currentCoverRef.current && index < coversRef.current[currentCoverRef.current].images.length && <img
+                          {coversRef.current !== null && currentCoverRef.current !== null && index < coversRef.current[currentCoverRef.current].images.length && <img
                             alt="img"
                             className="image w-[100%] h-[100%]"
                             style={{ objectFit: "cover" }}
