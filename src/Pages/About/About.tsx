@@ -861,9 +861,9 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       className="w-[100vw] min-h-[100vh] select-none"
       style={{ backgroundColor: "white" }}
     >
-      {aboutText.length >= 15 &&
+      {aboutText.length >= 13 &&
         coversRef.current !== null &&
-        coversRef.current.length >= 14 && (
+        coversRef.current.length >= 12 && (
           <>
             <div
               className="z-[201] fixed top-0 left-0 w-[100vw] h-[58px] md:h-[76px] lg:h-[80px] "
@@ -1160,17 +1160,15 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
                   transform: `translate3d(0, 72.5%, 0)`,
                 }}
               >
-                <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
+                {/* <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
                   01
-                </div>
-                <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
+                </div> */}
+                <div className="mollie mt-[1%] mb-[4.1%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
                   {aboutText[8].value}
                 </div>
-                <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
+          
+                <div className="text-center mx-[20.5%] mb-[6%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
                   {aboutText[9].value}
-                </div>
-                <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
-                  {aboutText[10].value}
                 </div>
 
                 <img
@@ -1207,17 +1205,14 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
                     transform: `translate3d(0, 72.5%, 0)`,
                   }}
                 >
-                  <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
+                  {/* <div className="h-[5.5%] text-[calc(12px+0.22vw)] font-[500] text-center">
                     02
+                  </div> */}
+                  <div className="mollie mt-[1%] mb-[4.1%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
+                    {aboutText[10].value}
                   </div>
-                  <div className="mb-[3.5%] text-[calc(27px+0.5vw)] leading-[calc(27px+0.5vw)] mx-[20%] font-[600] text-center">
+                  <div className="text-center mx-[19%] mb-[6%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
                     {aboutText[11].value}
-                  </div>
-                  <div className="mb-[3.3%] text-[calc(12px+0.1vw)] text-center">
-                    {aboutText[12].value}
-                  </div>
-                  <div className="text-center mx-[21%] mb-[3.8%] leading-[calc(13px+0.28vw)] text-[calc(11px+0.2vw)]">
-                    {aboutText[13].value}
                   </div>
 
                   <img
@@ -1251,7 +1246,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
                   }}
                   className="cursor-pointer bestfriend leading-[calc(3vw+50px)] text-[calc(3vw+50px)]"
                 >
-                  {aboutText[14].value}
+                  {aboutText[12].value}
                 </div>
 
                 <div

@@ -177,44 +177,27 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const updateProjectFile = async (newProjectFile: any) => {
     setLoading(true);
-    cancelTimer();
-    const filePath = "project.json";
+     cancelTimer();
+    const formData = new FormData();
+    formData.append("appFile", JSON.stringify(newProjectFile));
     try {
-      const fileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github.v3+json",
-      };
-      const { data: fileInfo } = await axios.get(fileUrl, { headers });
-      const fileSha = fileInfo.sha;
-
-      // Convert the JSON to a UTF-8 encoded Base64 string
-      const updatedContent = btoa(
-        unescape(
-          encodeURIComponent(
-            typeof newProjectFile === "string"
-              ? newProjectFile
-              : JSON.stringify(newProjectFile)
-          )
-        )
-      );
-      const commitMessage = "Update project.json with new content";
-      await axios.put(
-        fileUrl,
-        {
-          message: commitMessage,
-          content: updatedContent,
-          sha: fileSha,
-          branch,
+      const local = false;
+      let serverUrl = "https://cms-server-production-b414.up.railway.app/edit";
+      if (local) {
+        serverUrl = "http://localhost:3001/edit";
+      }
+      const response = await axios.post(serverUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-        { headers }
-      );
-
-      console.log("Project file updated successfully");
-      setProjectFile(newProjectFile);
-      return true;
+      });
+      if (response.status === 200) {
+        console.log("Project file updated successfully");
+        setProjectFile(newProjectFile);
+      } 
+      return response.status === 200
     } catch (error) {
-      console.error("Error updating project file:", error);
+      console.error("Upload error:", error);
       return false;
     } finally {
       setLoading(false);

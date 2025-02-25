@@ -388,3 +388,50 @@ export const uploadToGitHub = async (
     alert("Failed to upload images to GitHub. Check console for details.");
   }
 };
+
+export const updateGitProjectFile = async (newProjectFile: any) => {
+  // setLoading(true);
+  // cancelTimer();
+  const filePath = "project.json";
+  try {
+    const fileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github.v3+json",
+    };
+    const { data: fileInfo } = await axios.get(fileUrl, { headers });
+    const fileSha = fileInfo.sha;
+
+    // Convert the JSON to a UTF-8 encoded Base64 string
+    const updatedContent = btoa(
+      unescape(
+        encodeURIComponent(
+          typeof newProjectFile === "string"
+            ? newProjectFile
+            : JSON.stringify(newProjectFile)
+        )
+      )
+    );
+    const commitMessage = "Update project.json with new content";
+    await axios.put(
+      fileUrl,
+      {
+        message: commitMessage,
+        content: updatedContent,
+        sha: fileSha,
+        branch,
+      },
+      { headers }
+    );
+
+    console.log("Project file updated successfully");
+    // setProjectFile(newProjectFile);
+    return true;
+  } catch (error) {
+    console.error("Error updating project file:", error);
+    return false;
+  }
+  // finally {
+  //   setLoading(false);
+  // }
+};
