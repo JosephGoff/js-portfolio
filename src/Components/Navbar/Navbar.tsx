@@ -436,7 +436,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
           <div
             className="nav-transition nav-hamburger-bar select-none absolute top-[16px] left-0"
             style={{
-              backgroundColor: "black",
+              backgroundColor: currentNavColor,
               marginTop: navOpenSpin ? 0 : "-4.5px",
               transform: navOpenSpin ? "rotate(45deg)" : "none",
             }}
@@ -444,14 +444,14 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
           <div
             className="nav-transition nav-hamburger-bar select-none absolute top-[16px] left-0"
             style={{
-              backgroundColor: "black",
+              backgroundColor: currentNavColor,
               opacity: navOpenSpin ? 0 : 1,
             }}
           ></div>
           <div
             className="nav-transition nav-hamburger-bar select-none absolute top-[16px] left-0"
             style={{
-              backgroundColor: "black",
+              backgroundColor: currentNavColor,
               marginTop: navOpenSpin ? 0 : "4.5px",
               transform: navOpenSpin ? "rotate(-45deg)" : "none",
             }}

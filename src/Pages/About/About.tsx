@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Page, PageProps } from "../../App";
+import { GIT_KEYS, Page, PageProps } from "../../App";
 import useProjectColorsState from "../../store/useProjectColorsStore";
 import useSelectedProjectState from "../../store/useSelectedProjectStore";
 import useSelectedProjectNameState from "../../store/useSelectedProjectNameStore";
@@ -157,6 +157,10 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   );
   const contactRef = useRef<HTMLDivElement | null>(null);
   const [aboutText, setAboutText] = useState<any>({});
+  const tree1Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees1.png`;
+  const tree2Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees2.png`;
+  const tree3Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees3.png`;
+  const tree4Url = `https://raw.githubusercontent.com/${GIT_KEYS.owner}/${GIT_KEYS.repo}/refs/heads/${GIT_KEYS.branch}/constants/contact-trees4.png`;
 
   useEffect(() => {
     const project = projectAssets as any;
@@ -271,26 +275,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
           }
         });
       }
-
-      const rect = translateDiv7.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      if (rect.bottom <= windowHeight + 300) {
-        const extraScroll = Math.min(
-          100,
-          (windowHeight - rect.bottom + 280) / 2
-        );
-
-        setScrollProgress(extraScroll / 100);
-        scrollProgressRef.current = extraScroll / 100;
-      } else {
-        setScrollProgress(0);
-        scrollProgressRef.current = 0;
-      }
-      if (rect.bottom <= windowHeight + 3 && scrollProgress !== 100) {
-        setScrollProgress(100);
-        scrollProgressRef.current = 100;
-      }
     };
 
     window.addEventListener("scroll", handleParallax);
@@ -325,12 +309,6 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
     }
 
     requestAnimationFrame(animateScroll);
-  };
-
-  const handleSendRequestClick = () => {
-    if (contactRef.current !== null) {
-      smoothScrollTo(contactRef.current.getBoundingClientRect().top);
-    }
   };
 
   const items = [
@@ -388,6 +366,27 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const section5img2 = useRef<HTMLImageElement | null>(null);
   const section5Translate = useRef(-40);
 
+  const contactTrees = useRef<HTMLDivElement | null>(null);
+  const contactTreesEmail = useRef<HTMLDivElement | null>(null);
+  const contactTreesOpacity = useRef(0);
+
+  const contactTitle = useRef<HTMLDivElement | null>(null);
+  const contactRow1 = useRef<HTMLDivElement | null>(null);
+  const contactRow2 = useRef<HTMLDivElement | null>(null);
+  const contactSendButton = useRef<HTMLButtonElement | null>(null);
+
+  const contactTitleOpacity = useRef(0);
+  const contactTitleTranslate = useRef(30);
+
+  const contactRow1Opacity = useRef(0);
+  const contactRow1Translate = useRef(30);
+
+  const contactRow2Opacity = useRef(0);
+  const contactRow2Translate = useRef(30);
+
+  const contactSendButtonOpacity = useRef(0);
+  const contactSendButtonTranslate = useRef(30);
+
   useEffect(() => {
     const handleParallax = () => {
       if (
@@ -408,7 +407,14 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         !section4Text2.current ||
         !section5Ref.current ||
         !section5img1.current ||
-        !section5img2.current
+        !section5img2.current ||
+        !translateDiv7.current ||
+        !contactTrees.current ||
+        !contactTreesEmail.current ||
+        !contactTitle.current ||
+        !contactRow1.current ||
+        !contactRow2.current ||
+        !contactSendButton.current
       )
         return;
 
@@ -511,6 +517,40 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         80,
         Math.max(0, section5TranslateProgress)
       );
+
+      // CONTACT
+      const screenBottom = window.scrollY - window.innerHeight;
+      const pageBottom =
+        translateDiv7.current.offsetTop - translateDiv7.current.clientHeight;
+      const contactHeight = window.innerHeight * 0.8;
+
+      let contactOpacityProgress = Math.max(
+        0,
+        Math.min(1, (-280 + screenBottom - pageBottom) / 300)
+      );
+
+      let contactTitleOpacityProgress = Math.max(
+        0,
+        Math.min(1, (-(contactHeight * 0.4) + screenBottom - pageBottom) / 150)
+      );
+      let contactRow1OpacityProgress = Math.max(
+        0,
+        Math.min(1, (-(contactHeight * 0.5) + screenBottom - pageBottom) / 150)
+      );
+      let contactRow2OpacityProgress = Math.max(
+        0,
+        Math.min(1, (-(contactHeight * 0.6) + screenBottom - pageBottom) / 150)
+      );
+      let contactSendButtonOpacityProgress = Math.max(
+        0,
+        Math.min(1, (-(contactHeight * 0.7) + screenBottom - pageBottom) / 150)
+      );
+
+      if (screenBottom >= pageBottom) {
+        setScrollProgress(1);
+      } else {
+        setScrollProgress(0);
+      }
 
       if (animationFrame2.current) {
         cancelAnimationFrame(animationFrame2.current);
@@ -620,6 +660,45 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             -40 + section5Translate.current
           }px, 0)`;
         }
+
+        // CONTACT
+        contactTreesOpacity.current = contactOpacityProgress;
+        if (contactTrees.current) {
+          contactTrees.current.style.opacity = `${contactTreesOpacity.current}`;
+        }
+        if (contactTreesEmail.current) {
+          contactTreesEmail.current.style.opacity = `${contactTreesOpacity.current}`;
+        }
+
+        contactTitleOpacity.current = contactTitleOpacityProgress;
+        contactRow1Opacity.current = contactRow1OpacityProgress;
+        contactRow2Opacity.current = contactRow2OpacityProgress;
+        contactSendButtonOpacity.current = contactSendButtonOpacityProgress;
+
+        if (contactTitle.current) {
+          contactTitle.current.style.transform = `translate3d(0, ${
+            20 - contactTitleTranslate.current
+          }px, 0)`;
+          contactTitle.current.style.opacity = `${contactTitleOpacity.current}`;
+        }
+        if (contactRow1.current) {
+          contactRow1.current.style.transform = `translate3d(0, ${
+            20 - contactRow1Translate.current
+          }px, 0)`;
+          contactRow1.current.style.opacity = `${contactRow1Opacity.current}`;
+        }
+        if (contactRow2.current) {
+          contactRow2.current.style.transform = `translate3d(0, ${
+            20 - contactRow2Translate.current
+          }px, 0)`;
+          contactRow2.current.style.opacity = `${contactRow2Opacity.current}`;
+        }
+        if (contactSendButton.current) {
+          contactSendButton.current.style.transform = `translate3d(0, ${
+            20 - contactSendButtonTranslate.current
+          }px, 0)`;
+          contactSendButton.current.style.opacity = `${contactSendButtonOpacity.current}`;
+        }
       });
     };
 
@@ -668,11 +747,13 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const [bgColors, setbgColors] = useState<string[]>([
     "white",
     "rgb(131, 162, 115)",
-    "rgb(75, 101, 56)"
-  ])
+    "rgb(75, 101, 56)",
+  ]);
+
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.style.backgroundColor = bgColors[0];
@@ -681,7 +762,12 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current || !section3RefLeft.current || !section3RefRight.current) return;
+      if (
+        !containerRef.current ||
+        !section3RefLeft.current ||
+        !section3RefRight.current
+      )
+        return;
 
       const scrollTop = window.scrollY;
       const screenHeight = window.innerHeight;
@@ -754,6 +840,49 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [displayText, setDisplayText] = useState<any>({});
+  useEffect(() => {
+    setDisplayText(aboutText.text);
+  }, [aboutText]);
+
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+
+    const formURL =
+      "https://docs.google.com/forms/d/e/1FAIpQLSefgkOVmZsuBuglgw9YzEoX8FJ1wdEs1hGIU9_womrnLO6xDQ/formResponse";
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("entry.1601100610", formData.name);
+    formDataToSend.append("entry.1899991606", formData.email);
+    formDataToSend.append("entry.193734573", formData.message);
+
+    fetch(formURL, {
+      method: "POST",
+      body: formDataToSend,
+    })
+      .then((response) => {
+        toast.success("Form submitted successfully!");
+      })
+      .catch((error) => {
+        toast.success("Form submitted successfully!");
+      });
+  };
+
+  const handleSendNewEmailClick = () => {
+    const sendEmail = "jessshul27@gmail.com";
+    window.location.href = `mailto:${sendEmail}`;
+  };
 
   return (
     <div
@@ -848,7 +977,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.54)] mb-[27px] ">
               <img
                 ref={section2img1Ref}
-                style={{ marginBottom: "30px", marginRight: "30px", border: "3px solid white" }}
+                style={{
+                  marginBottom: "30px",
+                  marginRight: "30px",
+                  border: "3px solid white",
+                }}
                 className="absolute bottom-0 right-0 aspect-[1/1.38] w-[43%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 1"
@@ -857,7 +990,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.46)] ">
               <img
                 ref={section2img2Ref}
-                style={{ marginTop: "30px", marginRight: "30px", border: "3px solid white" }}
+                style={{
+                  marginTop: "30px",
+                  marginRight: "30px",
+                  border: "3px solid white",
+                }}
                 className="absolute top-0 right-0 aspect-[1/1.35] w-[53%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 2"
@@ -868,7 +1005,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.61)] mb-[27px] ">
               <img
                 ref={section2img3Ref}
-                style={{ marginBottom: "30px", marginLeft: "30px", border: "3px solid white" }}
+                style={{
+                  marginBottom: "30px",
+                  marginLeft: "30px",
+                  border: "3px solid white",
+                }}
                 className="absolute bottom-0 left-0 aspect-[1/1.35] w-[72%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 3"
@@ -877,7 +1018,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
             <div className="relative w-[100%] h-[calc((100%-27px)*0.39)] ">
               <img
                 ref={section2img4Ref}
-                style={{ marginTop: "30px", marginLeft: "30px", border: "3px solid white" }}
+                style={{
+                  marginTop: "30px",
+                  marginLeft: "30px",
+                  border: "3px solid white",
+                }}
                 className="absolute top-0 left-0 aspect-[1/1.38] w-[52%] object-cover"
                 src={coversRef.current === null ? "" : coversRef.current[0].url}
                 alt="about 4"
@@ -922,8 +1067,15 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
               style={{ borderRadius: "50%", border: "0.5px solid #dddddd" }}
             ></div> */}
             <div
-              className="kayonest text-[calc(0.6vw+11px)]  inline-block font-[300]"
+              className="hover-dim7 cursor-pointer kayonest text-[calc(0.6vw+11px)]  inline-block font-[300]"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => {
+                if (containerRef.current) {
+                  smoothScrollTo(
+                    containerRef.current.clientHeight - window.innerHeight
+                  );
+                }
+              }}
             >
               Get in touch
             </div>
@@ -1042,7 +1194,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
 
       <div
         ref={translateDiv7}
-        className="h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
+        className="z-[105] h-[100vh] min-h-[600px] w-[100vw] overflow-hidden relative flex justify-center"
       >
         <img
           className="w-[100%] h-[100%] object-cover absolute"
@@ -1084,33 +1236,120 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         </div>
       </div>
 
-      <div className="h-[calc(100vh-58px)] md:h-[calc(100vh-76px)] lg:h-[calc(100vh-80px)]"></div>
-
-      {/* <div
-        className="z-[600] fixed top-0 left-0 w-full h-full bg-white pointer-events-none"
-        style={{ opacity: scrollProgress }}
-      >
-        <div
-          style={{ borderTop: "0.5px solid #bbbbbb" }}
-          className="flex flex-row mx-[calc(2vw+15px)] py-[40px]"
+      <div className="pb-[1vh] h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)] bg-white flex flex-col">
+        <form
+          onSubmit={handleSubmit}
+          className="z-[11] w-full h-full flex flex-col items-center justify-center"
         >
-          <div className="md:flex hidden w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px)*0.65)] bg-[#EEEEEE] relative p-[4vw]">
-            <img
-              alt=""
-              style={{}}
-              className="w-[100%] h-[100%] object-cover"
-              src="assets/about/contact.png"
-            />
-            <div className="absolute top-0 left-0 w-[100%] h-[100%] opacity-[0%] bg-white"></div>
+          <div
+            style={{ transform: "translateY(30px)", opacity: 0 }}
+            ref={contactTitle}
+            onClick={() => {
+              if (containerRef.current) {
+                smoothScrollTo(
+                  containerRef.current.clientHeight - window.innerHeight
+                );
+              }
+            }}
+            className="cursor-pointer bestfriend leading-[calc(3vw+50px)] text-[calc(3vw+50px)]"
+          >
+            Get in touch
+          </div>
+
+          <div
+            ref={contactRow1}
+            className="flex flex-row w-[67%] md:w-[50%] mt-[5px] mb-[15px] md:mb-[15px]"
+            style={{ transform: "translateY(30px)", opacity: 0, backgroundColor: "transparent"}}
+          >
+            <div className="w-[calc(50%-10px)]">
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                style={{ borderBottom: "1px solid #999999", color: "black" }}
+                placeholder={"Name"}
+                required
+                className="pb-[3px] pl-[5px] w-[100%] caster text-[calc(0.6vw+11px)] border-none outline-none"
+              />
+            </div>
+            <div className="ml-[20px] pl-[5px] w-[calc(50%-10px)]">
+              <input
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                style={{ borderBottom: "1px solid #999999", color: "black" }}
+                placeholder={"Email"}
+                required
+                inputMode="text"
+                autoComplete="off"
+                className="pl-[1px] pb-[3px] w-[100%] caster border-none outline-none text-[calc(0.6vw+11px)]"
+              />
+            </div>
           </div>
           <div
-            ref={contactRef}
-            className="w-[100%] md:w-[calc((96vw-30px)*0.5)] h-[calc((96vw-30px))] md:h-[calc((96vw-30px)*0.65)]"
+            ref={contactRow2}
+            style={{ transform: "translateY(30px)", opacity: 0, backgroundColor: "transparent"}}
+            className="h-[150px] mb-[18px] abygaer w-[67%] md:w-[50%]"
           >
-            <ContactForm2 text={aboutText} />
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder=""
+              required
+              className="caster w-full h-full justify-end resize-none border-none outline-none"
+              style={{
+                color: "black",
+                borderBottom: "1px solid #999999",
+              }}
+            />
           </div>
+
+          <button
+            ref={contactSendButton}
+            className="bg-white cursor-pointer baskara text-[35px] w-[120px] h-[40px] flex items-center justify-center pt-[8px]"
+            type="submit"
+            style={{
+              transform: "translateY(30px)",
+              opacity: 0,
+              border: "1px solid #BBBBBB",
+              borderRadius: "25px",
+            }}
+          >
+            Send
+          </button>
+        </form>
+      </div>
+
+      <div
+        ref={contactTrees}
+        style={{
+          display: scrollProgress === 0 ? "none" : "flex",
+        }}
+        className="z-[10]  fixed bottom-0 left-0 flex-row w-full h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)]"
+      >
+        <div className="lg:w-[28%] w-[33%] h-[100%] flex items-end justify-end">
+          <img alt="" className="w-full object-contain" src={tree1Url} />
         </div>
-      </div> */}
+        <div className="lg:w-[44%] w-[34%] h-[100%] flex flex-row gap-[10px]"></div>
+        <div className="lg:w-[28%] w-[33%] h-[100%] flex items-end justify-end">
+          <img alt="" className="w-full object-contain" src={tree2Url} />
+        </div>
+      </div>
+
+      <div
+        ref={contactTreesEmail}
+        style={{
+          display: scrollProgress === 0 ? "none" : "flex",
+        }}
+        className="z-[12] justify-center fixed bottom-0 left-0 w-full h-[32px]"
+      >
+        <p onClick={handleSendNewEmailClick} className="cursor-pointer hover-dim7 lg:hidden flex text-[calc(0.8vw+8px)] caster">
+          jessshul27@gmail.com
+        </p>
+      </div>
     </div>
   );
 };
