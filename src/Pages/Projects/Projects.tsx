@@ -62,10 +62,7 @@ const Projects: React.FC<ProjectsPageProps> = ({
 
   useEffect(() => {
     const project = projectAssets as any;
-    if (
-      project !== null &&
-      project["Projects"]
-    ) {
+    if (project !== null && project["Projects"]) {
       const coversList = project["Projects"].children as ProjectEntry[];
       const newProjectsList = coversList.map((item) =>
         item.title.replaceAll("_", "").replaceAll("&", "and")
@@ -100,7 +97,10 @@ const Projects: React.FC<ProjectsPageProps> = ({
     }
   }, [animate, currentPage, page, projectsList, selectedProject]);
 
+  const isOnCooldown = useRef(false);
   function handleProjectClick(index: number, item: any) {
+    if (isOnCooldown.current) return;
+    
     if (canSelectProject && coversReady !== null) {
       setCanSelectProject(false);
       const currentProj = selectedProject;
@@ -123,14 +123,18 @@ const Projects: React.FC<ProjectsPageProps> = ({
       navigate(nextTitle);
 
       setProjectColors(projectColorsCopy);
+
       setTimeout(() => {
         projectColorsCopy[1] = [item.bg_color, item.text_color];
         setProjectColors(projectColorsCopy);
         setSelectedProjectName([null, index, null]);
-        setTimeout(()=>{
-          setCanSelectProject(true);
-        },500)
+        setCanSelectProject(true);
       }, 1000);
+
+      isOnCooldown.current = true;
+      setTimeout(() => {
+        isOnCooldown.current = false; 
+      }, 1500);
     }
   }
 
