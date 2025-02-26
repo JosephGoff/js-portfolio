@@ -500,7 +500,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   };
 
   const handleEditFolderColor = async (index: number, newColor: string) => {
-    setLoading(true);
     const currentFolder = getCurrentFolder();
     if (
       currentFolder !== null &&
@@ -531,9 +530,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         );
         targetObject["details"]["colors"][foundIndex].value = newColor;
       }
-      await updateProjectFile(projectFileObject);
+      setProjectFile(projectFileObject);
+      resetTimer();
     }
-    setLoading(false);
   };
 
   const updateFolderName = (newValue: string) => {
