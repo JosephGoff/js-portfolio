@@ -20,6 +20,8 @@ export type ArchivesEntryImage = {
   index: number;
   url: string;
   aspectRatio?: number;
+  width: number;
+  height: number;
 };
 
 export type ArchivesEntry = {
@@ -548,15 +550,16 @@ const Archives: React.FC<ArchivesPageProps> = ({
                               height: "100%",
                               objectFit: "cover",
                               transition: "transform 0.3s ease-in-out",
+                              aspectRatio: `${item.width} / ${item.height}`
                             }}
-                            onLoad={(e: any) => {
-                              const img = e.target;
-                              const naturalWidth = img.naturalWidth;
-                              const naturalHeight = img.naturalHeight;
+                            // onLoad={(e: any) => {
+                              // const img = e.target;
+                              // const naturalWidth = img.naturalWidth;
+                              // const naturalHeight = img.naturalHeight;
 
                               // Set the aspect ratio dynamically
-                              item.aspectRatio = naturalWidth / naturalHeight;
-                            }}
+                              // item.aspectRatio = naturalWidth / naturalHeight;
+                            // }}
                           />
                         </div>
                       </ImageListItem>
