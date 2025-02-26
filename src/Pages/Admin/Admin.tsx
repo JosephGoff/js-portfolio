@@ -177,7 +177,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const updateProjectFile = async (newProjectFile: any) => {
     setLoading(true);
-     cancelTimer();
+    cancelTimer();
     const formData = new FormData();
     formData.append("appFile", JSON.stringify(newProjectFile));
     try {
@@ -194,8 +194,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       if (response.status === 200) {
         console.log("Project file updated successfully");
         setProjectFile(newProjectFile);
-      } 
-      return response.status === 200
+      }
+      return response.status === 200;
     } catch (error) {
       console.error("Upload error:", error);
       return false;
@@ -589,12 +589,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   };
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const projectFileRef = useRef(projectFile);
+  useEffect(() => {
+    projectFileRef.current = projectFile;
+  }, [projectFile]);
+
   const startTimer = () => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
     timerRef.current = setTimeout(async () => {
-      await updateProjectFile(projectFile);
+      await updateProjectFile(projectFileRef.current);
     }, 3000);
   };
 
