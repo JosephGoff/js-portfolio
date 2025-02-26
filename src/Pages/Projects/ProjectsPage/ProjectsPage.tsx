@@ -12,7 +12,7 @@ import useProjectAssetsStore from "../../../store/useProjectAssetsStore";
 import usePreloadedImagesStore from "../../../store/usePreloadedImagesStore";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import { ProjectEntry } from "../Projects";
+import { ProjectEntry, ProjectEntryImage } from "../Projects";
 
 export interface ProjectsPageProps {
   navigate: (page: Page) => void;
@@ -43,7 +43,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
   const { canSelectProject, setCanSelectProject } = useCanSelectProjectState();
   const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
 
-  const [imageDimensions, setImageDimensions] = useState<ImageDimension[]>([]);
+  const [imageDimensions, setImageDimensions] = useState<ProjectEntryImage[]>([]);
   const scrollRef = useRef(0);
   const parallaxRefs = useRef<HTMLImageElement[]>([]);
   const projectPageRef = useRef<HTMLDivElement>(null);
@@ -200,23 +200,9 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
 
   const loadImageDimensions = async () => {
     if (coversRef.current !== null) {
-      let dimensions: ImageDimension[] = [];
-
+      let dimensions: ProjectEntryImage[] = [];
       if (slideUpComponent && selectedProjectName[2] !== null) {
-        dimensions = await Promise.all(
-          coversRef.current[selectedProjectName[2]].images.map((item) => {
-            return new Promise<ImageDimension>((resolve) => {
-              const img = new Image();
-              img.onload = () =>
-                resolve({
-                  width: img.naturalWidth,
-                  height: img.naturalHeight,
-                  src: item.url,
-                });
-              img.src = item.url;
-            });
-          })
-        );
+        dimensions = coversRef.current[selectedProjectName[2]].images
         setImageDimensions(dimensions);
         setIncomingImageDimensions(dimensions);
       }
@@ -225,30 +211,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
         incomingImageDimensions.length === 0 &&
         imageDimensions.length === 0
       ) {
-        dimensions = coversRef.current[selectedProjectName[1]].images.map(
-          (item) => {
-            return {
-              width: item.width,
-              height: item.height,
-              src: item.url,
-            };
-          }
-        );
-        // dimensions = await Promise.all(
-        //   coversRef.current[selectedProjectName[1]].images.map((item) => {
-        //     return new Promise<ImageDimension>((resolve) => {
-        //       const img = new Image();
-        //       img.onload = () =>
-        //         resolve({
-        //           width: img.naturalWidth,
-        //           height: img.naturalHeight,
-        //           src: item.url,
-        //         });
-        //       img.src = item.url;
-        //     });
-        //   })
-        // );
-
+        dimensions = coversRef.current[selectedProjectName[1]].images
         setImageDimensions(dimensions);
         setIncomingImageDimensions(dimensions);
       }
@@ -419,7 +382,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                     // }
                     src={
                       imageDimensions && imageDimensions.length > 0
-                        ? imageDimensions[0].src
+                        ? imageDimensions[0].url
                         : ""
                     }
                     className="w-[100%] aspect-[1.55/1] max-h-[50vh]"
@@ -462,7 +425,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                             <img
                               ref={(el) => (parallaxRefs.current[index] = el!)}
                               alt=""
-                              src={img.src}
+                              src={img.url}
                               style={{
                                 objectFit: "cover",
                                 zIndex: 105 + index,
@@ -487,7 +450,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                 alt=""
                 src={
                   imageDimensions && imageDimensions.length > 0
-                    ? imageDimensions[0].src
+                    ? imageDimensions[0].url
                     : ""
                 }
                 // src={
@@ -532,7 +495,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                         <img
                           ref={(el) => (parallaxRefs.current[index] = el!)}
                           alt=""
-                          src={img.src}
+                          src={img.url}
                           style={{
                             objectFit: "cover",
                             zIndex: 105 + index,

@@ -1,19 +1,14 @@
 import { create } from "zustand";
-
-interface ImageDimension {
-  width: number;
-  height: number;
-  src: string;
-}
+import { ProjectEntryImage } from "../Pages/Projects/Projects";
 
 type StateType = {
-  incomingImageDimensions: ImageDimension[]
-  setIncomingImageDimensions: (newVal:ImageDimension[]) => void;
+  incomingImageDimensions: ProjectEntryImage[]
+  setIncomingImageDimensions: (newVal: ProjectEntryImage[]) => void;
 };
 
 const useIncomingImageDimensionsState = create<StateType>((set) => ({
   incomingImageDimensions: [],
-  setIncomingImageDimensions: (newVal: ImageDimension[]) =>
+  setIncomingImageDimensions: (newVal: ProjectEntryImage[]) =>
     set((state) => ({ incomingImageDimensions: newVal })),
 }));
 

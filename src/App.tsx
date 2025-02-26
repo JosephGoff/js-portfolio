@@ -1053,7 +1053,8 @@ const App = () => {
           incomingPageDecision.split("/").length === 2 && (
             <>
               <div
-                className="w-[calc((310px+2vw)+(3vw+30px))] sm:w-[calc((360px+2vw)+(3vw+30px))] md:w-[calc((410px+2vw)+(3vw+30px))] h-[100vh] fixed left-0 top-0 "
+              // w-[calc((310px+2vw)+(3vw+30px))] sm:w-[calc((360px+2vw)+(3vw+30px))] md:w-[calc((410px+2vw)+(3vw+30px))]
+                className="w-[100vw] h-[100vh] fixed left-0 top-0 "
                 style={{ backgroundColor: projectColors[0][0] }}
               ></div>
 
