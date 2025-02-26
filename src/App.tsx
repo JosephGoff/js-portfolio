@@ -23,6 +23,8 @@ import usePreloadedImagesStore from "./store/usePreloadedImagesStore";
 import useSelectedArchiveGroupStore from "./store/useSelectedArchiveGroupStore";
 import Admin from "./Pages/Admin/Admin";
 import useAppDataFileStore from "./store/useAppDataFileStore";
+import { Player } from "@lottiefiles/react-lottie-player";
+import flower from "./utils/flower.json";
 
 export interface SlideUpPageProps {
   children: React.ReactNode;
@@ -55,20 +57,6 @@ export type IncomingPage = string | null;
 export interface PageProps {
   navigate: (page: Page) => void;
 }
-
-// Preload images function
-const preloadImages = (urls: string[]) => {
-  return Promise.all(
-    urls.map((url) => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.src = url;
-        img.onload = () => resolve({ url, success: true });
-        img.onerror = () => resolve({ url, success: false });
-      });
-    })
-  );
-};
 
 const random4Digits = () => {
   return Math.floor(1000 + Math.random() * 9000);
@@ -169,9 +157,44 @@ const App = () => {
   // FULL REPOSITORY & APP FILE
   const [projectImages, setProjectImages] = useState<string[]>([]);
   const [projectFile, setProjectFile] = useState<any>({});
-  const collectAllImages = useRef<string[][]>([[], [], [], []]);
+  const collectAllImages = useRef<string[][]>([[], [], []]);
   // Generate an array where each number is unique to the two next to it
   const [layoutOrder, setLayoutOrder] = useState<number[]>([]);
+
+  const [preloadedFirstImagesCount, setPreloadedFirstImagesCount] =
+    useState<number>(0);
+  const preloadedFirstImagesTotal = useRef<number>(0);
+  const preloadedFirstImagesCurrent = useRef<number>(0);
+
+  // Preload images function
+  const preloadImages = (urls: string[], firstPage: boolean) => {
+    return Promise.all(
+      urls.map((url) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = url;
+          img.onload = () => {
+            if (
+              firstPage &&
+              preloadedFirstImagesCurrent.current <
+                preloadedFirstImagesTotal.current
+            ) {
+              preloadedFirstImagesCurrent.current += 1;
+              if (preloadedFirstImagesCurrent.current % 5 === 0) {
+                setPreloadedFirstImagesCount(
+                  (preloadedFirstImagesCurrent.current /
+                    preloadedFirstImagesTotal.current) *
+                    100
+                );
+              }
+            }
+            resolve({ url, success: true });
+          };
+          img.onerror = () => resolve({ url, success: false });
+        });
+      })
+    );
+  };
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -183,6 +206,8 @@ const App = () => {
 
     fetchProject();
   }, []);
+
+  const [preloadingScreen, setPreloadingScreen] = useState(true);
 
   const getProject = async () => {
     const returnedProject: any[] = [null, null];
@@ -312,41 +337,9 @@ const App = () => {
       }
 
       setProjectAssets(tree);
-      let startingPreloadIndex = 0;
-      if (location.pathname.startsWith("/about")) {
-        startingPreloadIndex = 1;
-      }
-      if (location.pathname.startsWith("/projects")) {
-        startingPreloadIndex = 2;
-      }
-      if (location.pathname.startsWith("/archives")) {
-        startingPreloadIndex = 3;
-      }
-      const pageLoadOrder = [];
-      pageLoadOrder.push(startingPreloadIndex);
-      for (let i = 2; i < 4; i++) {
-        if (i !== startingPreloadIndex && i !== 0) {
-          pageLoadOrder.push(i);
-        }
-      }
-      if (1 !== startingPreloadIndex) {
-        pageLoadOrder.push(1);
-      }
-
-      console.log("beginning preload")
-      for (let i = 0; i < pageLoadOrder.length; i++) {
-        const currentPageIndex = pageLoadOrder[i]; // 0 = home, 1 = about, 2 = project, 3 = archives
-        if (collectAllImages.current[currentPageIndex].length > 0) {
-          await preloadImages(collectAllImages.current[currentPageIndex]);
-          const preloadedImagesCopy = preloadedImages;
-          preloadedImagesCopy[currentPageIndex] = true;
-          setPreloadedImages(preloadedImagesCopy);
-        }
-      }
-      console.log("ended preload")
 
       //  HOME PAGE COVER LAYOUT ORDER (num covers, 2 layouts available so far)
-      const numberOfCovers  = returnedProject[1].children[0].children.length
+      const numberOfCovers = returnedProject[1].children[0].children.length;
       const numberOfLayoutsCreated = 7;
 
       let previous = -1; // Start with a value that can't match the first random number
@@ -379,6 +372,52 @@ const App = () => {
 
       setLayoutOrder(newLayoutOrder);
 
+      // PRELOAD IMAAGES
+      let startingPreloadIndex = 0;
+      if (location.pathname.startsWith("/about")) {
+        startingPreloadIndex = 1;
+      }
+      if (location.pathname.startsWith("/projects")) {
+        startingPreloadIndex = 0;
+      }
+      if (location.pathname.startsWith("/archives")) {
+        startingPreloadIndex = 2;
+      }
+      const pageLoadOrder = [];
+      pageLoadOrder.push(startingPreloadIndex);
+      for (let i = 0; i <= 2; i++) {
+        if (i !== startingPreloadIndex) {
+          pageLoadOrder.push(i);
+        }
+      }
+
+      const firstPageIndex = pageLoadOrder[0];
+      if (collectAllImages.current[firstPageIndex].length > 0) {
+        preloadedFirstImagesTotal.current =
+          collectAllImages.current[firstPageIndex].length;
+        await preloadImages(collectAllImages.current[firstPageIndex], true);
+        setPreloadingScreen(false);
+        const preloadedImagesCopy = preloadedImages;
+        preloadedImagesCopy[firstPageIndex] = true;
+        setPreloadedImages(preloadedImagesCopy);
+        console.log("preloaded first screen");
+      }
+
+      for (let i = 0; i < pageLoadOrder.length; i++) {
+        if (i === firstPageIndex) continue;
+        const currentPageIndex = pageLoadOrder[i];
+        if (collectAllImages.current[currentPageIndex].length > 0) {
+          await preloadImages(
+            collectAllImages.current[currentPageIndex],
+            false
+          );
+          const preloadedImagesCopy = preloadedImages;
+          preloadedImagesCopy[currentPageIndex] = true;
+          setPreloadedImages(preloadedImagesCopy);
+        }
+      }
+      console.log("ended preload");
+
       return returnedProject;
     }
   };
@@ -395,6 +434,7 @@ const App = () => {
       const folder = appFile.children[pageKey].children;
       const mappedImages: CoverEntryImage[] = Object.keys(folder)
         .filter((item) => folder[item].name !== "blank.png")
+        .filter((item) => folder[item].index <= 13)
         .map((imgKey: any) => {
           if (collectNewImages) {
             collectAllImagesCopy[1].push(folder[imgKey].link);
@@ -423,7 +463,7 @@ const App = () => {
       page === "Projects" &&
       Object.keys(appFile.children[pageKey]).length > 0
     ) {
-      if (collectAllImagesCopy[2].length === 0) {
+      if (collectAllImagesCopy[0].length === 0) {
         collectNewImages = true;
       }
       const folder = appFile.children[pageKey].children;
@@ -435,7 +475,7 @@ const App = () => {
           )
           .map((imgKey: any) => {
             if (collectNewImages) {
-              collectAllImagesCopy[2].push(
+              collectAllImagesCopy[0].push(
                 folder[imageFolder].children[imgKey].link
               );
             }
@@ -493,7 +533,7 @@ const App = () => {
       page === "Archives" &&
       Object.keys(appFile.children[pageKey]).length > 0
     ) {
-      if (collectAllImagesCopy[3].length === 0) {
+      if (collectAllImagesCopy[2].length === 0) {
         collectNewImages = true;
       }
       const folder = appFile.children[pageKey].children;
@@ -505,7 +545,7 @@ const App = () => {
           )
           .map((imgKey: any) => {
             if (collectNewImages) {
-              collectAllImagesCopy[3].push(
+              collectAllImagesCopy[2].push(
                 folder[imageFolder].children[imgKey].link
               );
             }
@@ -562,15 +602,8 @@ const App = () => {
       );
     }
 
-    if (page === "Home") {
-      if (collectAllImagesCopy[0].length === 0) {
-        collectNewImages = true;
-      }
-      collectAllImages.current = collectAllImagesCopy;
-    } else {
-      collectAllImages.current = collectAllImagesCopy;
-      return result;
-    }
+    collectAllImages.current = collectAllImagesCopy;
+    return result;
   }
 
   const [incomingPage, setIncomingPage] = useState<IncomingPage>(null);
@@ -780,6 +813,46 @@ const App = () => {
       setSittingProject(false);
     }
   }, [projectsList]);
+
+// const playerRef = useRef<PlayerMethods | null>(null); 
+  // useEffect(() => {
+  //   const animationProgress = preloadedFirstImagesCount / 100;
+  //   if (playerRef.current) {
+  //     playerRef.current.setSeeker(animationProgress * 100); 
+  //   }
+  // }, [preloadedFirstImagesCount]);
+
+  if (preloadingScreen) {
+    return (
+      <div className="w-[100vw] h-[100vh] pt-[2vh] flex flex-col gap-[10px] items-center justify-center">
+        {/* <div className="flower-animation-container">
+          <Player
+            autoplay={false} 
+            loop={false}
+            src={flower}
+            ref={playerRef}
+            style={{
+              transform: "rotate(130deg)",
+              height: "300px",
+              width: "300px",
+            }}
+          />
+        </div> */}
+        <div
+          className="w-[400px] h-[4px] mt-[20vh] "
+          style={{ border: "1px solid #FFFFFF", borderRadius: "10px" }}
+        >
+          <div
+            className="bg-[#BBBBBB] h-full"
+            style={{
+              width: `${preloadedFirstImagesCount}%`,
+              transition: "width 0.2s ease-in-out",
+            }}
+          ></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

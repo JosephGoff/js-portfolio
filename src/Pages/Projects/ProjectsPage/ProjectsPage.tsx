@@ -54,7 +54,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
   const [projectsList, setProjectsList] = useState<string[]>([]);
   const { projectAssets, setProjectAssets } = useProjectAssetsStore();
   const coversRef = useRef<ProjectEntry[] | null>(null);
-  const [firstPageLoad, setFirstPageLoad] = useState(false);
+  const [firstPageLoad, setFirstPageLoad] = useState(true);
 
   useEffect(() => {
     const project = projectAssets as any;
@@ -296,34 +296,34 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
     }
   }, [coversRef.current, selectedProjectName]);
 
-  useEffect(() => {
-    if (!slideUpComponent && coversRef.current !== null) {
-      let timeoutId: NodeJS.Timeout;
-      let intervalId: NodeJS.Timeout;
-      const maxWaitTime = 60000;
-      const checkInterval = 50;
+  // useEffect(() => {
+  //   if (!slideUpComponent && coversRef.current !== null) {
+  //     let timeoutId: NodeJS.Timeout;
+  //     let intervalId: NodeJS.Timeout;
+  //     const maxWaitTime = 60000;
+  //     const checkInterval = 50;
 
-      const startChecking = () => {
-        const startTime = Date.now();
+  //     const startChecking = () => {
+  //       const startTime = Date.now();
 
-        intervalId = setInterval(() => {
-          if (preloadedImages[2] === true) {
-            clearInterval(intervalId);
-            setFirstPageLoad(true);
-          } else if (Date.now() - startTime >= maxWaitTime) {
-            clearInterval(intervalId);
-          }
-        }, checkInterval);
-      };
+  //       intervalId = setInterval(() => {
+  //         if (preloadedImages[2] === true) {
+  //           clearInterval(intervalId);
+  //           setFirstPageLoad(true);
+  //         } else if (Date.now() - startTime >= maxWaitTime) {
+  //           clearInterval(intervalId);
+  //         }
+  //       }, checkInterval);
+  //     };
 
-      timeoutId = setTimeout(startChecking, 50);
+  //     timeoutId = setTimeout(startChecking, 50);
 
-      return () => {
-        clearTimeout(timeoutId);
-        clearInterval(intervalId);
-      };
-    }
-  }, []);
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //       clearInterval(intervalId);
+  //     };
+  //   }
+  // }, []);
 
   const location = useLocation();
   const disableTransitionRef = useRef(false);
@@ -396,7 +396,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
           opacity: 1,
         }}
       >
-        {preloadedImages[2] && slideUpComponent && (
+        {slideUpComponent && (
           <AnimatePresence>
             <motion.div
               key={`current-${selectedProjectName[1] || ""}`}

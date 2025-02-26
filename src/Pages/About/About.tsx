@@ -149,7 +149,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
   const { selectedProjectName, setSelectedProjectName } =
     useSelectedProjectNameState();
   const { projectAssets, setProjectAssets } = useProjectAssetsStore();
-  const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
+  // const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
 
   const coversRef = useRef<CoverEntryImage[] | null>(null);
 

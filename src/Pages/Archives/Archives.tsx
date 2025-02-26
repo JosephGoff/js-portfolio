@@ -51,7 +51,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
   // const closeIconRef = useRef<HTMLDivElement>(null);
   // const playIconRef = useRef<HTMLDivElement>(null);
   const { projectAssets, setProjectAssets } = useProjectAssetsStore();
-  const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
+  // const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
   const archivesRef = useRef<ArchivesEntry[] | null>(null);
 
   const [bgColors, setbgColors] = useState<string[]>([]);

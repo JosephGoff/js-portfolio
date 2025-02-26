@@ -41,16 +41,13 @@ const Home: React.FC<HomePageProps> = ({
   }
 
   const { projectAssets, setProjectAssets } = useProjectAssetsStore();
-  const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
+  // const { preloadedImages, setPreloadedImages } = usePreloadedImagesStore();
   const coversRef = useRef<CoverEntry[] | null>(null);
   const [coversReady, setCoversReady] = useState<any[] | null>(null);
 
   useEffect(() => {
     const project = projectAssets as any;
-    if (
-      project !== null &&
-      project["Projects"]
-    ) {
+    if (project !== null && project["Projects"]) {
       coversRef.current = project["Projects"].children;
       readyToTransition.current = true;
       setCoversReady(project["Projects"].children);
@@ -183,7 +180,7 @@ const Home: React.FC<HomePageProps> = ({
             }
           }
         } else if (deltaY < 4 && deltaY > -4) {
-          nextMove.current = [0, false]
+          nextMove.current = [0, false];
           if (
             !readyToRetrigger.current &&
             !nextMove.current[1] &&
@@ -236,7 +233,12 @@ const Home: React.FC<HomePageProps> = ({
   }, [coversReady]);
 
   useEffect(() => {
-    if (!slideUpComponent && currentCoverRef && currentCoverRef.current !== null && coversRef.current !== null) {
+    if (
+      !slideUpComponent &&
+      currentCoverRef &&
+      currentCoverRef.current !== null &&
+      coversRef.current !== null
+    ) {
       const text = coversRef.current[currentCoverRef.current].title
         .split("_")
         .map((word: any) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -422,7 +424,12 @@ const Home: React.FC<HomePageProps> = ({
 
   const generateRandomDelay = () => Math.random() * 0.3;
 
-  if (currentCoverRef.current === null || currentCoverRef.current === undefined) {return <></>}
+  if (
+    currentCoverRef.current === null ||
+    currentCoverRef.current === undefined
+  ) {
+    return <></>;
+  }
 
   return (
     <div className="fixed w-[100vw] h-[100vh] py-[calc(20px+10vh)] md:py-0">
@@ -442,8 +449,8 @@ const Home: React.FC<HomePageProps> = ({
         }}
       >
         {currentLayout &&
-          currentLayout.length > 0 &&
           currentLayout !== null &&
+          currentLayout.length > 0 &&
           pageLayoutsRef &&
           pageLayoutsRef.current !== null &&
           pageLayoutsRef.current.length > 0 &&
@@ -522,17 +529,27 @@ const Home: React.FC<HomePageProps> = ({
                             bottom: item.top ? "none" : `${item.y}vh`,
                           }}
                         >
-                          {!slideUpComponent && coversRef.current !== null && currentCoverRef.current !== null && index < coversRef.current[currentCoverRef.current].images.length && <img
-                            alt="img"
-                            className="image w-[100%] h-[100%]"
-                            style={{ objectFit: "cover" }}
-                            src={
-                              coversRef.current !== null && index < coversRef.current[currentCoverRef.current].images.length
-                                ? 
-                                coversRef.current[currentCoverRef.current].images[index].url
-                                : ""
-                            }
-                          />}
+                          {!slideUpComponent &&
+                            coversRef.current !== null &&
+                            currentCoverRef.current !== null &&
+                            index <
+                              coversRef.current[currentCoverRef.current].images
+                                .length && (
+                              <img
+                                alt="img"
+                                className="image w-[100%] h-[100%]"
+                                style={{ objectFit: "cover" }}
+                                src={
+                                  coversRef.current !== null &&
+                                  index <
+                                    coversRef.current[currentCoverRef.current]
+                                      .images.length
+                                    ? coversRef.current[currentCoverRef.current]
+                                        .images[index].url
+                                    : ""
+                                }
+                              />
+                            )}
                         </div>
                       </motion.div>
                     )}
