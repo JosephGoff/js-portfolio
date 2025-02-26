@@ -333,15 +333,17 @@ const App = () => {
         pageLoadOrder.push(1);
       }
 
+      console.log("beginning preload")
       for (let i = 0; i < pageLoadOrder.length; i++) {
         const currentPageIndex = pageLoadOrder[i]; // 0 = home, 1 = about, 2 = project, 3 = archives
         if (collectAllImages.current[currentPageIndex].length > 0) {
-          // await preloadImages(collectAllImages.current[currentPageIndex]);
+          await preloadImages(collectAllImages.current[currentPageIndex]);
           const preloadedImagesCopy = preloadedImages;
           preloadedImagesCopy[currentPageIndex] = true;
           setPreloadedImages(preloadedImagesCopy);
         }
       }
+      console.log("ended preload")
 
       //  HOME PAGE COVER LAYOUT ORDER (num covers, 2 layouts available so far)
       const numberOfCovers  = returnedProject[1].children[0].children.length
@@ -679,7 +681,9 @@ const App = () => {
           if (
             projectColors[1][0] !== "white" &&
             projectColors[1][0] !== "#FFF" &&
-            projectColors[1][0] !== "#FFFFFF"
+            projectColors[1][0] !== "#FFFFFF" &&
+            projectColors[1][0] !== "#fff" &&
+            projectColors[1][0] !== "#ffffff"
           ) {
             setCurrentNavColor("white");
           } else {

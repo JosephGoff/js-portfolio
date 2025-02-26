@@ -522,7 +522,7 @@ const Home: React.FC<HomePageProps> = ({
                             bottom: item.top ? "none" : `${item.y}vh`,
                           }}
                         >
-                          {coversRef.current !== null && currentCoverRef.current !== null && index < coversRef.current[currentCoverRef.current].images.length && <img
+                          {!slideUpComponent && coversRef.current !== null && currentCoverRef.current !== null && index < coversRef.current[currentCoverRef.current].images.length && <img
                             alt="img"
                             className="image w-[100%] h-[100%]"
                             style={{ objectFit: "cover" }}
@@ -662,7 +662,7 @@ const Home: React.FC<HomePageProps> = ({
         )}
 
         <div
-          className={`inverted-text absolute mt-[calc(35px+10vw)] text-[calc(8px+0.75vw)] ${
+          className={`hidden sm:flex text-center inverted-text absolute mt-[calc(35px+10vw)] text-[calc(7px+0.6vw)] md:text-[calc(8px+0.75vw)] ${
             isSubVisible ? "visible" : "hidden"
           }`}
         >
@@ -689,7 +689,7 @@ const Home: React.FC<HomePageProps> = ({
           </div>
         </div>
         <div
-          className={`inverted-text-black absolute mt-[calc(35px+10vw)] text-[calc(8px+0.75vw)] ${
+          className={`hidden sm:flex text-center inverted-text-black absolute mt-[calc(35px+10vw)] text-[calc(7px+0.6vw)] md:text-[calc(8px+0.75vw)] ${
             isSubVisible ? "visible" : "hidden"
           }`}
         >

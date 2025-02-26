@@ -450,11 +450,11 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         1,
         Math.max(0, section3OpacityProgress)
       );
-      let widthPace = window.innerWidth > 1024 ? 22 : 18;
+      let widthPace = window.innerWidth > 1024 ? 100 : 90;
       let section3WidthsProgress =
         (window.scrollY - (section3TopPosition + 200)) / widthPace;
       section3WidthsProgress = Math.min(
-        40,
+        4,
         Math.max(0, section3WidthsProgress)
       );
       const parallaxPace3 = window.innerWidth > 1024 ? 20 : 14;
@@ -603,13 +603,13 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
         }
         if (section3RefLeft.current) {
           section3RefLeft.current.style.width = `${
-            25 - section3Widths.current
-          }px`;
+            4 - section3Widths.current
+          }vw`;
         }
         if (section3RefRight.current) {
           section3RefRight.current.style.width = `${
-            25 - section3Widths.current
-          }px`;
+            4 - section3Widths.current
+          }vw`;
         }
 
         // SECTION 4
@@ -1078,7 +1078,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
               >
                 <div
                   ref={section3RefLeft}
-                  className="h-[100%] bg-white  w-[25px] absolute left-0 top-0 z-[500]"
+                  className="h-[100%] bg-white  w-[4vw] absolute left-0 top-0 z-[500]"
                 ></div>
                 <img
                   ref={section3Img}
@@ -1090,7 +1090,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
                 />
                 <div
                   ref={section3RefRight}
-                  className="h-[100%] bg-white w-[25px] absolute right-0 top-0 z-[500]"
+                  className="h-[100%] bg-white w-[4vw] absolute right-0 top-0 z-[500]"
                 ></div>
               </div>
 

@@ -126,8 +126,10 @@ const Projects: React.FC<ProjectsPageProps> = ({
       setTimeout(() => {
         projectColorsCopy[1] = [item.bg_color, item.text_color];
         setProjectColors(projectColorsCopy);
-        setCanSelectProject(true);
         setSelectedProjectName([null, index, null]);
+        setTimeout(()=>{
+          setCanSelectProject(true);
+        },500)
       }, 1000);
     }
   }
