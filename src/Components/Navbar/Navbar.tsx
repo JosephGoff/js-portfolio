@@ -32,7 +32,9 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
 
   const [canSelectPage, setCanSelectPage] = useState(true);
 
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible1, setIsVisible1] = useState(false);
+  const [isVisible2, setIsVisible2] = useState(false);
+  const [isVisible3, setIsVisible3] = useState(false);
   const [isRevealing1, setIsRevealing1] = useState(true);
   const [isRevealing2, setIsRevealing2] = useState(true);
   const [isRevealing3, setIsRevealing3] = useState(true);
@@ -77,7 +79,9 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
   }, [projectAssets]);
 
   function resetText() {
-    setIsVisible(false);
+    setIsVisible1(false);
+    setIsVisible2(false);
+    setIsVisible3(false);
     setIsRevealing1(false);
     setIsRevealing2(false);
     setIsRevealing3(false);
@@ -87,20 +91,23 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
   }
 
   function showText() {
-    resetText()
+    resetText();
+    
     setTimeout(() => {
+      setIsVisible1(true);
       setIsRevealing1(true);
-      setIsRevealing2(true);
-      setIsRevealing3(true);
-      setIsVisible(true);
       setDropdown1Display(true);
     }, 200);
 
     setTimeout(() => {
+      setIsVisible2(true);
+      setIsRevealing2(true);
       setDropdown2Display(true);
     }, 350);
 
     setTimeout(() => {
+      setIsVisible3(true);
+      setIsRevealing3(true);
       setDropdown3Display(true);
     }, 500);
   }
@@ -115,10 +122,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
     }, 300);
 
     setTimeout(() => {
-      setIsVisible(false);
-      setDropdown1Display(false);
-      setDropdown2Display(false);
-      setDropdown3Display(false);
+      resetText();
     }, 900);
   }
 
@@ -504,7 +508,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
           <div
             className={`text-reveal-wrapper 
             ${dropdown1Display ? "flex" : "hidden"}
-            ${isVisible ? "visible" : ""}`}
+            ${isVisible1 ? "visible" : ""}`}
           >
             <div
               onClick={() => {
@@ -521,7 +525,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
           <div
             className={`text-reveal-wrapper
             ${dropdown2Display ? "flex" : "hidden"}
-             ${isVisible ? "visible" : ""}`}
+             ${isVisible2 ? "visible" : ""}`}
           >
             <div
               onClick={() => {
@@ -538,7 +542,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
           <div
             className={`text-reveal-wrapper
             ${dropdown3Display ? "flex" : "hidden"}
-             ${isVisible ? "visible" : ""}`}
+             ${isVisible3 ? "visible" : ""}`}
           >
             <div
               onClick={() => {
