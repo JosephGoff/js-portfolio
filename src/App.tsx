@@ -336,7 +336,7 @@ const App = () => {
       for (let i = 0; i < pageLoadOrder.length; i++) {
         const currentPageIndex = pageLoadOrder[i]; // 0 = home, 1 = about, 2 = project, 3 = archives
         if (collectAllImages.current[currentPageIndex].length > 0) {
-          await preloadImages(collectAllImages.current[currentPageIndex]);
+          // await preloadImages(collectAllImages.current[currentPageIndex]);
           const preloadedImagesCopy = preloadedImages;
           preloadedImagesCopy[currentPageIndex] = true;
           setPreloadedImages(preloadedImagesCopy);
