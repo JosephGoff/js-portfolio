@@ -155,7 +155,7 @@ const Home: React.FC<HomePageProps> = ({
 
   const readyToTransition = useRef(false);
   const animatingRef = useRef([0, 0]);
-  const [firstPageLoad, setFirstPageLoad] = useState(false);
+  const [firstPageLoad, setFirstPageLoad] = useState(true);
 
   const readyToRetrigger = useRef(false);
 
@@ -207,26 +207,26 @@ const Home: React.FC<HomePageProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (!slideUpComponent && coversRef.current !== null) {
-      setTimeout(() => {
-        const maxWaitTime = 1000; // Max wait time for preload
-        const startTime = Date.now();
+  // useEffect(() => {
+  //   if (!slideUpComponent && coversRef.current !== null) {
+  //     setTimeout(() => {
+  //       const maxWaitTime = 1000; // Max wait time for preload
+  //       const startTime = Date.now();
 
-        const checkPreload = () => {
-          if (preloadedImages[2] === true) {
-            setFirstPageLoad(true); // Images are preloaded
-          } else if (Date.now() - startTime >= maxWaitTime) {
-            setFirstPageLoad(true); // Fallback after timeout
-          } else {
-            requestAnimationFrame(checkPreload); // Check continuously
-          }
-        };
+  //       const checkPreload = () => {
+  //         if (preloadedImages[2] === true) {
+  //           setFirstPageLoad(true); // Images are preloaded
+  //         } else if (Date.now() - startTime >= maxWaitTime) {
+  //           setFirstPageLoad(true); // Fallback after timeout
+  //         } else {
+  //           requestAnimationFrame(checkPreload); // Check continuously
+  //         }
+  //       };
 
-        checkPreload();
-      }, 260);
-    }
-  }, [coversRef.current, slideUpComponent, preloadedImages]);
+  //       checkPreload();
+  //     }, 260);
+  //   }
+  // }, [coversRef.current, slideUpComponent, preloadedImages]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
