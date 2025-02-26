@@ -111,6 +111,26 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
     }, 900);
   }
 
+  function resetText() {
+    setIsVisible(false);
+    setIsRevealing1(false);
+    setIsRevealing2(false);
+    setIsRevealing3(false);
+    setDropdown1Display(false);
+    setDropdown2Display(false);
+    setDropdown3Display(false);
+  }
+
+    function setText() {
+    setIsVisible(true);
+    setIsRevealing1(true);
+    setIsRevealing2(true);
+    setIsRevealing3(true);
+    setDropdown1Display(true);
+    setDropdown2Display(true);
+    setDropdown3Display(true);
+  }
+
   useEffect(() => {
     const handleNavResize = () => {
       if (window.innerWidth >= 768 && isOpenRef && isOpenRef.current) {
@@ -118,7 +138,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
         setNavOpen(false);
         setNavOpenSpin(false);
         setNavOnScreen(false);
-        hideText();
+        resetText();
         document.body.style.overflow = "";
       }
     };
@@ -149,7 +169,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
         // Close Nav
         setCurrentNavColor(prevNavColorRef.current);
         document.body.style.overflow = "";
-        hideText();
+        resetText();
         setIsAnimatingNav(true);
         setNavOpenSpin(newVal);
         setTimeout(() => {
@@ -166,7 +186,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
         document.body.style.overflow = "hidden";
         setNavOpen(newVal);
         setNavOpenSpin(newVal);
-        showText();
+        setText();
         setNavOnScreen(true);
         setIsAnimatingNav(true);
         setTimeout(() => {
@@ -278,7 +298,7 @@ const Navbar: React.FC<PageProps> = ({ navigate }) => {
     }
 
     setNavOpenSpin(false);
-    hideText();
+    resetText();
 
     if (navOverlayBG && navOverlayBG.current !== null) {
       navOverlayBG.current.style.transition = "none";
