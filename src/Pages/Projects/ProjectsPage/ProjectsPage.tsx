@@ -410,7 +410,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                     </>
                   )}
                 </div>
-                <div className="w-[100%] flex justify-center">
+                <div className="w-[100%] sm:ml-0 ml-[3vw] flex justify-center">
                   <div
                     className="w-[100%] flex flex-col h-[auto] mb-[65px]"
                     style={{
@@ -480,7 +480,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                     .replaceAll("_", " ")}
               </div>
             </div>
-            <div className="w-[100%] flex justify-center">
+            <div className="w-[100%] sm:ml-0 ml-[3vw] flex justify-center">
               <div
                 className="w-[100%] flex flex-col h-[auto] mb-[65px]"
                 style={{

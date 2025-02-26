@@ -9,6 +9,7 @@ import useProjectAssetsStore from "../../store/useProjectAssetsStore";
 import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+import { useMediaQuery } from "@mui/material";
 
 type ArchivesPageProps = {
   navigate: (page: Page) => void;
@@ -401,6 +402,8 @@ const Archives: React.FC<ArchivesPageProps> = ({
     setFullscreenImage(null);
   };
 
+  const isSmallScreen = useMediaQuery('(max-width: 765px)');
+
   return (
     <div ref={archivesRootDiv} className="w-[100%] h-[100vh]">
       {revealGallery && (
@@ -515,7 +518,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                     />
                   </div>
                 )}
-                <ImageList variant="masonry" cols={3} gap={22}>
+                <ImageList variant="masonry" cols={isSmallScreen ? 2 : 3} gap={22}>
                   {archivesRef.current?.[selectedArchiveGroup]?.images
                     ?.filter(
                       (item) =>
@@ -753,16 +756,16 @@ const Archives: React.FC<ArchivesPageProps> = ({
                       >
                         <div className="hidden lg:flex flex-col">
                           {archivesRef.current !== null && (
-                            <p>{archivesRef.current[index].description}</p>
+                            <p>{archivesRef.current[index].description.toUpperCase()}</p>
                           )}
 
                           {archivesRef.current !== null && (
-                            <p className="ml-[100px]">
-                              {archivesRef.current[index].description2}
+                            <p className="ml-[calc(2vw+50px)]">
+                              {archivesRef.current[index].description2.toUpperCase()}
                             </p>
                           )}
                           {archivesRef.current !== null && (
-                            <p>{archivesRef.current[index].description3}</p>
+                            <p>{archivesRef.current[index].description3.toUpperCase()}</p>
                           )}
                         </div>
                         <div
@@ -771,16 +774,16 @@ const Archives: React.FC<ArchivesPageProps> = ({
                           style={{ color: bgColors[index] }}
                         >
                           {archivesRef.current !== null && (
-                            <p>{archivesRef.current[index].description}</p>
+                            <p>{archivesRef.current[index].description.toUpperCase()}</p>
                           )}
 
                           {archivesRef.current !== null && (
-                            <p className="ml-[100px]">
-                              {archivesRef.current[index].description2}
+                            <p className="ml-[calc(2vw+50px)]">
+                              {archivesRef.current[index].description2.toUpperCase()}
                             </p>
                           )}
                           {archivesRef.current !== null && (
-                            <p>{archivesRef.current[index].description3}</p>
+                            <p>{archivesRef.current[index].description3.toUpperCase()}</p>
                           )}
                         </div>
                       </div>
@@ -918,16 +921,16 @@ const Archives: React.FC<ArchivesPageProps> = ({
                         <p>
                           {
                             archivesRef.current[selectedArchiveGroup]
-                              .description
+                              .description.toUpperCase()
                           }
                         </p>
                       )}
 
                       {archivesRef.current !== null && (
-                        <p className="ml-[100px]">
+                        <p className="ml-[calc(2vw+50px)]">
                           {
                             archivesRef.current[selectedArchiveGroup]
-                              .description2
+                              .description2.toUpperCase()
                           }
                         </p>
                       )}
@@ -935,7 +938,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                         <p>
                           {
                             archivesRef.current[selectedArchiveGroup]
-                              .description3
+                              .description3.toUpperCase()
                           }
                         </p>
                       )}
@@ -948,16 +951,16 @@ const Archives: React.FC<ArchivesPageProps> = ({
                         <p>
                           {
                             archivesRef.current[selectedArchiveGroup]
-                              .description
+                              .description.toUpperCase()
                           }
                         </p>
                       )}
 
                       {archivesRef.current !== null && (
-                        <p className="ml-[100px]">
+                        <p className="ml-[calc(2vw+50px)]">
                           {
                             archivesRef.current[selectedArchiveGroup]
-                              .description2
+                              .description2.toUpperCase()
                           }
                         </p>
                       )}
@@ -965,7 +968,7 @@ const Archives: React.FC<ArchivesPageProps> = ({
                         <p>
                           {
                             archivesRef.current[selectedArchiveGroup]
-                              .description3
+                              .description3.toUpperCase()
                           }
                         </p>
                       )}
