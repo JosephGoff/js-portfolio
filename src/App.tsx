@@ -839,7 +839,7 @@ const App = () => {
           />
         </div> */}
         <div
-          className="w-[400px] h-[4px] mt-[20vh] "
+          className="w-[400px] max-w-[65vw] h-[4px] mt-[20vh] "
           style={{ border: "1px solid #FFFFFF", borderRadius: "10px" }}
         >
           <div
