@@ -1333,7 +1333,7 @@ const About: React.FC<AboutPageProps> = ({ navigate, slideUpComponent }) => {
               style={{
                 display: scrollProgress === 0 ? "none" : "flex",
               }}
-              className="z-[10]  fixed bottom-0 left-0 flex-row w-full h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)]"
+              className="z-[10] bg-white fixed bottom-0 left-0 flex-row w-full h-[calc(82vh-58px)] md:h-[calc(82vh-76px)] lg:h-[calc(82vh-80px)]"
             >
               <div className="lg:w-[28%] w-[33%] h-[100%] flex items-end justify-end">
                 <img alt="" className="w-full object-contain" src={tree1Url} />
