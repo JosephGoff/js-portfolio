@@ -12,16 +12,35 @@ import Draggable from "react-draggable";
 import { FaUndoAlt } from "react-icons/fa";
 import { getCurrentTimestamp } from "../../utils/helperFunctions";
 
+const local = false;
 const Admin = () => {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = (e: any) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
-    if (password === process.env.REACT_APP_ADMIN_PASSWORD) {
-      setIsLoggedIn(true);
-    } else {
-      alert("Incorrect password. Please try again.");
+
+    const formData = new FormData();
+    formData.append("password", password);
+    try {
+      let serverUrl =
+        "https://cms-server-production-b414.up.railway.app/password";
+      if (local) {
+        serverUrl = "http://localhost:3001/password";
+      }
+      const response = await axios.post(serverUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        setIsLoggedIn(true);
+      } else {
+        alert("Incorrect password. Please try again.");
+      }
+    } catch (error) {
+      alert("Error logging in. Please try again.");
     }
   };
 
@@ -179,9 +198,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     setLoading(true);
     cancelTimer();
     const formData = new FormData();
+    formData.append("branch", GIT_KEYS.branch);
+    formData.append("repo", GIT_KEYS.repo);
+    formData.append("owner", GIT_KEYS.owner);
     formData.append("appFile", JSON.stringify(newProjectFile));
     try {
-      const local = false;
       let serverUrl = "https://cms-server-production-b414.up.railway.app/edit";
       if (local) {
         serverUrl = "http://localhost:3001/edit";
@@ -197,7 +218,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       }
       return response.status === 200;
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("Error updating project file:", error);
       return false;
     } finally {
       setLoading(false);
@@ -927,7 +948,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     formData.append("repo", GIT_KEYS.repo);
     formData.append("owner", GIT_KEYS.owner);
     try {
-      const local = false;
       let serverUrl =
         "https://cms-server-production-b414.up.railway.app/compress";
       if (local) {
