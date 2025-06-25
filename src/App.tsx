@@ -157,7 +157,7 @@ const App = () => {
   // FULL REPOSITORY & APP FILE
   const [projectImages, setProjectImages] = useState<string[]>([]);
   const [projectFile, setProjectFile] = useState<any>({});
-  const collectAllImages = useRef<string[][]>([[], [], []]);
+  const collectAllImages = useRef<string[][]>([[], [], [], []]);
   // Generate an array where each number is unique to the two next to it
   const [layoutOrder, setLayoutOrder] = useState<number[]>([]);
 
@@ -378,14 +378,14 @@ const App = () => {
         startingPreloadIndex = 1;
       }
       if (location.pathname.startsWith("/projects")) {
-        startingPreloadIndex = 0;
+        startingPreloadIndex = 2;
       }
       if (location.pathname.startsWith("/archives")) {
-        startingPreloadIndex = 2;
+        startingPreloadIndex = 3;
       }
       const pageLoadOrder = [];
       pageLoadOrder.push(startingPreloadIndex);
-      for (let i = 0; i <= 2; i++) {
+      for (let i = 0; i <= 3; i++) {
         if (i !== startingPreloadIndex) {
           pageLoadOrder.push(i);
         }
@@ -473,9 +473,14 @@ const App = () => {
             (imgKey) =>
               folder[imageFolder].children[imgKey].name !== "blank.png"
           )
-          .map((imgKey: any) => {
+          .map((imgKey: any, index: number) => {
             if (collectNewImages) {
-              collectAllImagesCopy[0].push(
+              if (index < 6) {
+                collectAllImagesCopy[0].push(
+                  folder[imageFolder].children[imgKey].link
+                );
+              }
+              collectAllImagesCopy[2].push(
                 folder[imageFolder].children[imgKey].link
               );
             }
@@ -533,7 +538,7 @@ const App = () => {
       page === "Archives" &&
       Object.keys(appFile.children[pageKey]).length > 0
     ) {
-      if (collectAllImagesCopy[2].length === 0) {
+      if (collectAllImagesCopy[3].length === 0) {
         collectNewImages = true;
       }
       const folder = appFile.children[pageKey].children;
@@ -545,7 +550,7 @@ const App = () => {
           )
           .map((imgKey: any) => {
             if (collectNewImages) {
-              collectAllImagesCopy[2].push(
+              collectAllImagesCopy[3].push(
                 folder[imageFolder].children[imgKey].link
               );
             }
@@ -814,11 +819,11 @@ const App = () => {
     }
   }, [projectsList]);
 
-// const playerRef = useRef<PlayerMethods | null>(null); 
+  // const playerRef = useRef<PlayerMethods | null>(null);
   // useEffect(() => {
   //   const animationProgress = preloadedFirstImagesCount / 100;
   //   if (playerRef.current) {
-  //     playerRef.current.setSeeker(animationProgress * 100); 
+  //     playerRef.current.setSeeker(animationProgress * 100);
   //   }
   // }, [preloadedFirstImagesCount]);
 
@@ -1053,7 +1058,7 @@ const App = () => {
           incomingPageDecision.split("/").length === 2 && (
             <>
               <div
-              // w-[calc((310px+2vw)+(3vw+30px))] sm:w-[calc((360px+2vw)+(3vw+30px))] md:w-[calc((410px+2vw)+(3vw+30px))]
+                // w-[calc((310px+2vw)+(3vw+30px))] sm:w-[calc((360px+2vw)+(3vw+30px))] md:w-[calc((410px+2vw)+(3vw+30px))]
                 className="w-[100vw] h-[100vh] fixed left-0 top-0 "
                 style={{ backgroundColor: projectColors[0][0] }}
               ></div>

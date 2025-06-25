@@ -118,6 +118,8 @@ const Home: React.FC<HomePageProps> = ({
   const [currentLayout, setCurrentLayout] = useState<any>(null);
   const pageLayoutsRef = useRef<any>(null);
 
+  const [imgLoaded, setImgLoaded] = useState<boolean[]>([false, false, false, false, false, false]);
+
   useEffect(() => {
     if (layoutOrder.length > 0) {
       const newPageLayouts = layoutOrder.map((item) => coverLayouts[item]);
@@ -508,7 +510,7 @@ const Home: React.FC<HomePageProps> = ({
                       <motion.div
                         key={`current-${currentCoverRef.current}`}
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        animate={{ opacity: imgLoaded.every(Boolean) ? 1 : 0 }}
                         exit={{ opacity: 0 }}
                         transition={{
                           duration: 0.7,
@@ -548,6 +550,13 @@ const Home: React.FC<HomePageProps> = ({
                                         .images[index].url
                                     : ""
                                 }
+                                onLoad={() => {
+                                  setImgLoaded((prev) => {
+                                    const updated = [...prev];
+                                    updated[index] = true;
+                                    return updated;
+                                  });
+                                }}
                               />
                             )}
                         </div>
